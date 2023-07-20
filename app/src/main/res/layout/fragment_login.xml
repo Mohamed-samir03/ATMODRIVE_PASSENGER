@@ -50,19 +50,29 @@
         android:id="@+id/et_phone_number"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="26dp"
         android:hint="100 123 4567"
         android:textColor="@color/title"
         android:textColorHint="@color/hint"
+        android:background="@drawable/button_background"
+        app:layout_constraintBottom_toBottomOf="@+id/ccp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/ccp"
-        app:layout_constraintTop_toBottomOf="@+id/tv_find_or_create" />
+        app:layout_constraintTop_toTopOf="@+id/ccp" />
+
+    <View
+        android:id="@+id/view2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/hint"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ccp" />
 
     <Button
         android:id="@+id/btn_continue"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
         android:background="@drawable/button_background"
         android:backgroundTint="@color/primary"
         android:text="Continue"
@@ -70,8 +80,9 @@
         android:textColor="@color/white"
         android:textSize="20sp"
         android:textStyle="bold"
+        android:layout_marginTop="20dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_phone_number" />
+        app:layout_constraintTop_toBottomOf="@+id/view2" />
 
     <TextView
         android:id="@+id/tv_info"

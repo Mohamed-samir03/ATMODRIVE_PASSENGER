@@ -44,4 +44,6 @@ dependencies {
 
     //Country Code Picker
     implementation 'com.hbb20:ccp:2.5.1'
+    //OTP View
+    implementation 'com.github.mukeshsolanki.android-otpview-pinview:otpview:3.1.0'
 }

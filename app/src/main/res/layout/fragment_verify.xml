@@ -39,66 +39,26 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_verify" />
 
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="match_parent"
+    <com.mukeshsolanki.OtpView
+        android:id="@+id/otp_view"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:gravity="center"
-        android:orientation="horizontal"
+        android:inputType="number"
+        android:textAllCaps="true"
+        android:textColor="@color/title"
+        app:OtpHideLineWhenFilled="true"
+        app:OtpItemCount="4"
+        app:OtpItemSpacing="8dp"
+        android:textSize="20sp"
+        android:hint="----"
+        android:textColorHint="@color/hint"
+        app:OtpLineColor="@color/hint"
+        app:OtpState_filled="true"
+        app:OtpViewType="line"
+        android:layout_marginTop="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_verify_info">
-
-        <EditText
-            android:id="@+id/et_verify_num1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:hint="-"
-            android:textColorHint="@color/hint"
-            android:inputType="number"
-            android:maxLength="1"
-            android:padding="16dp"
-            android:textColor="@color/title"
-            android:textSize="24sp" />
-
-        <EditText
-            android:id="@+id/et_verify_num2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:hint="-"
-            android:textColorHint="@color/hint"
-            android:inputType="number"
-            android:maxLength="1"
-            android:padding="16dp"
-            android:textColor="@color/title"
-            android:textSize="24sp" />
-
-        <EditText
-            android:id="@+id/et_verify_num3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:hint="-"
-            android:textColorHint="@color/hint"
-            android:inputType="number"
-            android:maxLength="1"
-            android:padding="16dp"
-            android:textColor="@color/title"
-            android:textSize="24sp" />
-
-        <EditText
-            android:id="@+id/et_verify_num4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:hint="-"
-            android:textColorHint="@color/hint"
-            android:inputType="number"
-            android:maxLength="1"
-            android:padding="16dp"
-            android:textColor="@color/title"
-            android:textSize="24sp" />
-
-    </LinearLayout>
+        app:layout_constraintTop_toBottomOf="@+id/tv_verify_info" />
 
     <Button
         android:id="@+id/btn_verify"
@@ -106,14 +66,15 @@
         android:layout_height="wrap_content"
         android:background="@drawable/button_background"
         android:backgroundTint="@color/primary"
-        android:layout_marginTop="20dp"
         android:text="Login"
         android:textAllCaps="false"
         android:textColor="@color/white"
         android:textSize="20sp"
         android:textStyle="bold"
+        android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/otp_view" />
 
     <TextView
         android:id="@+id/tv_dont_receive_code"

@@ -4,5 +4,6 @@
         <!-- Customize your dark theme here. -->
         <item name="fontFamily">@font/dm_sans</item>
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        <item name="android:statusBarColor">@color/stats</item>
     </style>
 </resources>

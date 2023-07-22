@@ -16,6 +16,6 @@
     <color name="success">#3CD29C</color>
     <color name="progress">#FFB21C</color>
     <color name="error">#FF2D55</color>
-
+    <color name="stats">#20000000</color>
 
 </resources>

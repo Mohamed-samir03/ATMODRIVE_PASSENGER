@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/mapview">
@@ -11,33 +12,44 @@
         android:layout_height="0dp"
         android:src="@drawable/custom_shape_intro"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHeight_percent="0.9"
+        app:layout_constraintHeight_percent="0.90"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/imageView2"
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/line"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="80dp"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.15"/>
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="@dimen/_150sdp"
+        android:layout_height="@dimen/_90sdp"
         android:src="@drawable/logo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@id/line" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/line2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toTopOf="@+id/intro_text"
+        app:layout_constraintGuide_percent="0.40"/>
 
     <TextView
         android:id="@+id/intro_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:paddingStart="20dp"
-        android:paddingEnd="60dp"
         android:text="@string/intro"
+        android:layout_marginStart="@dimen/_16sdp"
         android:textColor="@color/titleSecondary"
-        android:textSize="40sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+        android:textSize="@dimen/_28ssp"
+        app:layout_constraintTop_toTopOf="@id/line2"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/btn_get_start"
@@ -48,11 +60,11 @@
         android:drawableEnd="@drawable/arrow_circle_right"
         android:text="@string/get_started"
         android:textColor="@color/title"
-        android:textSize="20sp"
+        android:textSize="@dimen/_14ssp"
         android:textStyle="bold"
-        android:padding="10dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="30dp"
+        android:padding="@dimen/_6sdp"
+        android:layout_marginStart="@dimen/_16sdp"
+        android:layout_marginTop="@dimen/_26sdp"
         android:drawablePadding="24dp"
         android:textAllCaps="false"
         app:layout_constraintStart_toStartOf="parent"
@@ -63,7 +75,7 @@
         android:layout_height="wrap_content"
         android:text="Powered by Atmosphere ©"
         android:textColor="@color/secondary"
-        android:textSize="16sp"
+        android:textSize="@dimen/_10ssp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

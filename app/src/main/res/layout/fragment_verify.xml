@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
-    android:padding="20dp">
+    android:padding="@dimen/_16sdp">
 
     <ImageView
         android:id="@+id/verify_go_back"
@@ -19,22 +19,22 @@
         android:id="@+id/tv_verify"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
         android:text="Verify"
         android:textColor="@color/title"
-        android:textSize="24sp"
+        android:textSize="@dimen/_18ssp"
         android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/verify_go_back"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tv_verify_info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="@dimen/_20sdp"
         android:text="@string/verify_otp"
         android:textColor="@color/title"
-        android:textSize="18sp"
+        android:textSize="@dimen/_12ssp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_verify" />
@@ -48,14 +48,14 @@
         android:textColor="@color/title"
         app:OtpHideLineWhenFilled="true"
         app:OtpItemCount="4"
-        app:OtpItemSpacing="8dp"
-        android:textSize="20sp"
+        app:OtpItemSpacing="@dimen/_6sdp"
+        android:textSize="@dimen/_16ssp"
         android:hint="----"
         android:textColorHint="@color/hint"
         app:OtpLineColor="@color/hint"
         app:OtpState_filled="true"
         app:OtpViewType="line"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="@dimen/_20sdp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_verify_info" />
@@ -63,15 +63,15 @@
     <Button
         android:id="@+id/btn_verify"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/_40sdp"
         android:background="@drawable/button_background"
         android:backgroundTint="@color/primary"
         android:text="Login"
         android:textAllCaps="false"
         android:textColor="@color/white"
-        android:textSize="20sp"
+        android:textSize="@dimen/_16ssp"
         android:textStyle="bold"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="@dimen/_20sdp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/otp_view" />
@@ -80,9 +80,10 @@
         android:id="@+id/tv_dont_receive_code"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="@dimen/_16sdp"
         android:text="@string/don_t_receive_a_code"
         android:textColor="@color/title"
+        android:textSize="@dimen/_11ssp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn_verify" />
 
@@ -90,10 +91,11 @@
         android:id="@+id/tv_resend_code"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
         android:text="@string/resend"
+        android:textSize="@dimen/_11ssp"
         android:textColor="@color/primary"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_dont_receive_code"
         app:layout_constraintStart_toEndOf="@+id/tv_dont_receive_code"
-        app:layout_constraintTop_toBottomOf="@+id/btn_verify" />
+        app:layout_constraintTop_toTopOf="@+id/tv_dont_receive_code" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

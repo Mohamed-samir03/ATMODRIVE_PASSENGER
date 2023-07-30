@@ -9,4 +9,6 @@
     <string name="don_t_receive_a_code">Don’t receive a code? </string>
     <string name="resend"><u>Resend</u></string>
     <string name="create_your_account">Enter your information below to create your account.</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

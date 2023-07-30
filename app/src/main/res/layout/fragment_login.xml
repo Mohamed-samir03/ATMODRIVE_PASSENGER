@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
-    android:padding="@dimen/_16sdp">
+    android:padding="@dimen/_16sdp"
+    tools:context=".Login">
 
     <ImageView
         android:id="@+id/go_back"
@@ -52,6 +53,9 @@
         android:layout_height="wrap_content"
         android:background="@drawable/button_background"
         android:hint="100 123 4567"
+        android:inputType="phone"
+        android:maxLength="10"
+        android:textSize="@dimen/_14ssp"
         android:textColor="@color/title"
         android:textColorHint="@color/hint"
         app:layout_constraintBottom_toBottomOf="@+id/ccp"

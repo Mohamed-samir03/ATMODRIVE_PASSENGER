@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/background"
     android:padding="@dimen/_16sdp"
-    tools:context=".Verify">
+    tools:context=".ui.auth.Verify">
 
     <ImageView
         android:id="@+id/verify_go_back"

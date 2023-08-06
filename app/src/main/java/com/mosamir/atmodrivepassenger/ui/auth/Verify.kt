@@ -1,22 +1,18 @@
-package com.mosamir.atmodrivepassenger
+package com.mosamir.atmodrivepassenger.ui.auth
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.lifecycleScope
+import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
-import com.mosamir.atmodrivepassenger.databinding.FragmentSplashBinding
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import com.mosamir.atmodrivepassenger.VerifyDirections
+import com.mosamir.atmodrivepassenger.databinding.FragmentVerifyBinding
 
-class Splash : Fragment() {
+class Verify:Fragment() {
 
-    private var _binding: FragmentSplashBinding? = null
+    private var _binding: FragmentVerifyBinding? = null
     private val binding get() = _binding!!
     private lateinit var mNavController: NavController
 
@@ -30,16 +26,17 @@ class Splash : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        _binding = FragmentSplashBinding.inflate(inflater, container, false)
+        _binding = FragmentVerifyBinding.inflate(inflater, container, false)
 
-        lifecycleScope.launchWhenStarted {
-            delay(3000)
-
-            val action = SplashDirections.actionSplashToIntro()
+        binding.btnVerify.setOnClickListener {
+            val action = VerifyDirections.actionVerifyToCreateAccount2()
             mNavController.navigate(action)
-
         }
 
+        binding.verifyGoBack.setOnClickListener {
+            val action = VerifyDirections.actionVerifyToLogin()
+            mNavController.navigate(action)
+        }
 
         return binding.root
     }

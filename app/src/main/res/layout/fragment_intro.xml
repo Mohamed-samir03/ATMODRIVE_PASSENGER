@@ -4,8 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/layout_intro"
     android:background="@drawable/mapview"
-    tools:context=".Intro">
+    tools:context=".ui.auth.Intro">
 
     <ImageView
         android:id="@+id/background_shape"
@@ -47,7 +48,7 @@
         android:layout_height="wrap_content"
         android:text="@string/intro"
         android:layout_marginStart="@dimen/_16sdp"
-        android:textColor="@color/titleSecondary"
+        android:textColor="@color/white"
         android:textSize="@dimen/_28ssp"
         app:layout_constraintTop_toTopOf="@id/line2"
         app:layout_constraintStart_toStartOf="parent" />
@@ -60,7 +61,7 @@
         android:backgroundTint="@color/white"
         android:drawableEnd="@drawable/arrow_circle_right"
         android:text="@string/get_started"
-        android:textColor="@color/title"
+        android:textColor="@color/black"
         android:textSize="@dimen/_14ssp"
         android:textStyle="bold"
         android:padding="@dimen/_6sdp"

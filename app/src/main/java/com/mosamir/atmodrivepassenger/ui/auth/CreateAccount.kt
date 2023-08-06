@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
-import com.mosamir.atmodrivepassenger.CreateAccountDirections
 import com.mosamir.atmodrivepassenger.databinding.FragmentCreateAccountBinding
 
 class CreateAccount:Fragment() {

@@ -6,40 +6,46 @@
     app:startDestination="@id/intro">
     <fragment
         android:id="@+id/intro"
-        android:name="com.mosamir.atmodrivepassenger.ui.auth.Intro"
+        android:name="com.mosamir.atmodrivepassenger.Intro"
         android:label="fragment_intro"
         tools:layout="@layout/fragment_intro" >
         <action
             android:id="@+id/action_intro_to_login"
-            app:destination="@id/login" />
+            app:destination="@id/login"
+            app:popUpTo="@id/intro"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/login"
-        android:name="com.mosamir.atmodrivepassenger.ui.auth.Login"
+        android:name="com.mosamir.atmodrivepassenger.Login"
         android:label="fragment_login"
         tools:layout="@layout/fragment_login" >
         <action
             android:id="@+id/action_login_to_verify"
-            app:destination="@id/verify" />
+            app:destination="@id/verify"
+            app:popUpTo="@id/login"
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_login_to_intro"
             app:destination="@id/intro" />
     </fragment>
     <fragment
         android:id="@+id/verify"
-        android:name="com.mosamir.atmodrivepassenger.ui.auth.Verify"
+        android:name="com.mosamir.atmodrivepassenger.Verify"
         android:label="fragment_verify"
         tools:layout="@layout/fragment_verify" >
         <action
             android:id="@+id/action_verify_to_createAccount2"
-            app:destination="@id/createAccount" />
+            app:destination="@id/createAccount"
+            app:popUpTo="@id/verify"
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_verify_to_login"
             app:destination="@id/login" />
     </fragment>
     <fragment
         android:id="@+id/createAccount"
-        android:name="com.mosamir.atmodrivepassenger.ui.auth.CreateAccount"
+        android:name="com.mosamir.atmodrivepassenger.CreateAccount"
         android:label="fragment_create_account"
         tools:layout="@layout/fragment_create_account" >
         <action

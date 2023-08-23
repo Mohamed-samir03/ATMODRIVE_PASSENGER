@@ -1,4 +1,4 @@
-package com.mosamir.atmodrivepassenger.ui.auth
+package com.mosamir.atmodrivepassenger
 
 import android.os.Bundle
 import android.view.LayoutInflater

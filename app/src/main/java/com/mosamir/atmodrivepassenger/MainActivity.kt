@@ -1,11 +1,10 @@
-package com.mosamir.atmodrivepassenger.ui
+package com.mosamir.atmodrivepassenger
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.lifecycle.lifecycleScope
 import com.mosamir.atmodrivepassenger.databinding.ActivityMainBinding
-import com.mosamir.atmodrivepassenger.ui.auth.AuthActivity
 import kotlinx.coroutines.delay
 
 class MainActivity : AppCompatActivity() {

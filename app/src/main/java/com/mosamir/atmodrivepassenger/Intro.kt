@@ -1,4 +1,4 @@
-package com.mosamir.atmodrivepassenger.ui.auth
+package com.mosamir.atmodrivepassenger
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,11 +7,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
-import com.mosamir.atmodrivepassenger.databinding.FragmentLoginBinding
+import com.mosamir.atmodrivepassenger.databinding.FragmentIntroBinding
 
-class Login:Fragment() {
+class Intro:Fragment() {
 
-    private var _binding: FragmentLoginBinding? = null
+    private var _binding: FragmentIntroBinding? = null
     private val binding get() = _binding!!
     private lateinit var mNavController: NavController
 
@@ -25,15 +25,16 @@ class Login:Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        _binding = FragmentLoginBinding.inflate(inflater, container, false)
+        _binding = FragmentIntroBinding.inflate(inflater, container, false)
 
-        binding.btnContinue.setOnClickListener {
-            val action = LoginDirections.actionLoginToVerify()
-            mNavController.navigate(action)
+        if (resources.getString(R.string.mode) == "Night"){
+            binding.layoutIntro.setBackgroundResource(R.drawable.mapviewdark)
+        }else{
+            binding.layoutIntro.setBackgroundResource(R.drawable.mapview)
         }
 
-        binding.goBack.setOnClickListener {
-            val action = LoginDirections.actionLoginToIntro()
+        binding.btnGetStart.setOnClickListener {
+            val action = IntroDirections.actionIntroToLogin()
             mNavController.navigate(action)
         }
 

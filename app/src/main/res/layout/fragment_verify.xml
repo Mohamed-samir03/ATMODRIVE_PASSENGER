@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/background"
     android:padding="@dimen/_16sdp"
-    tools:context=".ui.auth.Verify">
+    tools:context=".Verify">
 
     <ImageView
         android:id="@+id/verify_go_back"
@@ -55,6 +55,7 @@
         android:textColorHint="@color/hint"
         app:OtpLineColor="@color/hint"
         app:OtpState_filled="true"
+        app:layout_constraintWidth=""
         app:OtpViewType="line"
         android:layout_marginTop="@dimen/_20sdp"
         app:layout_constraintEnd_toEndOf="parent"

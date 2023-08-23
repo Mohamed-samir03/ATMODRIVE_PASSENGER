@@ -1,4 +1,4 @@
-package com.mosamir.atmodrivepassenger.ui.auth
+package com.mosamir.atmodrivepassenger
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

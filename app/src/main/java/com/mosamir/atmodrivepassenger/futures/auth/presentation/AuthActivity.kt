@@ -1,9 +1,11 @@
-package com.mosamir.atmodrivepassenger
+package com.mosamir.atmodrivepassenger.futures.auth.presentation
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.mosamir.atmodrivepassenger.databinding.ActivityAuthBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class AuthActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAuthBinding

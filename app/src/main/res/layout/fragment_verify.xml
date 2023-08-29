@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/background"
     android:padding="@dimen/_16sdp"
-    tools:context=".Verify">
+    tools:context=".auth.presentation.fragment.VerifyFragment">
 
     <ImageView
         android:id="@+id/verify_go_back"
@@ -52,6 +52,7 @@
         app:OtpItemSpacing="@dimen/_6sdp"
         android:textSize="@dimen/_16ssp"
         android:hint="----"
+        android:text="0000"
         android:textColorHint="@color/hint"
         app:OtpLineColor="@color/hint"
         app:OtpState_filled="true"
@@ -99,5 +100,15 @@
         app:layout_constraintBottom_toBottomOf="@+id/tv_dont_receive_code"
         app:layout_constraintStart_toEndOf="@+id/tv_dont_receive_code"
         app:layout_constraintTop_toTopOf="@+id/tv_dont_receive_code" />
+
+    <ProgressBar
+        android:id="@+id/verify_progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

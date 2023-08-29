@@ -5,7 +5,7 @@
     <string name="mobile_number">Enter mobile number</string>
     <string name="find_account">Enter mobile number to find your account or create a new one.</string>
     <string name="agree_policy">By continue you agree to AtmoDrive’s <font color='#00A6A6'><u>Terms &amp; Conditions</u></font> and <font color='#00A6A6'><u>Privacy Policy</u></font></string>
-    <string name="verify_otp">Hello <font color='#00A6A6'>Mohamed</font>. Enter the OTP code sent to you at mobile number <font color='#00A6A6'>+20 114 933 6618</font></string>
+    <string name="verify_otp">Enter the OTP code sent at mobile number <font color='#00A6A6'>+20 114 933 6618</font> to verify its you.</string>
     <string name="don_t_receive_a_code">Don’t receive a code? </string>
     <string name="resend"><u>Resend</u></string>
     <string name="create_your_account">Enter your information below to create your account.</string>

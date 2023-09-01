@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/background"
     android:padding="@dimen/_16sdp"
-    tools:context=".auth.presentation.fragment.MobileNumberFragment">
+    tools:context=".futures.auth.presentation.fragment.MobileNumberFragment">
 
     <ImageView
         android:id="@+id/go_back"

@@ -11,7 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.mosamir.atmodrivepassenger.databinding.FragmentMobileNumberBinding
-import com.mosamir.atmodrivepassenger.futures.auth.presentation.AuthViewModel
+import com.mosamir.atmodrivepassenger.futures.auth.presentation.common.AuthViewModel
 import com.mosamir.atmodrivepassenger.util.NetworkState
 import com.mosamir.atmodrivepassenger.util.showToast
 import com.mosamir.atmodrivepassenger.util.visibilityGone
@@ -38,12 +38,27 @@ class MobileNumberFragment:Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         _binding = FragmentMobileNumberBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         binding.btnContinue.setOnClickListener {
             val phone = binding.etPhoneNumber.text.toString()
             loginViewModel.sendCode(phone)
         }
 
+        sendCodeObserve()
+
+        binding.goBack.setOnClickListener {
+            val action = MobileNumberFragmentDirections.actionLoginToIntro()
+            mNavController.navigate(action)
+        }
+
+    }
+
+    private fun sendCodeObserve(){
         lifecycleScope.launch {
             loginViewModel.sendCodeResult.collect{ networkState ->
                 when(networkState?.status){
@@ -64,14 +79,6 @@ class MobileNumberFragment:Fragment() {
                 }
             }
         }
-
-
-        binding.goBack.setOnClickListener {
-            val action = MobileNumberFragmentDirections.actionLoginToIntro()
-            mNavController.navigate(action)
-        }
-
-        return binding.root
     }
 
     override fun onDestroyView() {

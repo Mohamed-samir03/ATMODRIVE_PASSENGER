@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView.BufferType
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -15,9 +16,11 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.mosamir.atmodrivepassenger.databinding.FragmentVerifyBinding
 import com.mosamir.atmodrivepassenger.futures.auth.domain.model.CheckCodeResponse
-import com.mosamir.atmodrivepassenger.futures.auth.presentation.AuthViewModel
+import com.mosamir.atmodrivepassenger.futures.auth.presentation.common.AuthViewModel
+import com.mosamir.atmodrivepassenger.util.Constants
 import com.mosamir.atmodrivepassenger.util.IResult
 import com.mosamir.atmodrivepassenger.util.NetworkState
+import com.mosamir.atmodrivepassenger.util.SharedPreferencesManager
 import com.mosamir.atmodrivepassenger.util.disable
 import com.mosamir.atmodrivepassenger.util.enabled
 import com.mosamir.atmodrivepassenger.util.getData
@@ -65,9 +68,49 @@ class VerifyFragment:Fragment() {
         }
 
         binding.btnVerify.setOnClickListener {
-            loginViewModel.checkCode("device_token:${args.mobile!!}",args.mobile!!,"0000")
+            val otpCode = binding.otpView.text.toString()
+            loginViewModel.checkCode("device_token:${mobile}",mobile,otpCode)
         }
 
+        binding.tvResendCode.setOnClickListener {
+            loginViewModel.sendCode(args.mobile!!)
+            countDownTimer.onTick(120000)
+            countDownTimer.start()
+        }
+
+        observeOnCheckCode()
+        observeOnSendCode()
+
+        binding.verifyGoBack.setOnClickListener {
+            countDownTimer.cancel()
+            val action = VerifyFragmentDirections.actionVerifyToLogin()
+            mNavController.navigate(action)
+        }
+
+    }
+
+
+
+    private fun observeOnSendCode(){
+        lifecycleScope.launch {
+            loginViewModel.sendCodeResult.collect{ networkState ->
+                when(networkState?.status){
+                    NetworkState.Status.SUCCESS ->{
+                        binding.verifyProgressBar.visibilityGone()
+                    }
+                    NetworkState.Status.FAILED ->{
+                        showToast(networkState.msg.toString())
+                        binding.verifyProgressBar.visibilityGone()
+                    }
+                    NetworkState.Status.RUNNING ->{
+                        binding.verifyProgressBar.visibilityVisible()
+                    }
+                    else -> {}
+                }
+            }
+        }
+    }
+    private fun observeOnCheckCode(){
         lifecycleScope.launch {
             loginViewModel.checkCodeResult.collect{ networkState ->
                 when(networkState?.status){
@@ -76,11 +119,13 @@ class VerifyFragment:Fragment() {
                         val data = networkState.data as IResult<CheckCodeResponse>
                         if(data.getData()?.is_new == true){
                             val action =
-                                VerifyFragmentDirections.actionVerifyToCreateAccount2(mobile)
+                                VerifyFragmentDirections.actionVerifyToCreateAccount2(args.mobile!!.toString())
                             mNavController.navigate(action)
                         }else{
                             // go Home
-                            showToast("Go Home")
+                            showToast("Successful Go Home")
+                            val data = networkState.data as IResult<CheckCodeResponse>
+                            saveUserDate(data)
                         }
                         binding.verifyProgressBar.visibilityGone()
                     }
@@ -95,12 +140,25 @@ class VerifyFragment:Fragment() {
                 }
             }
         }
+    }
 
-        binding.verifyGoBack.setOnClickListener {
-            countDownTimer.cancel()
-            val action = VerifyFragmentDirections.actionVerifyToLogin()
-            mNavController.navigate(action)
-        }
+    private fun saveUserDate(userData : IResult<CheckCodeResponse>){
+
+        val data = userData.getData()?.data
+        val myPrefs = SharedPreferencesManager(requireContext())
+
+        myPrefs.saveString(Constants.AVATAR_PREFS,data!!.avatar)
+        myPrefs.saveString(Constants.EMAIL_PREFS,data.email.toString())
+        myPrefs.saveString(Constants.FULL_NAME_PREFS,data.full_name)
+        myPrefs.saveString(Constants.IS_DARK_MODE_PREFS,data.is_dark_mode.toString())
+        myPrefs.saveString(Constants.LANG_PREFS,data.lang)
+        myPrefs.saveString(Constants.MOBILE_PREFS,data.mobile)
+        myPrefs.saveString(Constants.PASSENGER_CODE_PREFS,data.passenger_code)
+        myPrefs.saveString(Constants.RATE_PREFS,data.rate.toString())
+        myPrefs.saveString(Constants.REMEMBER_TOKEN_PREFS,data.remember_token)
+        myPrefs.saveString(Constants.SHAKE_PHONE_PREFS,data.shake_phone.toString())
+        myPrefs.saveString(Constants.STATUS_PREFS,data.status.toString())
+        myPrefs.saveString(Constants.SUSPEND_PREFS,data.suspend.toString())
 
     }
 
@@ -135,6 +193,7 @@ class VerifyFragment:Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        countDownTimer.cancel()
     }
 
 }

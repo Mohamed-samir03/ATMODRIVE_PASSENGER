@@ -5,6 +5,6 @@ import com.mosamir.atmodrivepassenger.util.IResult
 
 interface IRegisterUseCase {
 
-    suspend fun registerUser(fullName:String, mobile:String, avatar:String, deviceToken:String, deviceId:String, deviceType:String): IResult<CheckCodeResponse>
+    suspend fun registerUser(fullName:String, mobile:String, avatar:String, deviceToken:String, deviceId:String, deviceType:String, email:String): IResult<CheckCodeResponse>
 
 }

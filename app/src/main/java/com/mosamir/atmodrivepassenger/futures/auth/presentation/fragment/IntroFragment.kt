@@ -27,6 +27,11 @@ class IntroFragment:Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         _binding = FragmentIntroBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         if (resources.getString(R.string.mode) == "Night"){
             binding.layoutIntro.setBackgroundResource(R.drawable.mapviewdark)
@@ -39,7 +44,6 @@ class IntroFragment:Fragment() {
             mNavController.navigate(action)
         }
 
-        return binding.root
     }
 
     override fun onDestroyView() {

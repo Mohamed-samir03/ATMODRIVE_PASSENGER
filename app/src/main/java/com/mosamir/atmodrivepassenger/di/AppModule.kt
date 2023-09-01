@@ -1,10 +1,14 @@
 package com.mosamir.atmodrivepassenger.di
 
+import android.content.Context
+import android.content.SharedPreferences
+import android.preference.PreferenceManager
 import com.mosamir.atmodrivepassenger.futures.auth.data.data_source.remote.AuthApiService
 import com.mosamir.atmodrivepassenger.util.Constants
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -38,7 +42,6 @@ object AppModule {
     @Singleton
     fun provideAuthApiService(retrofit: Retrofit):AuthApiService
             = retrofit.create(AuthApiService::class.java)
-
 
 
 }

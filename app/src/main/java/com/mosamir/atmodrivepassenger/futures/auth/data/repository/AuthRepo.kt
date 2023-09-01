@@ -20,8 +20,8 @@ class AuthRepo @Inject constructor(
         return  iAuthDataSource.checkCode(mobile,verificationCode, deviceToken)
     }
 
-    override suspend fun registerUser(fullName:String, mobile:String, avatar:String, deviceToken:String, deviceId:String, deviceType:String): IResult<CheckCodeResponse> {
-        return iAuthDataSource.registerUser(fullName, mobile, avatar, deviceToken, deviceId, deviceType)
+    override suspend fun registerUser(fullName:String, mobile:String, avatar:String, deviceToken:String, deviceId:String, deviceType:String, email:String): IResult<CheckCodeResponse> {
+        return iAuthDataSource.registerUser(fullName, mobile, avatar, deviceToken, deviceId, deviceType, email)
     }
 
 

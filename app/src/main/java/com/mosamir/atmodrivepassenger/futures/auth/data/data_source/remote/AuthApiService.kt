@@ -31,7 +31,8 @@ interface AuthApiService {
                              @Field("avatar") avatar:String,
                              @Field("device_token") deviceToken:String,
                              @Field("device_id") deviceId:String,
-                             @Field("device_type") deviceType:String
+                             @Field("device_type") deviceType:String,
+                             @Field("email") email:String
         ):RemoteCheckCodeResponse
 
 }

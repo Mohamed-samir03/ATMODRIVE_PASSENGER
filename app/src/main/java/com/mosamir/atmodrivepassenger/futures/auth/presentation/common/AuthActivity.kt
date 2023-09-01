@@ -1,4 +1,4 @@
-package com.mosamir.atmodrivepassenger.futures.auth.presentation
+package com.mosamir.atmodrivepassenger.futures.auth.presentation.common
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

@@ -1,4 +1,4 @@
-package com.mosamir.atmodrivepassenger.futures.auth.presentation
+package com.mosamir.atmodrivepassenger.futures.auth.presentation.common
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -68,11 +68,11 @@ class AuthViewModel @Inject constructor(
     }
 
 
-    fun registerUser(fullName:String, mobile:String, avatar:String, deviceToken:String, deviceId:String, deviceType:String) {
+    fun registerUser(fullName:String, mobile:String, avatar:String, deviceToken:String, deviceId:String, deviceType:String, email:String) {
         _registerResult.value = NetworkState.LOADING
         viewModelScope.launch {
             try {
-                val result = iRegisterUseCase.registerUser(fullName, mobile, avatar, deviceToken, deviceId, deviceType)
+                val result = iRegisterUseCase.registerUser(fullName, mobile, avatar, deviceToken, deviceId, deviceType,email)
                 if (result.isSuccessful()){
                     _registerResult.value = NetworkState.getLoaded(result)
                 }else{

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/background"
     android:padding="@dimen/_16sdp"
-    tools:context=".auth.presentation.fragment.VerifyFragment">
+    tools:context=".futures.auth.presentation.fragment.VerifyFragment">
 
     <ImageView
         android:id="@+id/verify_go_back"
@@ -52,12 +52,14 @@
         app:OtpItemSpacing="@dimen/_6sdp"
         android:textSize="@dimen/_16ssp"
         android:hint="----"
-        android:text="0000"
         android:textColorHint="@color/hint"
         app:OtpLineColor="@color/hint"
         app:OtpState_filled="true"
         app:layout_constraintWidth=""
         app:OtpViewType="line"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:clickable="true"
         android:layout_marginTop="@dimen/_20sdp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

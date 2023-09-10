@@ -1,5 +1,6 @@
 package com.mosamir.atmodrivepassenger.futures.auth.presentation.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +14,7 @@ import androidx.navigation.fragment.navArgs
 import com.mosamir.atmodrivepassenger.databinding.FragmentCreateAccountBinding
 import com.mosamir.atmodrivepassenger.futures.auth.domain.model.CheckCodeResponse
 import com.mosamir.atmodrivepassenger.futures.auth.presentation.common.AuthViewModel
+import com.mosamir.atmodrivepassenger.futures.home.HomeActivity
 import com.mosamir.atmodrivepassenger.util.Constants
 import com.mosamir.atmodrivepassenger.util.IResult
 import com.mosamir.atmodrivepassenger.util.NetworkState
@@ -58,6 +60,11 @@ class CreateAccountFragment:Fragment() {
 
         registerObserve()
 
+        binding.createAccountGoBack.setOnClickListener {
+            val action = CreateAccountFragmentDirections.actionCreateAccountToLogin()
+            mNavController.navigate(action)
+        }
+
     }
 
     private fun registerObserve(){
@@ -65,10 +72,12 @@ class CreateAccountFragment:Fragment() {
             loginViewModel.registerResult.collect{ networkState ->
                 when(networkState?.status){
                     NetworkState.Status.SUCCESS ->{
-                        showToast("Successful Go Home")
                         binding.registerProgressBar.visibilityGone()
                         val data = networkState.data as IResult<CheckCodeResponse>
                         saveUserDate(data)
+                        val intent = Intent(requireContext(), HomeActivity::class.java)
+                        startActivity(intent)
+                        activity?.finish()
                     }
                     NetworkState.Status.FAILED ->{
                         showToast(networkState.msg.toString())

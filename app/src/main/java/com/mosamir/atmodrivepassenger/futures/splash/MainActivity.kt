@@ -1,6 +1,7 @@
 package com.mosamir.atmodrivepassenger.futures.splash
 
 import android.content.Intent
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.lifecycle.Lifecycle
@@ -8,6 +9,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.mosamir.atmodrivepassenger.databinding.ActivityMainBinding
 import com.mosamir.atmodrivepassenger.futures.auth.presentation.common.AuthActivity
+import com.mosamir.atmodrivepassenger.futures.home.HomeActivity
+import com.mosamir.atmodrivepassenger.util.Constants
+import com.mosamir.atmodrivepassenger.util.SharedPreferencesManager
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -23,9 +27,19 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 delay(3000)
-                val intent = Intent(applicationContext, AuthActivity::class.java)
-                startActivity(intent)
-                finish()
+
+                val token  = SharedPreferencesManager(this@MainActivity).getString(Constants.REMEMBER_TOKEN_PREFS)
+
+                if (token.isNullOrBlank()){
+                    val intent = Intent(applicationContext, AuthActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                }else{
+                    val intent = Intent(applicationContext, HomeActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                }
+
             }
         }
 

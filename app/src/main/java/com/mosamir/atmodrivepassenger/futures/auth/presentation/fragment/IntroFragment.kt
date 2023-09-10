@@ -9,6 +9,8 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.mosamir.atmodrivepassenger.R
 import com.mosamir.atmodrivepassenger.databinding.FragmentIntroBinding
+import com.mosamir.atmodrivepassenger.util.Constants
+import com.mosamir.atmodrivepassenger.util.SharedPreferencesManager
 
 class IntroFragment:Fragment() {
 
@@ -39,7 +41,15 @@ class IntroFragment:Fragment() {
             binding.layoutIntro.setBackgroundResource(R.drawable.mapview)
         }
 
+        val intro = SharedPreferencesManager(requireContext()).getString(Constants.INTRO_PREFS)
+
+        if (intro == "1"){
+            val action = IntroFragmentDirections.actionIntroToLogin()
+            mNavController.navigate(action)
+        }
+
         binding.btnGetStart.setOnClickListener {
+            SharedPreferencesManager(requireContext()).saveString(Constants.INTRO_PREFS,"1")
             val action = IntroFragmentDirections.actionIntroToLogin()
             mNavController.navigate(action)
         }

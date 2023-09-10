@@ -51,10 +51,7 @@ class MobileNumberFragment:Fragment() {
 
         sendCodeObserve()
 
-        binding.goBack.setOnClickListener {
-            val action = MobileNumberFragmentDirections.actionLoginToIntro()
-            mNavController.navigate(action)
-        }
+
 
     }
 

@@ -25,9 +25,6 @@
             app:destination="@id/verify"
             app:popUpTo="@id/login"
             app:popUpToInclusive="true" />
-        <action
-            android:id="@+id/action_login_to_intro"
-            app:destination="@id/intro" />
     </fragment>
     <fragment
         android:id="@+id/verify"
@@ -41,7 +38,9 @@
             app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_verify_to_login"
-            app:destination="@id/login" />
+            app:destination="@id/login"
+            app:popUpTo="@id/verify"
+            app:popUpToInclusive="true" />
         <argument
             android:name="mobile"
             app:argType="string"
@@ -52,12 +51,14 @@
         android:name="com.mosamir.atmodrivepassenger.futures.auth.presentation.fragment.CreateAccountFragment"
         android:label="fragment_create_account"
         tools:layout="@layout/fragment_create_account" >
-        <action
-            android:id="@+id/action_createAccount_to_verify"
-            app:destination="@id/verify" />
         <argument
             android:name="mobile"
             app:argType="string"
             app:nullable="true" />
+        <action
+            android:id="@+id/action_createAccount_to_login"
+            app:destination="@id/login"
+            app:popUpTo="@id/createAccount"
+            app:popUpToInclusive="true" />
     </fragment>
 </navigation>

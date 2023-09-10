@@ -1,5 +1,6 @@
 package com.mosamir.atmodrivepassenger.futures.auth.presentation.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.text.Html
@@ -17,6 +18,7 @@ import androidx.navigation.fragment.navArgs
 import com.mosamir.atmodrivepassenger.databinding.FragmentVerifyBinding
 import com.mosamir.atmodrivepassenger.futures.auth.domain.model.CheckCodeResponse
 import com.mosamir.atmodrivepassenger.futures.auth.presentation.common.AuthViewModel
+import com.mosamir.atmodrivepassenger.futures.home.HomeActivity
 import com.mosamir.atmodrivepassenger.util.Constants
 import com.mosamir.atmodrivepassenger.util.IResult
 import com.mosamir.atmodrivepassenger.util.NetworkState
@@ -41,6 +43,15 @@ class VerifyFragment:Fragment() {
     private lateinit var mNavController: NavController
     private val loginViewModel by viewModels<AuthViewModel>()
     private val args by navArgs<VerifyFragmentArgs>()
+    private var mTimer:Long = 120000
+    private var countdownTimer: CountDownTimer? = null
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        outState.putLong("time", mTimer)
+
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,8 +74,13 @@ class VerifyFragment:Fragment() {
         val fullText = "Enter the OTP code sent at mobile number <font color='#00A6A6'>+2${mobile}</font> to verify its you."
         binding.tvVerifyInfo.setText(Html.fromHtml(fullText), BufferType.SPANNABLE)
 
+        if (savedInstanceState != null) {
+            mTimer = savedInstanceState.getLong("time",120000)
+        }
+
         if(!args.mobile.isNullOrBlank()){
-            countDownTimer.start()
+            startCountdownTimer()
+            countdownTimer?.start()
         }
 
         binding.btnVerify.setOnClickListener {
@@ -74,22 +90,20 @@ class VerifyFragment:Fragment() {
 
         binding.tvResendCode.setOnClickListener {
             loginViewModel.sendCode(args.mobile!!)
-            countDownTimer.onTick(120000)
-            countDownTimer.start()
+            mTimer = 120000
+            startCountdownTimer()
         }
 
         observeOnCheckCode()
         observeOnSendCode()
 
         binding.verifyGoBack.setOnClickListener {
-            countDownTimer.cancel()
+            countdownTimer?.cancel()
             val action = VerifyFragmentDirections.actionVerifyToLogin()
             mNavController.navigate(action)
         }
 
     }
-
-
 
     private fun observeOnSendCode(){
         lifecycleScope.launch {
@@ -97,6 +111,7 @@ class VerifyFragment:Fragment() {
                 when(networkState?.status){
                     NetworkState.Status.SUCCESS ->{
                         binding.verifyProgressBar.visibilityGone()
+                        countdownTimer?.start()
                     }
                     NetworkState.Status.FAILED ->{
                         showToast(networkState.msg.toString())
@@ -115,7 +130,7 @@ class VerifyFragment:Fragment() {
             loginViewModel.checkCodeResult.collect{ networkState ->
                 when(networkState?.status){
                     NetworkState.Status.SUCCESS ->{
-                        countDownTimer.cancel()
+                        countdownTimer?.cancel()
                         val data = networkState.data as IResult<CheckCodeResponse>
                         if(data.getData()?.is_new == true){
                             val action =
@@ -123,9 +138,11 @@ class VerifyFragment:Fragment() {
                             mNavController.navigate(action)
                         }else{
                             // go Home
-                            showToast("Successful Go Home")
                             val data = networkState.data as IResult<CheckCodeResponse>
                             saveUserDate(data)
+                            val intent = Intent(requireContext(), HomeActivity::class.java)
+                            startActivity(intent)
+                            activity?.finish()
                         }
                         binding.verifyProgressBar.visibilityGone()
                     }
@@ -162,9 +179,8 @@ class VerifyFragment:Fragment() {
 
     }
 
-    private val countDownTimer =
-        object : CountDownTimer(120000, 1000) {
-
+    private fun startCountdownTimer() {
+        countdownTimer = object : CountDownTimer(mTimer, 1000) {
             // Callback function, fired on regular interval
             override fun onTick(millisUntilFinished: Long) {
                 binding.tvResendCode.apply {
@@ -172,9 +188,10 @@ class VerifyFragment:Fragment() {
                     val min = millisUntilFinished / 60000 % 60
                     val sec = millisUntilFinished / 1000 % 60
                     val mText =
-                        "<font color='#B2C3C9'>Resend(${(f.format(min)).toString() + ":" + f.format(sec)}s)</font>"
+                        "<font color='#B2C3C9'> Resend(${(f.format(min)).toString() + ":" + f.format(sec)}s)</font>"
                     setText(Html.fromHtml(mText), BufferType.SPANNABLE)
                     disable()
+                    mTimer = millisUntilFinished
                 }
             }
 
@@ -182,18 +199,19 @@ class VerifyFragment:Fragment() {
             // when the time is up
             override fun onFinish() {
                 binding.tvResendCode.apply {
-                    val mText = "<font color='#00A6A6'><u>Resend</u></font>"
+                    val mText = "<font color='#00A6A6'><u> Resend</u></font>"
                     setText(Html.fromHtml(mText), BufferType.SPANNABLE)
                     enabled()
                 }
                 cancel()
             }
         }
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-        countDownTimer.cancel()
+        countdownTimer?.cancel()
     }
 
 }

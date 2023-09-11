@@ -1,7 +1,7 @@
 package com.mosamir.atmodrivepassenger.futures.auth.data.data_source.remote
 
-import com.mosamir.atmodrivepassenger.futures.auth.data.model.RemoteCheckCodeResponse
-import com.mosamir.atmodrivepassenger.futures.auth.data.model.RemoteSendCodeResponse
+import com.mosamir.atmodrivepassenger.futures.auth.data.model.login.RemoteLoginResponse
+import com.mosamir.atmodrivepassenger.futures.auth.data.model.register.RemoteRegisterResponse
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.POST
@@ -15,14 +15,14 @@ interface AuthApiService {
 
     @POST(SEND_CODE)
     @FormUrlEncoded
-    suspend fun sendCode(@Field("mobile") mobile: String):RemoteSendCodeResponse
+    suspend fun sendCode(@Field("mobile") mobile: String): RemoteLoginResponse
 
     @POST(CHECK_CODE)
     @FormUrlEncoded
     suspend fun checkCode(@Field("mobile") mobile:String,
                           @Field("verification_code") verificationCode:String,
                           @Field("device_token") deviceToken:String
-      ):RemoteCheckCodeResponse
+      ): RemoteLoginResponse
 
     @POST(REGISTER)
     @FormUrlEncoded
@@ -33,6 +33,6 @@ interface AuthApiService {
                              @Field("device_id") deviceId:String,
                              @Field("device_type") deviceType:String,
                              @Field("email") email:String
-        ):RemoteCheckCodeResponse
+        ): RemoteRegisterResponse
 
 }

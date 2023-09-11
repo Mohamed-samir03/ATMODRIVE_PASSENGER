@@ -12,7 +12,8 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.mosamir.atmodrivepassenger.databinding.FragmentCreateAccountBinding
-import com.mosamir.atmodrivepassenger.futures.auth.domain.model.CheckCodeResponse
+import com.mosamir.atmodrivepassenger.futures.auth.data.model.register.RemoteRegisterResponse
+import com.mosamir.atmodrivepassenger.futures.auth.domain.model.register.RegisterResponse
 import com.mosamir.atmodrivepassenger.futures.auth.presentation.common.AuthViewModel
 import com.mosamir.atmodrivepassenger.futures.home.HomeActivity
 import com.mosamir.atmodrivepassenger.util.Constants
@@ -73,7 +74,7 @@ class CreateAccountFragment:Fragment() {
                 when(networkState?.status){
                     NetworkState.Status.SUCCESS ->{
                         binding.registerProgressBar.visibilityGone()
-                        val data = networkState.data as IResult<CheckCodeResponse>
+                        val data = networkState.data as IResult<RegisterResponse>
                         saveUserDate(data)
                         val intent = Intent(requireContext(), HomeActivity::class.java)
                         startActivity(intent)
@@ -92,7 +93,7 @@ class CreateAccountFragment:Fragment() {
         }
     }
 
-    private fun saveUserDate(userData : IResult<CheckCodeResponse>){
+    private fun saveUserDate(userData : IResult<RegisterResponse>){
 
         val data = userData.getData()?.data
         val myPrefs = SharedPreferencesManager(requireContext())

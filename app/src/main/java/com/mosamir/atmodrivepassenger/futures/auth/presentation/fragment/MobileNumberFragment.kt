@@ -11,8 +11,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.mosamir.atmodrivepassenger.databinding.FragmentMobileNumberBinding
+import com.mosamir.atmodrivepassenger.futures.auth.domain.model.login.LoginResponse
 import com.mosamir.atmodrivepassenger.futures.auth.presentation.common.AuthViewModel
+import com.mosamir.atmodrivepassenger.util.IResult
 import com.mosamir.atmodrivepassenger.util.NetworkState
+import com.mosamir.atmodrivepassenger.util.getData
 import com.mosamir.atmodrivepassenger.util.showToast
 import com.mosamir.atmodrivepassenger.util.visibilityGone
 import com.mosamir.atmodrivepassenger.util.visibilityVisible
@@ -60,8 +63,11 @@ class MobileNumberFragment:Fragment() {
             loginViewModel.sendCodeResult.collect{ networkState ->
                 when(networkState?.status){
                     NetworkState.Status.SUCCESS ->{
+                        val data = networkState.data as IResult<LoginResponse>
+                        val phone = binding.etPhoneNumber.text.toString()
+                        val name = data.getData()?.data?.full_name
                         val action =
-                            MobileNumberFragmentDirections.actionLoginToVerify(binding.etPhoneNumber.text.toString())
+                            MobileNumberFragmentDirections.actionLoginToVerify(phone,name)
                         mNavController.navigate(action)
                         binding.loginProgressBar.visibilityGone()
                     }

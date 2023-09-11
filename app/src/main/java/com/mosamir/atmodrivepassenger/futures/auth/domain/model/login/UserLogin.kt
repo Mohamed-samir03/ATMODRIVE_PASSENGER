@@ -1,13 +1,13 @@
-package com.mosamir.atmodrivepassenger.futures.auth.domain.model
+package com.mosamir.atmodrivepassenger.futures.auth.domain.model.login
 
-data class Data(
+data class UserLogin(
     val avatar: String,
-    val email: Any?,
+    val email: String,
     val full_name: String,
     val is_dark_mode: Int,
     val lang: String,
     val mobile: String,
-    val options: Options,
+    val options: OptionsLogin,
     val passenger_code: String,
     val rate: Int,
     val remember_token: String,

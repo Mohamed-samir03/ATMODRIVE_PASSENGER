@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView.BufferType
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -16,7 +15,7 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.mosamir.atmodrivepassenger.databinding.FragmentVerifyBinding
-import com.mosamir.atmodrivepassenger.futures.auth.domain.model.CheckCodeResponse
+import com.mosamir.atmodrivepassenger.futures.auth.domain.model.login.LoginResponse
 import com.mosamir.atmodrivepassenger.futures.auth.presentation.common.AuthViewModel
 import com.mosamir.atmodrivepassenger.futures.home.HomeActivity
 import com.mosamir.atmodrivepassenger.util.Constants
@@ -71,8 +70,15 @@ class VerifyFragment:Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val mobile = args.mobile!!.toString()
-        val fullText = "Enter the OTP code sent at mobile number <font color='#00A6A6'>+2${mobile}</font> to verify its you."
-        binding.tvVerifyInfo.setText(Html.fromHtml(fullText), BufferType.SPANNABLE)
+        val name = args.name
+        if (name.isNullOrBlank()){
+            val fullText = "Enter the OTP code sent at mobile number <font color='#00A6A6'>+2${mobile}</font> to verify its you."
+            binding.tvVerifyInfo.setText(Html.fromHtml(fullText), BufferType.SPANNABLE)
+        }else{
+            val fullText = "Hello <font color='#00A6A6'>${name}</font>. Enter the OTP code sent to you at mobile number <font color='#00A6A6'>+2${mobile}</font>"
+            binding.tvVerifyInfo.setText(Html.fromHtml(fullText), BufferType.SPANNABLE)
+        }
+
 
         if (savedInstanceState != null) {
             mTimer = savedInstanceState.getLong("time",120000)
@@ -131,14 +137,14 @@ class VerifyFragment:Fragment() {
                 when(networkState?.status){
                     NetworkState.Status.SUCCESS ->{
                         countdownTimer?.cancel()
-                        val data = networkState.data as IResult<CheckCodeResponse>
-                        if(data.getData()?.is_new == true){
+                        val data = networkState.data as IResult<LoginResponse>
+                        if(data.getData()?.data?.is_new == true){
                             val action =
                                 VerifyFragmentDirections.actionVerifyToCreateAccount2(args.mobile!!.toString())
                             mNavController.navigate(action)
                         }else{
                             // go Home
-                            val data = networkState.data as IResult<CheckCodeResponse>
+                            val data = networkState.data as IResult<LoginResponse>
                             saveUserDate(data)
                             val intent = Intent(requireContext(), HomeActivity::class.java)
                             startActivity(intent)
@@ -159,9 +165,9 @@ class VerifyFragment:Fragment() {
         }
     }
 
-    private fun saveUserDate(userData : IResult<CheckCodeResponse>){
+    private fun saveUserDate(userData : IResult<LoginResponse>){
 
-        val data = userData.getData()?.data
+        val data = userData.getData()?.data?.user
         val myPrefs = SharedPreferencesManager(requireContext())
 
         myPrefs.saveString(Constants.AVATAR_PREFS,data!!.avatar)

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/_12sdp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/background">
+
+    <ImageView
+        android:id="@+id/img_select_location"
+        android:layout_width="@dimen/_36sdp"
+        android:layout_height="@dimen/_36sdp"
+        android:background="@drawable/background_circle"
+        android:backgroundTint="@color/quinary"
+        android:padding="@dimen/_10sdp"
+        android:src="@drawable/location"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_location_city"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tv_location_address" />
+
+    <TextView
+        android:id="@+id/tv_location_address"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="F. 5606 OWest wahat road"
+        android:textColor="@color/secondary"
+        android:textSize="@dimen/_14sdp"
+        android:layout_marginStart="@dimen/_16sdp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/img_select_location"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_location_city"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="6 October city"
+        android:textColor="@color/hint"
+        android:textSize="@dimen/_12sdp"
+        android:layout_marginTop="@dimen/_4sdp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/tv_location_address"
+        app:layout_constraintTop_toBottomOf="@+id/tv_location_address" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_1sdp"
+        android:background="@color/quinary"
+        android:layout_marginTop="@dimen/_6sdp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_location_city" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

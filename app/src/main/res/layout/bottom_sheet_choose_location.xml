@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/background">
+
+    <View
+        android:id="@+id/drag_handle_card"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/_4sdp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:background="@drawable/button_background"
+        android:backgroundTint="@color/quinary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.30" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/materialCardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_16sdp"
+        android:background="@color/background"
+        app:cardCornerRadius="@dimen/_16sdp"
+        app:cardElevation="@dimen/_4sdp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/drag_handle_card">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/_12sdp">
+
+            <View
+                android:id="@+id/view_loc_dashed_line"
+                android:layout_width="@dimen/_24sdp"
+                android:layout_height="0dp"
+                android:background="@drawable/dashed_line"
+                android:rotation="90"
+                app:layout_constraintBottom_toTopOf="@+id/img_loc_where_go"
+                app:layout_constraintEnd_toEndOf="@+id/img_loc_your_location"
+                app:layout_constraintStart_toStartOf="@+id/img_loc_your_location"
+                app:layout_constraintTop_toBottomOf="@+id/img_loc_your_location" />
+
+            <ImageView
+                android:id="@+id/img_loc_your_location"
+                android:layout_width="@dimen/_10sdp"
+                android:layout_height="@dimen/_10sdp"
+                android:src="@drawable/yourloc"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_loc_your_location"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/tv_loc_your_location" />
+
+            <ImageView
+                android:id="@+id/img_loc_where_go"
+                android:layout_width="@dimen/_10sdp"
+                android:layout_height="@dimen/_14sdp"
+                android:src="@drawable/location"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_loc_where_go"
+                app:layout_constraintStart_toStartOf="@+id/img_loc_your_location"
+                app:layout_constraintTop_toTopOf="@+id/tv_loc_where_go" />
+
+            <TextView
+                android:id="@+id/tv_loc_your_location"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_16sdp"
+                android:hint="Your Location"
+                android:text="B. 1256, Northern Ex. - 6 Oct."
+                android:textColor="@color/title"
+                android:textColorHint="@color/hint"
+                android:textSize="@dimen/_12sdp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/img_loc_your_location"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:id="@+id/view_loc_line"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_1sdp"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:background="@color/quinary"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/tv_loc_your_location"
+                app:layout_constraintTop_toBottomOf="@+id/tv_loc_your_location" />
+
+
+            <TextView
+                android:id="@+id/tv_loc_where_go"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:hint="Where to go?"
+                android:text="402 El Mehwar Str. "
+                android:textColor="@color/title"
+                android:textColorHint="@color/hint"
+                android:textSize="@dimen/_12sdp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/view_loc_line"
+                app:layout_constraintTop_toBottomOf="@+id/view_loc_line" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <ImageView
+        android:id="@+id/img_pick_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_8sdp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:src="@drawable/pick"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/materialCardView" />
+
+    <TextView
+        android:id="@+id/tv_choose_from_map"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Choose from map"
+        android:textColor="@color/secondary"
+        android:textSize="@dimen/_12sdp"
+        app:layout_constraintBottom_toBottomOf="@+id/img_pick_location"
+        app:layout_constraintStart_toEndOf="@+id/img_pick_location"
+        app:layout_constraintTop_toTopOf="@+id/img_pick_location" />
+
+    <TextView
+        android:id="@+id/tv_find_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_16sdp"
+        android:layout_marginTop="@dimen/_12sdp"
+        android:text="Find location"
+        android:textColor="@color/title"
+        android:textSize="@dimen/_14sdp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/img_pick_location" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_locations"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="@dimen/_16sdp"
+        tools:listitem="@layout/item_find_location"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_find_location" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

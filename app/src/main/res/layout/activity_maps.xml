@@ -66,7 +66,7 @@
                 android:paddingHorizontal="@dimen/_16sdp">
 
                 <View
-                    android:id="@+id/drag_handle_card"
+                    android:id="@+id/drag_handle"
                     android:layout_width="0dp"
                     android:layout_height="@dimen/_4sdp"
                     android:backgroundTint="@color/quinary"
@@ -117,7 +117,7 @@
                     android:textSize="@dimen/_12sdp"
                     android:layout_marginStart="@dimen/_16sdp"
                     map:layout_constraintStart_toEndOf="@+id/img_your_location"
-                    map:layout_constraintTop_toBottomOf="@+id/drag_handle_card" />
+                    map:layout_constraintTop_toBottomOf="@+id/drag_handle" />
 
                 <View
                     android:id="@+id/view_line"

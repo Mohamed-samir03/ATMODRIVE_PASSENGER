@@ -64,6 +64,8 @@ dependencies {
     implementation 'com.intuit.sdp:sdp-android:1.1.0'
     //font dimens
     implementation 'com.intuit.ssp:ssp-android:1.1.0'
+    //lottie
+    implementation "com.airbnb.android:lottie:3.4.0"
 
     // Navigation component
     implementation("androidx.navigation:navigation-fragment-ktx:2.6.0")

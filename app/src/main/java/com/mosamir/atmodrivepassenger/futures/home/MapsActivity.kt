@@ -5,10 +5,10 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Looper
-import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.ResolvableApiException
@@ -28,9 +28,12 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.tasks.Task
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mosamir.atmodrivepassenger.R
 import com.mosamir.atmodrivepassenger.databinding.ActivityMapsBinding
 import com.mosamir.atmodrivepassenger.util.showToast
+import com.mosamir.atmodrivepassenger.util.visibilityGone
+import com.mosamir.atmodrivepassenger.util.visibilityVisible
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -39,6 +42,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     var mLocationRequest:LocationRequest ?= null
     var mLocationCallback:LocationCallback ?= null
     var mFusedLocationClient:FusedLocationProviderClient ?= null
+    private var bottomSheet = BottomSheetBehavior<ConstraintLayout>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,11 +50,28 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         binding = ActivityMapsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        binding.tvSkipGo.setOnClickListener {
+            binding.layoutFindLocation.visibilityVisible()
+            binding.locationCard.visibilityGone()
+        }
+
+        binding.tvCancelFindCaptain.setOnClickListener {
+            binding.layoutFindLocation.visibilityGone()
+            binding.locationCard.visibilityVisible()
+        }
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
         initLocation()
+    }
+
+    private fun disPlayChooseLocation(){
+        val bottomSheetView = findViewById<ConstraintLayout>(R.id.bottom_sheet_choose_location)
+        bottomSheet = BottomSheetBehavior.from(bottomSheetView!!)
+        bottomSheet.isDraggable = true
+        bottomSheet.state = BottomSheetBehavior.STATE_EXPANDED
     }
 
     private fun initLocation(){

@@ -44,13 +44,13 @@ class IntroFragment:Fragment() {
         val intro = SharedPreferencesManager(requireContext()).getString(Constants.INTRO_PREFS)
 
         if (intro == "1"){
-            val action = IntroFragmentDirections.actionIntroToLogin()
+            val action = IntroFragmentDirections.actionIntroToLogin(null)
             mNavController.navigate(action)
         }
 
         binding.btnGetStart.setOnClickListener {
             SharedPreferencesManager(requireContext()).saveString(Constants.INTRO_PREFS,"1")
-            val action = IntroFragmentDirections.actionIntroToLogin()
+            val action = IntroFragmentDirections.actionIntroToLogin(null)
             mNavController.navigate(action)
         }
 

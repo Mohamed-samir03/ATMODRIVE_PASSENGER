@@ -24,7 +24,6 @@
         android:textColor="@color/title"
         android:textSize="@dimen/_18sdp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -47,6 +46,7 @@
         app:ccpDialog_textColor="@color/title"
         app:ccp_contentColor="@color/title"
         app:ccp_defaultNameCode="EG"
+        android:clickable="false"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_find_or_create" />
 
@@ -55,9 +55,9 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@drawable/button_background"
-        android:hint="0100 123 4567"
+        android:hint="100 123 4567"
         android:inputType="phone"
-        android:maxLength="11"
+        android:maxLength="10"
         android:textColor="@color/title"
         android:textColorHint="@color/hint"
         android:textSize="@dimen/_14sdp"

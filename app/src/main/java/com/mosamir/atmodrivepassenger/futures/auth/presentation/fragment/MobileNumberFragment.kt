@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.mosamir.atmodrivepassenger.databinding.FragmentMobileNumberBinding
 import com.mosamir.atmodrivepassenger.futures.auth.domain.model.login.LoginResponse
 import com.mosamir.atmodrivepassenger.futures.auth.presentation.common.AuthViewModel
@@ -29,6 +30,7 @@ class MobileNumberFragment:Fragment() {
     private val binding get() = _binding!!
     private lateinit var mNavController: NavController
     private val loginViewModel by viewModels<AuthViewModel>()
+    private val args by navArgs<MobileNumberFragmentArgs>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,12 +51,17 @@ class MobileNumberFragment:Fragment() {
 
         binding.btnContinue.setOnClickListener {
             val phone = binding.etPhoneNumber.text.toString()
-            loginViewModel.sendCode(phone)
+            loginViewModel.sendCode("0$phone")
         }
+        binding.ccp.setCcpClickable(false)
 
         sendCodeObserve()
 
-
+        val mobile = args.mobile
+        if (!mobile.isNullOrBlank()){
+            binding.etPhoneNumber.setText(mobile)
+            binding.etPhoneNumber.requestFocus()
+        }
 
     }
 

@@ -69,7 +69,7 @@ class VerifyFragment:Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val mobile = args.mobile!!.toString()
+        val mobile = "0"+args.mobile!!.toString()
         val name = args.name
         if (name.isNullOrBlank()){
             val fullText = "Enter the OTP code sent at mobile number <font color='#00A6A6'>+2${mobile}</font> to verify its you."
@@ -95,7 +95,7 @@ class VerifyFragment:Fragment() {
         }
 
         binding.tvResendCode.setOnClickListener {
-            loginViewModel.sendCode(args.mobile!!)
+            loginViewModel.sendCode("0"+args.mobile!!)
             mTimer = 120000
             startCountdownTimer()
         }
@@ -105,7 +105,7 @@ class VerifyFragment:Fragment() {
 
         binding.verifyGoBack.setOnClickListener {
             countdownTimer?.cancel()
-            val action = VerifyFragmentDirections.actionVerifyToLogin()
+            val action = VerifyFragmentDirections.actionVerifyToLogin(args.mobile!!.toString())
             mNavController.navigate(action)
         }
 

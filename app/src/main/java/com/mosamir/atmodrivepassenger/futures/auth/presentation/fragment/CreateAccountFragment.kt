@@ -56,13 +56,13 @@ class CreateAccountFragment:Fragment() {
         binding.btnSubmit.setOnClickListener {
             val name = binding.etFullName.text.toString()
             val email = binding.etEmailAddress.text.toString()
-            loginViewModel.registerUser(name,args.mobile!!,"","device_token:${args.mobile!!}","device_id:Oppo","android",email)
+            loginViewModel.registerUser(name,"0"+args.mobile!!,"","device_token:${args.mobile!!}","device_id:Oppo","android",email)
         }
 
         registerObserve()
 
         binding.createAccountGoBack.setOnClickListener {
-            val action = CreateAccountFragmentDirections.actionCreateAccountToLogin()
+            val action = CreateAccountFragmentDirections.actionCreateAccountToLogin(args.mobile!!.toString())
             mNavController.navigate(action)
         }
 

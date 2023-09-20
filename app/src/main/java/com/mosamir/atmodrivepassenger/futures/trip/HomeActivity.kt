@@ -1,4 +1,4 @@
-package com.mosamir.atmodrivepassenger.futures.home
+package com.mosamir.atmodrivepassenger.futures.trip
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity

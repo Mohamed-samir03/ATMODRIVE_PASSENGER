@@ -24,15 +24,20 @@
             android:value="AIzaSyDo_NcGDWugGSV5q7YC_kye_ekQwvKsg5k" />
 
         <activity
-            android:name=".futures.home.MapsActivity"
+            android:name=".futures.trip.presentation.common.MapsActivity"
             android:exported="true"
             android:label="@string/title_activity_maps"
             android:screenOrientation="portrait">
 
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
         </activity>
 
         <activity
-            android:name=".futures.home.HomeActivity"
+            android:name=".futures.trip.HomeActivity"
             android:exported="false"
             android:screenOrientation="portrait"/>
         <activity
@@ -43,11 +48,6 @@
             android:name=".futures.splash.MainActivity"
             android:exported="true"
             android:screenOrientation="portrait">
-
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
 
         </activity>
     </application>

@@ -1,7 +1,6 @@
 package com.mosamir.atmodrivepassenger.futures.splash
 
 import android.content.Intent
-import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.lifecycle.Lifecycle
@@ -9,7 +8,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.mosamir.atmodrivepassenger.databinding.ActivityMainBinding
 import com.mosamir.atmodrivepassenger.futures.auth.presentation.common.AuthActivity
-import com.mosamir.atmodrivepassenger.futures.home.HomeActivity
+import com.mosamir.atmodrivepassenger.futures.trip.HomeActivity
 import com.mosamir.atmodrivepassenger.util.Constants
 import com.mosamir.atmodrivepassenger.util.SharedPreferencesManager
 import kotlinx.coroutines.delay

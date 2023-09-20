@@ -12,10 +12,9 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.mosamir.atmodrivepassenger.databinding.FragmentCreateAccountBinding
-import com.mosamir.atmodrivepassenger.futures.auth.data.model.register.RemoteRegisterResponse
 import com.mosamir.atmodrivepassenger.futures.auth.domain.model.register.RegisterResponse
 import com.mosamir.atmodrivepassenger.futures.auth.presentation.common.AuthViewModel
-import com.mosamir.atmodrivepassenger.futures.home.HomeActivity
+import com.mosamir.atmodrivepassenger.futures.trip.HomeActivity
 import com.mosamir.atmodrivepassenger.util.Constants
 import com.mosamir.atmodrivepassenger.util.IResult
 import com.mosamir.atmodrivepassenger.util.NetworkState

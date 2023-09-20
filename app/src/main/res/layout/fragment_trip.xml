@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".futures.trip.presentation.fragment.TripFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <fragment
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/_16sdp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/img_category"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_background"
+                android:backgroundTint="@color/background"
+                android:padding="@dimen/_4sdp"
+                android:src="@drawable/category"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_atmodrive_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="AtmoDrive"
+                android:textColor="@color/title"
+                android:textSize="@dimen/_16sdp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/img_category"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/img_category" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/location_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/background"
+                app:cardCornerRadius="@dimen/_16sdp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="@dimen/_6sdp"
+                    android:layout_marginBottom="@dimen/_16sdp"
+                    android:paddingHorizontal="@dimen/_16sdp">
+
+                    <View
+                        android:id="@+id/drag_handle"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/_4sdp"
+                        android:backgroundTint="@color/quinary"
+                        android:background="@drawable/button_background"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintWidth_percent=".30"/>
+
+                    <View
+                        android:id="@+id/view_dashed_line"
+                        android:layout_width="@dimen/_24sdp"
+                        android:layout_height="0dp"
+                        android:background="@drawable/dashed_line"
+                        android:rotation="90"
+                        app:layout_constraintBottom_toTopOf="@+id/img_where_go"
+                        app:layout_constraintEnd_toEndOf="@+id/img_your_location"
+                        app:layout_constraintStart_toStartOf="@+id/img_your_location"
+                        app:layout_constraintTop_toBottomOf="@+id/img_your_location" />
+
+                    <ImageView
+                        android:id="@+id/img_your_location"
+                        android:layout_width="@dimen/_10sdp"
+                        android:layout_height="@dimen/_10sdp"
+                        android:src="@drawable/yourloc"
+                        app:layout_constraintBottom_toBottomOf="@+id/tv_your_location"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/tv_your_location" />
+
+                    <ImageView
+                        android:id="@+id/img_where_go"
+                        android:layout_width="@dimen/_10sdp"
+                        android:layout_height="@dimen/_14sdp"
+                        android:src="@drawable/location"
+                        app:layout_constraintBottom_toBottomOf="@+id/tv_where_go"
+                        app:layout_constraintStart_toStartOf="@+id/img_your_location"
+                        app:layout_constraintTop_toTopOf="@+id/tv_where_go" />
+
+                    <TextView
+                        android:id="@+id/tv_your_location"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_12sdp"
+                        android:text="B. 1256, Northern Ex. - 6 Oct."
+                        android:hint="Your Location"
+                        android:textColorHint="@color/hint"
+                        android:textColor="@color/title"
+                        android:textSize="@dimen/_12sdp"
+                        android:layout_marginStart="@dimen/_16sdp"
+                        app:layout_constraintStart_toEndOf="@+id/img_your_location"
+                        app:layout_constraintTop_toBottomOf="@+id/drag_handle" />
+
+                    <View
+                        android:id="@+id/view_line"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/_1sdp"
+                        android:background="@color/quinary"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="@+id/tv_your_location"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_your_location" />
+
+
+                    <TextView
+                        android:id="@+id/tv_where_go"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:hint="Where to go?"
+                        android:textColor="@color/title"
+                        android:textColorHint="@color/hint"
+                        android:textSize="@dimen/_12sdp"
+                        app:layout_constraintEnd_toStartOf="@+id/tv_skip_go"
+                        app:layout_constraintStart_toStartOf="@+id/view_line"
+                        app:layout_constraintTop_toBottomOf="@+id/view_line" />
+
+                    <TextView
+                        android:id="@+id/tv_skip_go"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:text="Skip, and go"
+                        android:textColor="@color/primary"
+                        android:textSize="@dimen/_12sdp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/view_line" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_find_location"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#97000000"
+            android:visibility="gone">
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/animation_find_captain"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true"
+                app:lottie_rawRes="@raw/find_location" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline_find_captain"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.70" />
+
+            <TextView
+                android:id="@+id/tv_find_captain"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Finding captain..."
+                android:textColor="@color/white"
+                android:textSize="@dimen/_18sdp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/guideline_find_captain" />
+
+            <TextView
+                android:id="@+id/tv_cancel_find_captain"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_16sdp"
+                android:background="@drawable/background_stroke_button"
+                android:paddingHorizontal="@dimen/_18sdp"
+                android:paddingVertical="@dimen/_6sdp"
+                android:text="Cancel"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_14sdp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_find_captain" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <include layout="@layout/bottom_sheet_choose_location"/>
+    <include layout="@layout/bottom_sheet_request_trip"/>
+    <include layout="@layout/bottom_sheet_trip_date_time"/>
+    <include layout="@layout/bottom_sheet_trip_lifecycle"/>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

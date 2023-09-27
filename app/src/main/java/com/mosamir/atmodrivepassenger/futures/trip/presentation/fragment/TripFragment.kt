@@ -6,6 +6,7 @@ import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Resources
+import android.location.Geocoder
 import android.os.Bundle
 import android.os.Looper
 import android.util.Log
@@ -42,6 +43,8 @@ import com.mosamir.atmodrivepassenger.databinding.FragmentTripBinding
 import com.mosamir.atmodrivepassenger.util.showToast
 import com.mosamir.atmodrivepassenger.util.visibilityGone
 import com.mosamir.atmodrivepassenger.util.visibilityVisible
+import java.io.IOException
+import java.util.Locale
 
 class TripFragment : Fragment(), OnMapReadyCallback {
 
@@ -137,13 +140,32 @@ class TripFragment : Fragment(), OnMapReadyCallback {
             override fun onLocationResult(result: LocationResult) {
                 super.onLocationResult(result)
 
-                moveCameraMap(LatLng(result.lastLocation!!.latitude,result.lastLocation!!.longitude))
+                val latLng = LatLng(result.lastLocation!!.latitude,result.lastLocation!!.longitude)
+                moveCameraMap(latLng)
+                val address = getAddressFromLatLng(latLng)
+                binding.tvYourLocation.text = address
 
             }
         }
 
         mFusedLocationClient?.requestLocationUpdates(mLocationRequest!!,mLocationCallback!!, Looper.getMainLooper())
 
+    }
+
+    private fun getAddressFromLatLng(latLng: LatLng): String {
+        val geocoder = Geocoder(requireContext(), Locale.getDefault())
+        try {
+            val addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1)
+            if (addresses?.isNotEmpty()!!) {
+                val address = addresses[0]
+                // You can format the address as per your requirements
+                return address.getAddressLine(0)
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
+            showToast("Error getting address")
+        }
+        return "Address not found"
     }
 
     private fun moveCameraMap(latLng: LatLng){

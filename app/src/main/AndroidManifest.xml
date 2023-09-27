@@ -15,7 +15,6 @@
         android:label="@string/app_name"
         android:roundIcon="@drawable/passenger"
         android:supportsRtl="false"
-
         android:theme="@style/Theme.ATMODRIVEPASSENGER"
         tools:targetApi="31">
 

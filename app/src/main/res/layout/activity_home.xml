@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:padding="@dimen/_12sdp"
     android:background="@color/background"
-    tools:context=".futures.trip.HomeActivity">
+    tools:context=".features.trip.HomeActivity">
 
 
     <TextView

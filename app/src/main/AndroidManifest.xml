@@ -23,7 +23,7 @@
             android:value="AIzaSyDo_NcGDWugGSV5q7YC_kye_ekQwvKsg5k" />
 
         <activity
-            android:name=".futures.trip.presentation.common.MapsActivity"
+            android:name=".features.trip.presentation.common.MapsActivity"
             android:exported="true"
             android:label="@string/title_activity_maps"
             android:screenOrientation="portrait">
@@ -36,15 +36,15 @@
         </activity>
 
         <activity
-            android:name=".futures.trip.HomeActivity"
+            android:name=".features.trip.HomeActivity"
             android:exported="false"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".futures.auth.presentation.common.AuthActivity"
+            android:name=".features.auth.presentation.common.AuthActivity"
             android:exported="false"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".futures.splash.MainActivity"
+            android:name=".features.splash.MainActivity"
             android:exported="true"
             android:screenOrientation="portrait">
 

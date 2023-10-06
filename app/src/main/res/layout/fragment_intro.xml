@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:id="@+id/layout_intro"
     android:background="@drawable/mapview"
-    tools:context=".futures.auth.presentation.fragment.IntroFragment">
+    tools:context=".features.auth.presentation.fragment.IntroFragment">
 
     <ImageView
         android:id="@+id/background_shape"

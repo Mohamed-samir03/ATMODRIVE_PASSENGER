@@ -219,9 +219,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-    <include layout="@layout/bottom_sheet_choose_location"/>
-    <include layout="@layout/bottom_sheet_request_trip"/>
-    <include layout="@layout/bottom_sheet_trip_date_time"/>
-    <include layout="@layout/bottom_sheet_trip_lifecycle"/>
+
+    <include layout="@layout/bottom_sheet_trip"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

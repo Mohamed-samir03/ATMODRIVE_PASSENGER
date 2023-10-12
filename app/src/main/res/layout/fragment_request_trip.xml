@@ -4,11 +4,8 @@
     android:layout_height="wrap_content"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/bottom_sheet_request_trip"
-    android:orientation="vertical"
-    app:behavior_hideable="false"
-    app:behavior_peekHeight="0dp"
-    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+    android:id="@+id/request_trip_fragment"
+    tools:context=".features.trip.presentation.fragment.RequestTripFragment">
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"

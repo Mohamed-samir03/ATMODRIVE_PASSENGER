@@ -9,6 +9,7 @@ import android.content.res.Resources
 import android.location.Geocoder
 import android.os.Bundle
 import android.os.Looper
+import android.util.DisplayMetrics
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -82,15 +83,13 @@ class TripFragment : Fragment(), OnMapReadyCallback {
 
         database = Firebase.database.reference
 
-        binding.tvSkipGo.setOnClickListener {
-            binding.layoutFindLocation.visibilityVisible()
+        binding.locationCard.setOnClickListener {
             binding.locationCard.visibilityGone()
-//            disPlayChooseLocation()
+            disPlayBottomSheet()
         }
 
         binding.tvCancelFindCaptain.setOnClickListener {
             binding.layoutFindLocation.visibilityGone()
-            binding.locationCard.visibilityVisible()
         }
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -103,11 +102,20 @@ class TripFragment : Fragment(), OnMapReadyCallback {
     }
 
 
-    private fun disPlayChooseLocation(){
-        val bottomSheetView = view?.findViewById<ConstraintLayout>(R.id.bottom_sheet_choose_location)
+    private fun disPlayBottomSheet(){
+        val bottomSheetView = view?.findViewById<ConstraintLayout>(R.id.bottom_sheet_trip)
         bottomSheet = BottomSheetBehavior.from(bottomSheetView!!)
         bottomSheet.isDraggable = true
         bottomSheet.state = BottomSheetBehavior.STATE_EXPANDED
+        bottomSheetHeight()
+    }
+
+    private fun bottomSheetHeight(){
+        val displayMetrics = DisplayMetrics()
+        activity?.windowManager?.defaultDisplay?.getMetrics(displayMetrics)
+        val screenHeight = displayMetrics.heightPixels
+        val desiredHeight = (screenHeight * 0.1).toInt()
+        bottomSheet.peekHeight = desiredHeight
     }
 
     private fun setMapDarkStyle(map: GoogleMap) {

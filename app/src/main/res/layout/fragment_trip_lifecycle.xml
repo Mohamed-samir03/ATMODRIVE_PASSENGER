@@ -3,13 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/bottom_sheet_trip_lifecycle"
+    android:id="@+id/trip_lifecycle_fragment"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
-    android:orientation="vertical"
-    app:behavior_hideable="false"
-    app:behavior_peekHeight="0dp">
+    tools:context=".features.trip.presentation.fragment.TripLifecycleFragment">
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"

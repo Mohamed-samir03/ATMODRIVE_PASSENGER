@@ -33,6 +33,13 @@ class TripDateTimeFragment  : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.imgCloseTripDateTime.setOnClickListener {
+
+            val action = TripDateTimeFragmentDirections.actionTripDateTimeFragmentToRequestTripFragment()
+            mNavController.navigate(action)
+
+        }
+
 
     }
 

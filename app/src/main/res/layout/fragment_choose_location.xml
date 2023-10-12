@@ -39,7 +39,7 @@
 
             <View
                 android:id="@+id/view_loc_dashed_line"
-                android:layout_width="@dimen/_24sdp"
+                android:layout_width="@dimen/_26sdp"
                 android:layout_height="0dp"
                 android:background="@drawable/dashed_line"
                 android:rotation="90"
@@ -53,26 +53,25 @@
                 android:layout_width="@dimen/_10sdp"
                 android:layout_height="@dimen/_10sdp"
                 android:src="@drawable/yourloc"
-                app:layout_constraintBottom_toBottomOf="@+id/tv_loc_your_location"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_pickup_location"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/tv_loc_your_location" />
+                app:layout_constraintTop_toTopOf="@+id/tv_pickup_location" />
 
             <ImageView
                 android:id="@+id/img_loc_where_go"
                 android:layout_width="@dimen/_10sdp"
                 android:layout_height="@dimen/_14sdp"
                 android:src="@drawable/location"
-                app:layout_constraintBottom_toBottomOf="@+id/tv_loc_where_go"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_dropOff_location"
                 app:layout_constraintStart_toStartOf="@+id/img_loc_your_location"
-                app:layout_constraintTop_toTopOf="@+id/tv_loc_where_go" />
+                app:layout_constraintTop_toTopOf="@+id/tv_dropOff_location" />
 
             <TextView
-                android:id="@+id/tv_loc_your_location"
+                android:id="@+id/tv_pickup_location"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_16sdp"
-                android:hint="Your Location"
-                android:text="B. 1256, Northern Ex. - 6 Oct."
+                android:hint="Pickup Location"
                 android:textColor="@color/title"
                 android:textColorHint="@color/hint"
                 android:textSize="@dimen/_12sdp"
@@ -87,17 +86,16 @@
                 android:layout_marginTop="@dimen/_10sdp"
                 android:background="@color/quinary"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/tv_loc_your_location"
-                app:layout_constraintTop_toBottomOf="@+id/tv_loc_your_location" />
+                app:layout_constraintStart_toStartOf="@+id/tv_pickup_location"
+                app:layout_constraintTop_toBottomOf="@+id/tv_pickup_location" />
 
 
             <TextView
-                android:id="@+id/tv_loc_where_go"
+                android:id="@+id/tv_dropOff_location"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_10sdp"
-                android:hint="Where to go?"
-                android:text="402 El Mehwar Str. "
+                android:hint="DropOff Location"
                 android:textColor="@color/title"
                 android:textColorHint="@color/hint"
                 android:textSize="@dimen/_12sdp"

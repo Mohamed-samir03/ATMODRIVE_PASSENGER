@@ -33,6 +33,10 @@ class RequestTripFragment  : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.cardDateTime.setOnClickListener {
+            val action = RequestTripFragmentDirections.actionRequestTripFragmentToTripDateTimeFragment()
+            mNavController.navigate(action)
+        }
 
     }
 

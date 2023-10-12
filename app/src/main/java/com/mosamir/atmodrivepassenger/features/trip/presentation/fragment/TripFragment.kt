@@ -18,6 +18,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.common.api.ApiException
@@ -49,6 +52,7 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.mosamir.atmodrivepassenger.R
 import com.mosamir.atmodrivepassenger.databinding.FragmentTripBinding
+import com.mosamir.atmodrivepassenger.features.trip.presentation.common.SharedViewModel
 import com.mosamir.atmodrivepassenger.util.AnimationUtils
 import com.mosamir.atmodrivepassenger.util.LocationHelper
 import com.mosamir.atmodrivepassenger.util.MapUtils
@@ -79,6 +83,8 @@ class TripFragment : Fragment(), OnMapReadyCallback {
 
     private lateinit var database: DatabaseReference
 
+    var address = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mNavController = findNavController()
@@ -107,6 +113,31 @@ class TripFragment : Fragment(), OnMapReadyCallback {
             binding.layoutFindLocation.visibilityGone()
         }
 
+        val model = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
+
+        binding.btnConfirmLocation.setOnClickListener {
+            model.setLocation(address)
+            binding.chooseLocationFromMaps.visibilityGone()
+            bottomSheet.state = BottomSheetBehavior.STATE_EXPANDED
+        }
+
+        binding.btnCancelLocation.setOnClickListener {
+            binding.chooseLocationFromMaps.visibilityGone()
+            bottomSheet.state = BottomSheetBehavior.STATE_EXPANDED
+        }
+
+        model.locType.observe(viewLifecycleOwner, Observer {
+
+            if (it == "pickupLoc"){
+                binding.chooseLocationFromMaps.visibilityVisible()
+                bottomSheet.state = BottomSheetBehavior.STATE_COLLAPSED
+            }else if(it == "dropLoc"){
+                binding.chooseLocationFromMaps.visibilityVisible()
+                bottomSheet.state = BottomSheetBehavior.STATE_COLLAPSED
+            }
+
+        })
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = childFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
@@ -129,7 +160,7 @@ class TripFragment : Fragment(), OnMapReadyCallback {
         val displayMetrics = DisplayMetrics()
         activity?.windowManager?.defaultDisplay?.getMetrics(displayMetrics)
         val screenHeight = displayMetrics.heightPixels
-        val desiredHeight = (screenHeight * 0.1).toInt()
+        val desiredHeight = (screenHeight * 0.3).toInt()
         bottomSheet.peekHeight = desiredHeight
     }
 
@@ -335,6 +366,11 @@ class TripFragment : Fragment(), OnMapReadyCallback {
 
         if (resources.getString(R.string.mode) == "Night"){
             setMapDarkStyle(mMap)
+        }
+
+        mMap.setOnCameraIdleListener {
+            val loc = mMap.cameraPosition.target
+            address = getAddressFromLatLng(loc)
         }
 
 //        mMap.uiSettings.apply {

@@ -1,25 +1,14 @@
-package com.mosamir.atmodrivepassenger.features.trip.data.repository
+package com.mosamir.atmodrivepassenger.features.trip.domain.use_case
 
-import com.mosamir.atmodrivepassenger.features.trip.data.data_source.remote.ITripDataSource
 import com.mosamir.atmodrivepassenger.features.trip.domain.model.ConfirmTripResponse
-import com.mosamir.atmodrivepassenger.features.trip.domain.model.MakeTripResponse
 import com.mosamir.atmodrivepassenger.features.trip.domain.repository.ITripRepo
 import com.mosamir.atmodrivepassenger.util.IResult
 import javax.inject.Inject
 
-class TripRepo @Inject constructor(
-    private val iTripDataSource: ITripDataSource
-):ITripRepo {
+class ConfirmTripUseCase @Inject constructor(
+    private val iTripRepo: ITripRepo
+):IConfirmTripUseCase {
 
-
-    override suspend fun makeTrip(
-        distanceText: String,
-        distanceValue: Long,
-        durationText: String,
-        durationValue: Long
-    ): IResult<MakeTripResponse> {
-        return iTripDataSource.makeTrip(distanceText, distanceValue, durationText, durationValue)
-    }
 
     override suspend fun confirmTrip(
         vehicleClassId: String,
@@ -33,7 +22,7 @@ class TripRepo @Inject constructor(
         pickupLocationName: String,
         dropOffLocationName: String
     ): IResult<ConfirmTripResponse> {
-        return iTripDataSource.confirmTrip(vehicleClassId,
+        return iTripRepo.confirmTrip(vehicleClassId,
             pickupLat,
             pickupLng,
             dropOffLat,

@@ -1,17 +1,9 @@
-package com.mosamir.atmodrivepassenger.features.trip.data.data_source.remote
-
+package com.mosamir.atmodrivepassenger.features.trip.domain.use_case
 
 import com.mosamir.atmodrivepassenger.features.trip.domain.model.ConfirmTripResponse
-import com.mosamir.atmodrivepassenger.features.trip.domain.model.MakeTripResponse
 import com.mosamir.atmodrivepassenger.util.IResult
 
-interface ITripDataSource {
-
-    suspend fun makeTrip(distanceText: String,
-                                   distanceValue: Long,
-                                   durationText: String,
-                                   durationValue: Long): IResult<MakeTripResponse>
-
+interface IConfirmTripUseCase {
 
     suspend fun confirmTrip(vehicleClassId: String,pickupLat: String,
                             pickupLng: String,dropOffLat: String,dropOffLng: String,

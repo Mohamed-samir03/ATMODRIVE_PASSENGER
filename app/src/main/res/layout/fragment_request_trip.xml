@@ -140,8 +140,7 @@
                         android:textSize="@dimen/_11sdp"
                         app:layout_constraintBottom_toBottomOf="@+id/tv_trip_estimate_cost"
                         app:layout_constraintEnd_toEndOf="@+id/textView3"
-                        app:layout_constraintStart_toEndOf="@+id/tv_trip_estimate_cost"
-                        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+                        app:layout_constraintStart_toEndOf="@+id/tv_trip_estimate_cost" />
 
                     <ImageView
                         android:id="@+id/imageView5"
@@ -225,5 +224,13 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <ProgressBar
+            android:id="@+id/request_trip_ProgressBar"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"/>
+
     </com.google.android.material.card.MaterialCardView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -170,6 +170,7 @@ class VerifyFragment:Fragment() {
         val data = userData.getData()?.data?.user
         val myPrefs = SharedPreferencesManager(requireContext())
 
+        myPrefs.saveString(Constants.PASSENGER_ID_PREFS,data!!.id.toString())
         myPrefs.saveString(Constants.AVATAR_PREFS,data!!.avatar)
         myPrefs.saveString(Constants.EMAIL_PREFS,data.email.toString())
         myPrefs.saveString(Constants.FULL_NAME_PREFS,data.full_name)

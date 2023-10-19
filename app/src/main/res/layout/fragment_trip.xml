@@ -83,7 +83,7 @@
 
                     <View
                         android:id="@+id/view_dashed_line"
-                        android:layout_width="@dimen/_24sdp"
+                        android:layout_width="@dimen/_32sdp"
                         android:layout_height="0dp"
                         android:background="@drawable/dashed_line"
                         android:rotation="90"

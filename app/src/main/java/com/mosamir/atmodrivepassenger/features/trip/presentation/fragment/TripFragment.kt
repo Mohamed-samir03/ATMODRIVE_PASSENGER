@@ -54,14 +54,17 @@ import com.mosamir.atmodrivepassenger.R
 import com.mosamir.atmodrivepassenger.databinding.FragmentTripBinding
 import com.mosamir.atmodrivepassenger.features.trip.presentation.common.SharedViewModel
 import com.mosamir.atmodrivepassenger.util.AnimationUtils
+import com.mosamir.atmodrivepassenger.util.Constants
 import com.mosamir.atmodrivepassenger.util.LocationHelper
 import com.mosamir.atmodrivepassenger.util.MapUtils
+import com.mosamir.atmodrivepassenger.util.SharedPreferencesManager
 import com.mosamir.atmodrivepassenger.util.showToast
 import com.mosamir.atmodrivepassenger.util.visibilityGone
 import com.mosamir.atmodrivepassenger.util.visibilityVisible
+import dagger.hilt.android.AndroidEntryPoint
 import java.io.IOException
 import java.util.Locale
-
+@AndroidEntryPoint
 class TripFragment : Fragment(), OnMapReadyCallback {
 
     private var _binding: FragmentTripBinding? = null
@@ -73,6 +76,7 @@ class TripFragment : Fragment(), OnMapReadyCallback {
     var mLocationCallback: LocationCallback?= null
     var mFusedLocationClient: FusedLocationProviderClient?= null
     private var bottomSheet = BottomSheetBehavior<ConstraintLayout>()
+    var model = SharedViewModel()
 
     private var mBackPressed: Long = 0
     private var movingCabMarker : Marker?= null
@@ -113,7 +117,7 @@ class TripFragment : Fragment(), OnMapReadyCallback {
             binding.layoutFindLocation.visibilityGone()
         }
 
-        val model = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
+        model = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
 
         binding.btnConfirmLocation.setOnClickListener {
             model.setLocation(address)
@@ -205,6 +209,7 @@ class TripFragment : Fragment(), OnMapReadyCallback {
                 moveCameraMap(latLng)
                 val address = getAddressFromLatLng(latLng)
                 binding.tvYourLocation.text = address
+                SharedPreferencesManager(requireContext()).saveString(Constants.PICKUP_LOC,address)
 
             }
         }

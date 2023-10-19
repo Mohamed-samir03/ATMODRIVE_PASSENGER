@@ -8,9 +8,11 @@ class Constants {
 
 
         const val INTRO_PREFS = "firstTime"
+        const val PICKUP_LOC = "pickup_loc"
 
         // SharedPreferences keys
         const val PASSENGER_PREFS = "PassengerPrefs"
+        const val PASSENGER_ID_PREFS = "PassengerId"
         const val AVATAR_PREFS = "avatar"
         const val EMAIL_PREFS = "email"
         const val FULL_NAME_PREFS = "full_name"

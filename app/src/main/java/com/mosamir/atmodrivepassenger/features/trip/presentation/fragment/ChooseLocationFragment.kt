@@ -4,14 +4,29 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.mosamir.atmodrivepassenger.databinding.FragmentChooseLocationBinding
+import com.mosamir.atmodrivepassenger.features.trip.domain.model.MakeTripResponse
 import com.mosamir.atmodrivepassenger.features.trip.presentation.common.SharedViewModel
+import com.mosamir.atmodrivepassenger.features.trip.presentation.common.TripViewModel
+import com.mosamir.atmodrivepassenger.util.Constants
+import com.mosamir.atmodrivepassenger.util.IResult
+import com.mosamir.atmodrivepassenger.util.NetworkState
+import com.mosamir.atmodrivepassenger.util.SharedPreferencesManager
+import com.mosamir.atmodrivepassenger.util.showToast
+import com.mosamir.atmodrivepassenger.util.visibilityGone
+import com.mosamir.atmodrivepassenger.util.visibilityVisible
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class ChooseLocationFragment : Fragment() {
 
 
@@ -22,6 +37,8 @@ class ChooseLocationFragment : Fragment() {
     var locType = ""
     var pickupLoc: String? = null
     var dropLoc: String? = null
+
+    private val tripViewModel by viewModels<TripViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +58,8 @@ class ChooseLocationFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val model = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
+        val loc = SharedPreferencesManager(requireContext()).getString(Constants.PICKUP_LOC)
+        binding.tvPickupLocation.text = loc
 
         binding.tvPickupLocation.setOnClickListener {
             locType = "pickupLoc"
@@ -63,12 +82,36 @@ class ChooseLocationFragment : Fragment() {
             }
 
             if(!pickupLoc.isNullOrBlank() && !dropLoc.isNullOrBlank()){
-                val action = ChooseLocationFragmentDirections.actionChooseLocationFragmentToRequestTripFragment()
-                mNavController.navigate(action)
+                tripViewModel.makeTrip("500 KM",500,"160 Min",160)
             }
 
         })
 
+        observeOnMakeTrip()
+
+    }
+
+    private fun observeOnMakeTrip(){
+        lifecycleScope.launch {
+            tripViewModel.makeTripResult.collect{ networkState ->
+                when(networkState?.status){
+                    NetworkState.Status.SUCCESS ->{
+                        binding.chooseLocProgressBar.visibilityGone()
+                        val data = networkState.data as IResult<MakeTripResponse>
+                        val action = ChooseLocationFragmentDirections.actionChooseLocationFragmentToRequestTripFragment()
+                        mNavController.navigate(action)
+                    }
+                    NetworkState.Status.FAILED ->{
+                        showToast(networkState.msg.toString())
+                        binding.chooseLocProgressBar.visibilityGone()
+                    }
+                    NetworkState.Status.RUNNING ->{
+                        binding.chooseLocProgressBar.visibilityVisible()
+                    }
+                    else -> {}
+                }
+            }
+        }
     }
 
     override fun onDestroyView() {

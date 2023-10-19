@@ -4,6 +4,7 @@ import com.mosamir.atmodrivepassenger.features.auth.data.model.register.RemoteDa
 import com.mosamir.atmodrivepassenger.features.auth.domain.model.register.DataRegister
 
 fun RemoteDataRegister.asDomain() = DataRegister(
+    id,
     avatar,
     email,
     full_name,

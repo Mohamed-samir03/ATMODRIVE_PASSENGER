@@ -20,6 +20,7 @@ import com.mosamir.atmodrivepassenger.util.Constants
 import com.mosamir.atmodrivepassenger.util.IResult
 import com.mosamir.atmodrivepassenger.util.NetworkState
 import com.mosamir.atmodrivepassenger.util.SharedPreferencesManager
+import com.mosamir.atmodrivepassenger.util.getData
 import com.mosamir.atmodrivepassenger.util.showToast
 import com.mosamir.atmodrivepassenger.util.visibilityGone
 import com.mosamir.atmodrivepassenger.util.visibilityVisible
@@ -37,6 +38,7 @@ class ChooseLocationFragment : Fragment() {
     var locType = ""
     var pickupLoc: String? = null
     var dropLoc: String? = null
+    var model = SharedViewModel()
 
     private val tripViewModel by viewModels<TripViewModel>()
 
@@ -57,7 +59,7 @@ class ChooseLocationFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val model = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
+        model = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
         val loc = SharedPreferencesManager(requireContext()).getString(Constants.PICKUP_LOC)
         binding.tvPickupLocation.text = loc
 
@@ -98,6 +100,7 @@ class ChooseLocationFragment : Fragment() {
                     NetworkState.Status.SUCCESS ->{
                         binding.chooseLocProgressBar.visibilityGone()
                         val data = networkState.data as IResult<MakeTripResponse>
+                        model.setMakeTripData(data.getData()?.data!!)
                         val action = ChooseLocationFragmentDirections.actionChooseLocationFragmentToRequestTripFragment()
                         mNavController.navigate(action)
                     }

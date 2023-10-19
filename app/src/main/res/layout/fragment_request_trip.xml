@@ -40,16 +40,16 @@
                     android:padding="@dimen/_10sdp">
 
                     <ImageView
-                        android:id="@+id/imageView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:id="@+id/img_trip_class_icon"
+                        android:layout_width="@dimen/_30sdp"
+                        android:layout_height="@dimen/_30sdp"
                         android:src="@drawable/atmo_plus"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
-                        android:id="@+id/textView2"
+                        android:id="@+id/tv_trip_class_name"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_10sdp"
@@ -58,18 +58,19 @@
                         android:textSize="@dimen/_13sdp"
                         android:textStyle="bold"
                         app:layout_constraintEnd_toStartOf="@+id/imageView3"
-                        app:layout_constraintStart_toEndOf="@+id/imageView"
-                        app:layout_constraintTop_toTopOf="@+id/imageView" />
+                        app:layout_constraintStart_toEndOf="@+id/img_trip_class_icon"
+                        app:layout_constraintTop_toTopOf="@+id/img_trip_class_icon" />
 
                     <TextView
+                        android:id="@+id/tv_trip_estimate_time"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:text="2 mins way from you"
                         android:textColor="@color/progress"
                         android:textSize="@dimen/_11sdp"
                         app:layout_constraintEnd_toStartOf="@+id/imageView3"
-                        app:layout_constraintStart_toStartOf="@+id/textView2"
-                        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+                        app:layout_constraintStart_toStartOf="@+id/tv_trip_class_name"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_trip_class_name" />
 
                     <ImageView
                         android:id="@+id/imageView3"
@@ -122,12 +123,24 @@
                         app:layout_constraintTop_toTopOf="@+id/imageView4" />
 
                     <TextView
-                        android:layout_width="0dp"
+                        android:id="@+id/tv_trip_estimate_cost"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/cash_price"
                         android:textSize="@dimen/_11sdp"
-                        app:layout_constraintEnd_toStartOf="@+id/imageView5"
+                        android:textColor="@color/success"
                         app:layout_constraintStart_toStartOf="@+id/textView3"
+                        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text=" . 0 EGP in wallet"
+                        android:textColor="@color/secondary"
+                        android:textSize="@dimen/_11sdp"
+                        app:layout_constraintBottom_toBottomOf="@+id/tv_trip_estimate_cost"
+                        app:layout_constraintEnd_toEndOf="@+id/textView3"
+                        app:layout_constraintStart_toEndOf="@+id/tv_trip_estimate_cost"
                         app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
                     <ImageView
@@ -194,6 +207,7 @@
             </com.google.android.material.card.MaterialCardView>
 
             <Button
+                android:id="@+id/btn_request_trip"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_40sdp"
                 android:layout_margin="@dimen/_16sdp"

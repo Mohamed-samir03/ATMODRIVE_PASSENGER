@@ -1,5 +1,6 @@
 package com.mosamir.atmodrivepassenger.features.trip.presentation.fragment
 
+import android.location.Geocoder
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
+import com.google.android.gms.maps.model.LatLng
 import com.mosamir.atmodrivepassenger.R
 import com.mosamir.atmodrivepassenger.databinding.FragmentRequestTripBinding
 import com.mosamir.atmodrivepassenger.features.trip.domain.model.ConfirmTripResponse
@@ -27,6 +29,8 @@ import com.mosamir.atmodrivepassenger.util.visibilityGone
 import com.mosamir.atmodrivepassenger.util.visibilityVisible
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import java.io.IOException
+import java.util.Locale
 
 @AndroidEntryPoint
 class RequestTripFragment  : Fragment() {
@@ -74,7 +78,13 @@ class RequestTripFragment  : Fragment() {
         })
 
         binding.btnRequestTrip.setOnClickListener {
-            tripViewModel.confirmTrip("1","","","","","","","","","")
+            val pickUpLat = Constants.pickUpLatLng.latitude.toString()
+            val pickUpLng = Constants.pickUpLatLng.longitude.toString()
+            val dropOffLat = Constants.dropOffLatLng.latitude.toString()
+            val dropOffLng = Constants.dropOffLatLng.longitude.toString()
+            val pickUpName = getAddressFromLatLng(Constants.pickUpLatLng)
+            val dropOffName = getAddressFromLatLng(Constants.dropOffLatLng)
+            tripViewModel.confirmTrip("1",pickUpLat,pickUpLng,dropOffLat,dropOffLng,"","","",pickUpName,dropOffName)
         }
         observeOnConfirmTrip()
 
@@ -102,6 +112,22 @@ class RequestTripFragment  : Fragment() {
                 }
             }
         }
+    }
+
+    private fun getAddressFromLatLng(latLng: LatLng): String {
+        val geocoder = Geocoder(requireContext(), Locale.getDefault())
+        try {
+            val addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1)
+            if (addresses?.isNotEmpty()!!) {
+                val address = addresses[0]
+                // You can format the address as per your requirements
+                return address.getAddressLine(0)
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
+            showToast("Error getting address")
+        }
+        return "Address not found"
     }
 
     override fun onDestroyView() {

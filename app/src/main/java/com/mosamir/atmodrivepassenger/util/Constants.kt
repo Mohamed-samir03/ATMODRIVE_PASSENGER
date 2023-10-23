@@ -1,5 +1,7 @@
 package com.mosamir.atmodrivepassenger.util
 
+import com.google.android.gms.maps.model.LatLng
+
 class Constants {
 
     companion object{
@@ -9,7 +11,10 @@ class Constants {
         const val BASE_Image_URL = "https://s1.drive.dashboard.atmosphere.solutions/storage/"
 
         const val INTRO_PREFS = "firstTime"
-        const val PICKUP_LOC = "pickup_loc"
+
+        var isBottomSheetOn = false
+        var pickUpLatLng: LatLng = LatLng(0.0,0.0)
+        var dropOffLatLng: LatLng = LatLng(0.0,0.0)
 
         // SharedPreferences keys
         const val PASSENGER_PREFS = "PassengerPrefs"

@@ -18,7 +18,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
@@ -41,6 +40,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
@@ -57,7 +57,6 @@ import com.mosamir.atmodrivepassenger.util.AnimationUtils
 import com.mosamir.atmodrivepassenger.util.Constants
 import com.mosamir.atmodrivepassenger.util.LocationHelper
 import com.mosamir.atmodrivepassenger.util.MapUtils
-import com.mosamir.atmodrivepassenger.util.SharedPreferencesManager
 import com.mosamir.atmodrivepassenger.util.showToast
 import com.mosamir.atmodrivepassenger.util.visibilityGone
 import com.mosamir.atmodrivepassenger.util.visibilityVisible
@@ -87,7 +86,11 @@ class TripFragment : Fragment(), OnMapReadyCallback {
 
     private lateinit var database: DatabaseReference
 
+    private var pickUpMarker : Marker?= null
+    private var dropOffMarker : Marker?= null
     var address = ""
+    var pickupDropOff = 0
+    var myLoc:LatLng? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -111,6 +114,11 @@ class TripFragment : Fragment(), OnMapReadyCallback {
         binding.locationCard.setOnClickListener {
             binding.locationCard.visibilityGone()
             disPlayBottomSheet()
+            Constants.pickUpLatLng = myLoc!!
+            if(pickUpMarker == null){
+                pickUpMarker = addPickUpMarker(Constants.pickUpLatLng)
+            }
+            pickUpMarker?.position = Constants.pickUpLatLng
         }
 
         binding.tvCancelFindCaptain.setOnClickListener {
@@ -123,6 +131,17 @@ class TripFragment : Fragment(), OnMapReadyCallback {
             model.setLocation(address)
             binding.chooseLocationFromMaps.visibilityGone()
             bottomSheet.state = BottomSheetBehavior.STATE_EXPANDED
+            if(pickupDropOff == 1){
+                if(pickUpMarker == null){
+                    pickUpMarker = addPickUpMarker(Constants.pickUpLatLng)
+                }
+                pickUpMarker?.position = Constants.pickUpLatLng
+            }else if (pickupDropOff == 2){
+                if (dropOffMarker == null){
+                    dropOffMarker = addDropOffMarker(Constants.dropOffLatLng)
+                }
+                dropOffMarker?.position = Constants.dropOffLatLng
+            }
         }
 
         binding.btnCancelLocation.setOnClickListener {
@@ -133,11 +152,31 @@ class TripFragment : Fragment(), OnMapReadyCallback {
         model.locType.observe(viewLifecycleOwner, Observer {
 
             if (it == "pickupLoc"){
+                pickupDropOff = 1
                 binding.chooseLocationFromMaps.visibilityVisible()
                 bottomSheet.state = BottomSheetBehavior.STATE_COLLAPSED
+                setLocation(false)
             }else if(it == "dropLoc"){
+                pickupDropOff = 2
                 binding.chooseLocationFromMaps.visibilityVisible()
                 bottomSheet.state = BottomSheetBehavior.STATE_COLLAPSED
+                setLocation(false)
+            }else if ((it == "cancel")){
+                binding.locationCard.visibilityVisible()
+                bottomSheet.state = BottomSheetBehavior.STATE_COLLAPSED
+                setLocation(true)
+                mMap.clear()
+                moveCameraMap(myLoc!!)
+            }else if(it == "continue"){
+
+                val builder = LatLngBounds.Builder()
+                builder.include(Constants.pickUpLatLng)
+                builder.include(Constants.dropOffLatLng)
+                val bounds = builder.build()
+                mMap?.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 200))
+
+                // drawPath
+
             }
 
         })
@@ -151,13 +190,12 @@ class TripFragment : Fragment(), OnMapReadyCallback {
 
     }
 
-
     private fun disPlayBottomSheet(){
         val bottomSheetView = view?.findViewById<ConstraintLayout>(R.id.bottom_sheet_trip)
         bottomSheet = BottomSheetBehavior.from(bottomSheetView!!)
-        bottomSheet.isDraggable = true
+        bottomSheet.isDraggable = false
         bottomSheet.state = BottomSheetBehavior.STATE_EXPANDED
-        bottomSheetHeight()
+//        bottomSheetHeight()
     }
 
     private fun bottomSheetHeight(){
@@ -166,6 +204,20 @@ class TripFragment : Fragment(), OnMapReadyCallback {
         val screenHeight = displayMetrics.heightPixels
         val desiredHeight = (screenHeight * 0.3).toInt()
         bottomSheet.peekHeight = desiredHeight
+    }
+
+
+    private fun setLocation(status:Boolean){
+        if (ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+        }
+        mMap.isMyLocationEnabled = status
     }
 
     private fun setMapDarkStyle(map: GoogleMap) {
@@ -209,7 +261,7 @@ class TripFragment : Fragment(), OnMapReadyCallback {
                 moveCameraMap(latLng)
                 val address = getAddressFromLatLng(latLng)
                 binding.tvYourLocation.text = address
-                SharedPreferencesManager(requireContext()).saveString(Constants.PICKUP_LOC,address)
+                myLoc = latLng
 
             }
         }
@@ -272,6 +324,22 @@ class TripFragment : Fragment(), OnMapReadyCallback {
 
         }
 
+    }
+
+    private fun addPickUpMarker(latLng: LatLng): Marker {
+        val bitmapDescriptor =
+            BitmapDescriptorFactory.fromBitmap(MapUtils.getPickupBitmap(requireContext()))
+        return mMap.addMarker(
+            MarkerOptions().position(latLng).flat(true).icon(bitmapDescriptor)
+        )!!
+    }
+
+    private fun addDropOffMarker(latLng: LatLng): Marker {
+        val bitmapDescriptor =
+            BitmapDescriptorFactory.fromBitmap(MapUtils.getDropOffBitmap(requireContext()))
+        return mMap.addMarker(
+            MarkerOptions().position(latLng).flat(true).icon(bitmapDescriptor)
+        )!!
     }
 
     private fun addCarMarkerAndGet(latLng: LatLng): Marker {
@@ -376,7 +444,15 @@ class TripFragment : Fragment(), OnMapReadyCallback {
         mMap.setOnCameraIdleListener {
             val loc = mMap.cameraPosition.target
             address = getAddressFromLatLng(loc)
+            if(pickupDropOff == 1){
+                Constants.pickUpLatLng = loc
+            }else if (pickupDropOff == 2){
+                Constants.dropOffLatLng = loc
+            }
         }
+
+//        addPickUpMarker(LatLng(30.527235943660287, 30.920170507259662))
+
 
 //        mMap.uiSettings.apply {
 //            isCompassEnabled = true

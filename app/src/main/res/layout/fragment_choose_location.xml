@@ -146,12 +146,43 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_margin="@dimen/_16sdp"
-        tools:listitem="@layout/item_find_location"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/btn_continue_trip_loc"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.45"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintHeight_percent="0.55"
-        app:layout_constraintTop_toBottomOf="@+id/tv_find_location" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_find_location"
+        tools:listitem="@layout/item_find_location" />
+
+    <Button
+        android:id="@+id/btn_continue_trip_loc"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/_40sdp"
+        android:layout_marginVertical="@dimen/_12sdp"
+        android:background="@drawable/primary_stroke"
+        android:text="Continue"
+        android:textAllCaps="false"
+        android:textColor="@color/primary"
+        android:textSize="@dimen/_16sdp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/rv_locations"
+        app:layout_constraintWidth_percent="0.40" />
+
+    <Button
+        android:id="@+id/btn_cancel_trip_loc"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/_40sdp"
+        android:layout_marginVertical="@dimen/_12sdp"
+        android:background="@drawable/background_cancel_trip"
+        android:text="Cancel"
+        android:textAllCaps="false"
+        android:textColor="@color/error"
+        android:textSize="@dimen/_16sdp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/rv_locations"
+        app:layout_constraintWidth_percent="0.40" />
 
     <ProgressBar
         android:id="@+id/choose_loc_progressBar"

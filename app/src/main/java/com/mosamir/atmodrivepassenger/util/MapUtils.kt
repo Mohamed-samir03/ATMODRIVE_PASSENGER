@@ -14,6 +14,17 @@ object MapUtils {
         val bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.ic_car)
         return Bitmap.createScaledBitmap(bitmap, 88, 166, true)
     }
+
+    fun getPickupBitmap(context: Context): Bitmap {
+        val bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.pickup_location_icon)
+        return Bitmap.createScaledBitmap(bitmap, 120, 120, true)
+    }
+
+    fun getDropOffBitmap(context: Context): Bitmap {
+        val bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.drop_off)
+        return Bitmap.createScaledBitmap(bitmap, 130, 130, true)
+    }
+
     fun getRotation(start: LatLng, end: LatLng): Float {
         val latDifference: Double = abs(start.latitude - end.latitude)
         val lngDifference: Double = abs(start.longitude - end.longitude)

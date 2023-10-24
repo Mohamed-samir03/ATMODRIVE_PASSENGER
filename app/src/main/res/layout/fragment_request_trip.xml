@@ -124,23 +124,24 @@
 
                     <TextView
                         android:id="@+id/tv_trip_estimate_cost"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:text="@string/cash_price"
-                        android:textSize="@dimen/_11sdp"
                         android:textColor="@color/success"
+                        android:textSize="@dimen/_11sdp"
+                        app:layout_constraintEnd_toEndOf="@+id/textView3"
                         app:layout_constraintStart_toStartOf="@+id/textView3"
                         app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:text=" . 0 EGP in wallet"
-                        android:textColor="@color/secondary"
-                        android:textSize="@dimen/_11sdp"
-                        app:layout_constraintBottom_toBottomOf="@+id/tv_trip_estimate_cost"
-                        app:layout_constraintEnd_toEndOf="@+id/textView3"
-                        app:layout_constraintStart_toEndOf="@+id/tv_trip_estimate_cost" />
+<!--                    <TextView-->
+<!--                        android:layout_width="0dp"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:text=" . 0 EGP in wallet"-->
+<!--                        android:textColor="@color/secondary"-->
+<!--                        android:textSize="@dimen/_11sdp"-->
+<!--                        app:layout_constraintBottom_toBottomOf="@+id/tv_trip_estimate_cost"-->
+<!--                        app:layout_constraintEnd_toEndOf="@+id/textView3"-->
+<!--                        app:layout_constraintStart_toEndOf="@+id/tv_trip_estimate_cost" />-->
 
                     <ImageView
                         android:id="@+id/imageView5"

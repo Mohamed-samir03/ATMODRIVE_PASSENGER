@@ -13,8 +13,8 @@ class Constants {
         const val INTRO_PREFS = "firstTime"
 
         var isBottomSheetOn = false
-        var pickUpLatLng: LatLng = LatLng(0.0,0.0)
-        var dropOffLatLng: LatLng = LatLng(0.0,0.0)
+        var pickUpLatLng: LatLng? = null
+        var dropOffLatLng: LatLng? = null
 
         // SharedPreferences keys
         const val PASSENGER_PREFS = "PassengerPrefs"

@@ -78,12 +78,12 @@ class RequestTripFragment  : Fragment() {
         })
 
         binding.btnRequestTrip.setOnClickListener {
-            val pickUpLat = Constants.pickUpLatLng.latitude.toString()
-            val pickUpLng = Constants.pickUpLatLng.longitude.toString()
-            val dropOffLat = Constants.dropOffLatLng.latitude.toString()
-            val dropOffLng = Constants.dropOffLatLng.longitude.toString()
-            val pickUpName = getAddressFromLatLng(Constants.pickUpLatLng)
-            val dropOffName = getAddressFromLatLng(Constants.dropOffLatLng)
+            val pickUpLat = Constants.pickUpLatLng!!.latitude.toString()
+            val pickUpLng = Constants.pickUpLatLng!!.longitude.toString()
+            val dropOffLat = Constants.dropOffLatLng!!.latitude.toString()
+            val dropOffLng = Constants.dropOffLatLng!!.longitude.toString()
+            val pickUpName = getAddressFromLatLng(Constants.pickUpLatLng!!)
+            val dropOffName = getAddressFromLatLng(Constants.dropOffLatLng!!)
             tripViewModel.confirmTrip("1",pickUpLat,pickUpLng,dropOffLat,dropOffLng,"","","",pickUpName,dropOffName)
         }
         observeOnConfirmTrip()

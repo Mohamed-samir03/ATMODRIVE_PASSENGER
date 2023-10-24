@@ -65,7 +65,7 @@ class ChooseLocationFragment : Fragment() {
 
         model = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
 
-        binding.tvPickupLocation.text = getAddressFromLatLng(Constants.pickUpLatLng)
+        binding.tvPickupLocation.text = getAddressFromLatLng(Constants.pickUpLatLng!!)
 
         binding.tvPickupLocation.setOnClickListener {
             locType = "pickupLoc"
@@ -80,18 +80,20 @@ class ChooseLocationFragment : Fragment() {
         binding.btnCancelTripLoc.setOnClickListener {
             locType = "cancel"
             model.setLocType("cancel")
+            Constants.pickUpLatLng = null
+            Constants.dropOffLatLng = null
         }
 
         model.location.observe(viewLifecycleOwner, Observer {
 
-            if (locType == "pickupLoc"){
-                binding.tvPickupLocation.text = getAddressFromLatLng(Constants.pickUpLatLng)
+            if (locType == "pickupLoc" && Constants.pickUpLatLng != null){
+                binding.tvPickupLocation.text = getAddressFromLatLng(Constants.pickUpLatLng!!)
                 pickupLoc = it.toString()
-            }else if (locType == "dropLoc"){
-                binding.tvDropOffLocation.text = getAddressFromLatLng(Constants.dropOffLatLng)
+            }else if (locType == "dropLoc" && Constants.dropOffLatLng != null){
+                binding.tvDropOffLocation.text = getAddressFromLatLng(Constants.dropOffLatLng!!)
                 dropLoc = it.toString()
             }else if (locType == "cancel"){
-                binding.tvPickupLocation.text = getAddressFromLatLng(Constants.pickUpLatLng)
+                binding.tvPickupLocation.text = getAddressFromLatLng(Constants.pickUpLatLng!!)
                 binding.tvDropOffLocation.text = ""
             }
 
@@ -99,7 +101,7 @@ class ChooseLocationFragment : Fragment() {
 
         binding.btnContinueTripLoc.setOnClickListener {
 
-            if(Constants.pickUpLatLng != LatLng(0.0,0.0) && Constants.dropOffLatLng != LatLng(0.0,0.0)){
+            if(Constants.pickUpLatLng != null && Constants.dropOffLatLng != null){
                 tripViewModel.makeTrip("500 KM",500,"160 Min",160)
                 locType = "continue"
                 model.setLocType("continue")

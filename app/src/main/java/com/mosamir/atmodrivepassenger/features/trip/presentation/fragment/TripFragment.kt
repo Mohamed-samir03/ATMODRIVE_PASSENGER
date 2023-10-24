@@ -4,6 +4,7 @@ import android.Manifest
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Resources
@@ -16,11 +17,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.ResolvableApiException
@@ -75,6 +78,7 @@ class TripFragment : Fragment(), OnMapReadyCallback {
     var mLocationCallback: LocationCallback?= null
     var mFusedLocationClient: FusedLocationProviderClient?= null
     private var bottomSheet = BottomSheetBehavior<ConstraintLayout>()
+    private var myNavHostFragment: NavHostFragment? = null
     var model = SharedViewModel()
 
     private var mBackPressed: Long = 0
@@ -110,15 +114,20 @@ class TripFragment : Fragment(), OnMapReadyCallback {
         super.onViewCreated(view, savedInstanceState)
 
         database = Firebase.database.reference
+        val bottomSheetView = view.findViewById<ConstraintLayout>(R.id.bottom_sheet_trip)
+        bottomSheet = BottomSheetBehavior.from(bottomSheetView)
+        bottomSheet.isDraggable = false
+        myNavHostFragment =
+            childFragmentManager.findFragmentById(R.id.nav_trip_sheet) as NavHostFragment
 
         binding.locationCard.setOnClickListener {
             binding.locationCard.visibilityGone()
             disPlayBottomSheet()
             Constants.pickUpLatLng = myLoc!!
             if(pickUpMarker == null){
-                pickUpMarker = addPickUpMarker(Constants.pickUpLatLng)
+                pickUpMarker = addPickUpMarker(Constants.pickUpLatLng!!)
             }
-            pickUpMarker?.position = Constants.pickUpLatLng
+            pickUpMarker?.position = Constants.pickUpLatLng!!
         }
 
         binding.tvCancelFindCaptain.setOnClickListener {
@@ -131,22 +140,24 @@ class TripFragment : Fragment(), OnMapReadyCallback {
             model.setLocation(address)
             binding.chooseLocationFromMaps.visibilityGone()
             bottomSheet.state = BottomSheetBehavior.STATE_EXPANDED
+            Constants.isBottomSheetOn = true
             if(pickupDropOff == 1){
                 if(pickUpMarker == null){
-                    pickUpMarker = addPickUpMarker(Constants.pickUpLatLng)
+                    pickUpMarker = addPickUpMarker(Constants.pickUpLatLng!!)
                 }
-                pickUpMarker?.position = Constants.pickUpLatLng
+                pickUpMarker?.position = Constants.pickUpLatLng!!
             }else if (pickupDropOff == 2){
                 if (dropOffMarker == null){
-                    dropOffMarker = addDropOffMarker(Constants.dropOffLatLng)
+                    dropOffMarker = addDropOffMarker(Constants.dropOffLatLng!!)
                 }
-                dropOffMarker?.position = Constants.dropOffLatLng
+                dropOffMarker?.position = Constants.dropOffLatLng!!
             }
         }
 
         binding.btnCancelLocation.setOnClickListener {
             binding.chooseLocationFromMaps.visibilityGone()
             bottomSheet.state = BottomSheetBehavior.STATE_EXPANDED
+            Constants.isBottomSheetOn = true
         }
 
         model.locType.observe(viewLifecycleOwner, Observer {
@@ -155,23 +166,21 @@ class TripFragment : Fragment(), OnMapReadyCallback {
                 pickupDropOff = 1
                 binding.chooseLocationFromMaps.visibilityVisible()
                 bottomSheet.state = BottomSheetBehavior.STATE_COLLAPSED
+                Constants.isBottomSheetOn = false
                 setLocation(false)
             }else if(it == "dropLoc"){
                 pickupDropOff = 2
                 binding.chooseLocationFromMaps.visibilityVisible()
                 bottomSheet.state = BottomSheetBehavior.STATE_COLLAPSED
+                Constants.isBottomSheetOn = false
                 setLocation(false)
-            }else if ((it == "cancel")){
-                binding.locationCard.visibilityVisible()
-                bottomSheet.state = BottomSheetBehavior.STATE_COLLAPSED
-                setLocation(true)
-                mMap.clear()
-                moveCameraMap(myLoc!!)
+            }else if (it == "cancel"){
+                clearMap()
             }else if(it == "continue"){
 
                 val builder = LatLngBounds.Builder()
-                builder.include(Constants.pickUpLatLng)
-                builder.include(Constants.dropOffLatLng)
+                builder.include(Constants.pickUpLatLng!!)
+                builder.include(Constants.dropOffLatLng!!)
                 val bounds = builder.build()
                 mMap?.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 200))
 
@@ -188,24 +197,78 @@ class TripFragment : Fragment(), OnMapReadyCallback {
 
         initLocation()
 
+        onBackPressHandle()
+//        handleBottomSheetSize()
+
     }
 
     private fun disPlayBottomSheet(){
-        val bottomSheetView = view?.findViewById<ConstraintLayout>(R.id.bottom_sheet_trip)
-        bottomSheet = BottomSheetBehavior.from(bottomSheetView!!)
-        bottomSheet.isDraggable = false
+        val inflater = myNavHostFragment?.navController?.navInflater
+        val graph = inflater?.inflate(R.navigation.trip_sheet_graph)
+        myNavHostFragment?.navController?.graph = graph!!
         bottomSheet.state = BottomSheetBehavior.STATE_EXPANDED
-//        bottomSheetHeight()
+        Constants.isBottomSheetOn = true
     }
 
-    private fun bottomSheetHeight(){
+    private fun handleBottomSheetSize() {
+
+        myNavHostFragment?.navController?.addOnDestinationChangedListener { _, destination, arguments ->
+
+            if (destination.id == R.id.chooseLocationFragment || destination.id == R.id.requestTripFragment) {
+                changeHeightOfSheet(requireContext(), 0.90)
+                bottomSheet.isDraggable = false
+            }
+
+        }
+
+    }
+
+    private fun onBackPressHandle() {
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+
+            val childFragment = myNavHostFragment?.childFragmentManager?.fragments
+
+            if (childFragment?.size != 0 && Constants.isBottomSheetOn) {
+                var fragment = childFragment?.get(0)
+
+//                if (fragment?.childFragmentManager?.fragments?.size != 0) {
+//
+//                    fragment = fragment?.childFragmentManager?.fragments?.get(0)
+//                        ?.childFragmentManager?.fragments?.get(0)
+//                }
+
+                if ((fragment is ChooseLocationFragment || fragment is TripLifecycleFragment)
+                    && bottomSheet.state == BottomSheetBehavior.STATE_EXPANDED
+                ) {
+                    clearMap()
+                }
+
+            } else {
+                requireActivity().finish()
+            }
+        }
+    }
+
+    private fun changeHeightOfSheet(context: Context, percent: Double) {
         val displayMetrics = DisplayMetrics()
         activity?.windowManager?.defaultDisplay?.getMetrics(displayMetrics)
-        val screenHeight = displayMetrics.heightPixels
-        val desiredHeight = (screenHeight * 0.3).toInt()
-        bottomSheet.peekHeight = desiredHeight
+        bottomSheet.peekHeight = (displayMetrics.heightPixels * percent).toInt()
     }
 
+    private fun clearMap(){
+        bottomSheet.state = BottomSheetBehavior.STATE_COLLAPSED
+        binding.locationCard.visibilityVisible()
+        setLocation(true)
+        mMap.clear()
+        moveCameraMap(myLoc!!)
+        pickUpMarker = null
+        dropOffMarker = null
+        Constants.pickUpLatLng = myLoc
+        Constants.dropOffLatLng = null
+        pickupDropOff = 0
+        Constants.isBottomSheetOn = false
+    }
 
     private fun setLocation(status:Boolean){
         if (ActivityCompat.checkSelfPermission(

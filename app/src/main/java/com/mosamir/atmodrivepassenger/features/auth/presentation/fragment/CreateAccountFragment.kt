@@ -14,7 +14,7 @@ import androidx.navigation.fragment.navArgs
 import com.mosamir.atmodrivepassenger.databinding.FragmentCreateAccountBinding
 import com.mosamir.atmodrivepassenger.features.auth.domain.model.register.RegisterResponse
 import com.mosamir.atmodrivepassenger.features.auth.presentation.common.AuthViewModel
-import com.mosamir.atmodrivepassenger.features.trip.HomeActivity
+import com.mosamir.atmodrivepassenger.features.trip.presentation.common.TripActivity
 import com.mosamir.atmodrivepassenger.util.Constants
 import com.mosamir.atmodrivepassenger.util.IResult
 import com.mosamir.atmodrivepassenger.util.NetworkState
@@ -75,7 +75,7 @@ class CreateAccountFragment:Fragment() {
                         binding.registerProgressBar.visibilityGone()
                         val data = networkState.data as IResult<RegisterResponse>
                         saveUserDate(data)
-                        val intent = Intent(requireContext(), HomeActivity::class.java)
+                        val intent = Intent(requireContext(), TripActivity::class.java)
                         startActivity(intent)
                         activity?.finish()
                     }

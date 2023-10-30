@@ -23,30 +23,25 @@
             android:value="AIzaSyDo_NcGDWugGSV5q7YC_kye_ekQwvKsg5k" />
 
         <activity
-            android:name=".features.trip.presentation.common.MapsActivity"
+            android:name=".features.trip.presentation.common.TripActivity"
             android:exported="true"
             android:label="@string/title_activity_maps"
+            android:screenOrientation="portrait">
+
+        </activity>
+        <activity
+            android:name=".features.auth.presentation.common.AuthActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".features.splash.SplashActivity"
+            android:exported="true"
             android:screenOrientation="portrait">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
-        </activity>
-
-        <activity
-            android:name=".features.trip.HomeActivity"
-            android:exported="false"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".features.auth.presentation.common.AuthActivity"
-            android:exported="false"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".features.splash.MainActivity"
-            android:exported="true"
-            android:screenOrientation="portrait">
 
         </activity>
     </application>

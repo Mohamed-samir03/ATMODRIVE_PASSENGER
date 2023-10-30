@@ -55,11 +55,13 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.mosamir.atmodrivepassenger.R
 import com.mosamir.atmodrivepassenger.databinding.FragmentTripBinding
+import com.mosamir.atmodrivepassenger.features.auth.presentation.common.AuthActivity
 import com.mosamir.atmodrivepassenger.features.trip.presentation.common.SharedViewModel
 import com.mosamir.atmodrivepassenger.util.AnimationUtils
 import com.mosamir.atmodrivepassenger.util.Constants
 import com.mosamir.atmodrivepassenger.util.LocationHelper
 import com.mosamir.atmodrivepassenger.util.MapUtils
+import com.mosamir.atmodrivepassenger.util.SharedPreferencesManager
 import com.mosamir.atmodrivepassenger.util.showToast
 import com.mosamir.atmodrivepassenger.util.visibilityGone
 import com.mosamir.atmodrivepassenger.util.visibilityVisible
@@ -114,27 +116,49 @@ class TripFragment : Fragment(), OnMapReadyCallback {
         super.onViewCreated(view, savedInstanceState)
 
         database = Firebase.database.reference
-        val bottomSheetView = view.findViewById<ConstraintLayout>(R.id.bottom_sheet_trip)
-        bottomSheet = BottomSheetBehavior.from(bottomSheetView)
-        bottomSheet.isDraggable = false
-        myNavHostFragment =
-            childFragmentManager.findFragmentById(R.id.nav_trip_sheet) as NavHostFragment
+
+        model = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
+
+        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        val mapFragment = childFragmentManager
+            .findFragmentById(R.id.map) as SupportMapFragment
+        mapFragment.getMapAsync(this)
+
+        initLocation()
+        initBottomSheet()
+        onClick()
+        observeOnLocationType()
+        observeOnRequestTrip()
+        onBackPressHandle()
+//        handleBottomSheetSize()
+
+    }
+
+    private fun onClick(){
 
         binding.locationCard.setOnClickListener {
             binding.locationCard.visibilityGone()
             disPlayBottomSheet()
-            Constants.pickUpLatLng = myLoc!!
-            if(pickUpMarker == null){
-                pickUpMarker = addPickUpMarker(Constants.pickUpLatLng!!)
+            try {
+                Constants.pickUpLatLng = myLoc!!
+                if(pickUpMarker == null){
+                    pickUpMarker = addPickUpMarker(Constants.pickUpLatLng!!)
+                }
+                pickUpMarker?.position = Constants.pickUpLatLng!!
+            }catch (ex:NullPointerException){
+                showToast("There is no internet connection")
             }
-            pickUpMarker?.position = Constants.pickUpLatLng!!
         }
 
         binding.tvCancelFindCaptain.setOnClickListener {
-            binding.layoutFindLocation.visibilityGone()
-        }
+            binding.layoutFindCaptain.visibilityGone()
+            model.setRequestTrip(false)
+            bottomSheet.state = BottomSheetBehavior.STATE_EXPANDED
+            Constants.isBottomSheetOn = true
 
-        model = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
+            // cancel trip
+
+        }
 
         binding.btnConfirmLocation.setOnClickListener {
             model.setLocation(address)
@@ -147,10 +171,19 @@ class TripFragment : Fragment(), OnMapReadyCallback {
                 }
                 pickUpMarker?.position = Constants.pickUpLatLng!!
             }else if (pickupDropOff == 2){
-                if (dropOffMarker == null){
-                    dropOffMarker = addDropOffMarker(Constants.dropOffLatLng!!)
+                try {
+                    if (dropOffMarker == null){
+                        dropOffMarker = addDropOffMarker(Constants.dropOffLatLng!!)
+                    }
+                    dropOffMarker?.position = Constants.dropOffLatLng!!
+                }catch (ex:NullPointerException){
+                    if (dropOffMarker == null){
+                        dropOffMarker = addDropOffMarker(myLoc!!)
+                    }
+                    dropOffMarker?.position = myLoc!!
+                    Constants.dropOffLatLng = myLoc
                 }
-                dropOffMarker?.position = Constants.dropOffLatLng!!
+
             }
         }
 
@@ -160,6 +193,17 @@ class TripFragment : Fragment(), OnMapReadyCallback {
             Constants.isBottomSheetOn = true
         }
 
+        binding.imgCategory.setOnClickListener {
+            // logout for test only
+            SharedPreferencesManager(requireContext()).clearString(Constants.REMEMBER_TOKEN_PREFS)
+            val intent = Intent(requireContext(), AuthActivity::class.java)
+            startActivity(intent)
+            activity?.finish()
+        }
+
+    }
+
+    private fun observeOnLocationType(){
         model.locType.observe(viewLifecycleOwner, Observer {
 
             if (it == "pickupLoc"){
@@ -189,17 +233,24 @@ class TripFragment : Fragment(), OnMapReadyCallback {
             }
 
         })
+    }
 
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        val mapFragment = childFragmentManager
-            .findFragmentById(R.id.map) as SupportMapFragment
-        mapFragment.getMapAsync(this)
+    private fun observeOnRequestTrip(){
+        model.requestTrip.observe(viewLifecycleOwner, Observer {
 
-        initLocation()
+            if (it){
+                findingCaptain()
+            }
 
-        onBackPressHandle()
-//        handleBottomSheetSize()
+        })
+    }
 
+    private fun initBottomSheet(){
+        val bottomSheetView = view?.findViewById<ConstraintLayout>(R.id.bottom_sheet_trip)
+        bottomSheet = BottomSheetBehavior.from(bottomSheetView!!)
+        bottomSheet.isDraggable = false
+        myNavHostFragment =
+            childFragmentManager.findFragmentById(R.id.nav_trip_sheet) as NavHostFragment
     }
 
     private fun disPlayBottomSheet(){
@@ -232,18 +283,9 @@ class TripFragment : Fragment(), OnMapReadyCallback {
             if (childFragment?.size != 0 && Constants.isBottomSheetOn) {
                 var fragment = childFragment?.get(0)
 
-//                if (fragment?.childFragmentManager?.fragments?.size != 0) {
-//
-//                    fragment = fragment?.childFragmentManager?.fragments?.get(0)
-//                        ?.childFragmentManager?.fragments?.get(0)
-//                }
-
-                if ((fragment is ChooseLocationFragment || fragment is TripLifecycleFragment)
-                    && bottomSheet.state == BottomSheetBehavior.STATE_EXPANDED
-                ) {
+                if ((fragment is ChooseLocationFragment) && bottomSheet.state == BottomSheetBehavior.STATE_EXPANDED) {
                     clearMap()
                 }
-
             } else {
                 requireActivity().finish()
             }
@@ -268,6 +310,12 @@ class TripFragment : Fragment(), OnMapReadyCallback {
         Constants.dropOffLatLng = null
         pickupDropOff = 0
         Constants.isBottomSheetOn = false
+    }
+
+    private fun findingCaptain(){
+        bottomSheet.state = BottomSheetBehavior.STATE_COLLAPSED
+        Constants.isBottomSheetOn = false
+        binding.layoutFindCaptain.visibilityVisible()
     }
 
     private fun setLocation(status:Boolean){
@@ -344,7 +392,7 @@ class TripFragment : Fragment(), OnMapReadyCallback {
             }
         } catch (e: IOException) {
             e.printStackTrace()
-            showToast("Error getting address")
+            showToast("There is no internet connection")
         }
         return "Address not found"
     }

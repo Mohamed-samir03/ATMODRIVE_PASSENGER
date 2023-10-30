@@ -43,6 +43,10 @@ class RequestTripFragment  : Fragment() {
     var model = SharedViewModel()
     private val tripViewModel by viewModels<TripViewModel>()
 
+    private var estimateCost: String = ""
+    private var estimateTime: String = ""
+    private var estimateDistance: String = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mNavController = findNavController()
@@ -62,20 +66,17 @@ class RequestTripFragment  : Fragment() {
 
         model = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
 
+        onClick()
+        observeOnTripData()
+        observeOnConfirmTrip()
+
+    }
+
+    private fun onClick(){
         binding.cardDateTime.setOnClickListener {
             val action = RequestTripFragmentDirections.actionRequestTripFragmentToTripDateTimeFragment()
             mNavController.navigate(action)
         }
-
-        model.makeTripData.observe(viewLifecycleOwner, Observer {
-            binding.tvTripClassName.text = it.vehicle_class_name
-            binding.tvTripEstimateCost.text = "${it.estimate_cost} EGP"
-            binding.tvTripEstimateTime.text = "${it.estimate_time} mins way from you"
-            Glide.with(this)
-                .load(Constants.BASE_Image_URL+it.vehicle_class_icon)
-                .placeholder(R.drawable.atmo_plus)
-                .into(binding.imgTripClassIcon)
-        })
 
         binding.btnRequestTrip.setOnClickListener {
             val pickUpLat = Constants.pickUpLatLng!!.latitude.toString()
@@ -84,10 +85,23 @@ class RequestTripFragment  : Fragment() {
             val dropOffLng = Constants.dropOffLatLng!!.longitude.toString()
             val pickUpName = getAddressFromLatLng(Constants.pickUpLatLng!!)
             val dropOffName = getAddressFromLatLng(Constants.dropOffLatLng!!)
-            tripViewModel.confirmTrip("1",pickUpLat,pickUpLng,dropOffLat,dropOffLng,"","","",pickUpName,dropOffName)
+            tripViewModel.confirmTrip("1",pickUpLat,pickUpLng,dropOffLat,dropOffLng,estimateCost,estimateTime,estimateDistance,pickUpName,dropOffName)
         }
-        observeOnConfirmTrip()
+    }
 
+    private fun observeOnTripData(){
+        model.makeTripData.observe(viewLifecycleOwner, Observer {
+            estimateCost = it.estimate_cost
+            estimateTime = it.estimate_time.toString()
+            estimateDistance = it.estimate_distance.toString()
+            binding.tvTripClassName.text = it.vehicle_class_name
+            binding.tvTripEstimateCost.text = "$estimateCost EGP"
+            binding.tvTripEstimateTime.text = "$estimateTime mins way from you"
+            Glide.with(this)
+                .load(Constants.BASE_Image_URL+it.vehicle_class_icon)
+                .placeholder(R.drawable.atmo_plus)
+                .into(binding.imgTripClassIcon)
+        })
     }
 
     private fun observeOnConfirmTrip(){
@@ -98,8 +112,7 @@ class RequestTripFragment  : Fragment() {
                         binding.requestTripProgressBar.visibilityGone()
                         val data = networkState.data as IResult<ConfirmTripResponse>
                         showToast(data.getData()?.trip_id!!)
-                        val action = ChooseLocationFragmentDirections.actionChooseLocationFragmentToRequestTripFragment()
-                        mNavController.navigate(action)
+                        model.setRequestTrip(true)
                     }
                     NetworkState.Status.FAILED ->{
                         showToast(networkState.msg.toString())
@@ -125,7 +138,7 @@ class RequestTripFragment  : Fragment() {
             }
         } catch (e: IOException) {
             e.printStackTrace()
-            showToast("Error getting address")
+            showToast("There is no internet connection")
         }
         return "Address not found"
     }

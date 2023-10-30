@@ -9,6 +9,7 @@ class SharedViewModel : ViewModel() {
     val location = MutableLiveData<String>()
     val locType = MutableLiveData<String>()
     val makeTripData = MutableLiveData<MakeTripData>()
+    val requestTrip = MutableLiveData<Boolean>()
 
 
     fun setLocation(loc: String) {
@@ -21,6 +22,10 @@ class SharedViewModel : ViewModel() {
 
     fun setMakeTripData(trip:MakeTripData){
         makeTripData.value = trip
+    }
+
+    fun setRequestTrip(request:Boolean){
+        requestTrip.value = request
     }
 
 }

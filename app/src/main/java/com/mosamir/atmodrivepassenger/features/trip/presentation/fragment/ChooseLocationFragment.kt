@@ -67,6 +67,13 @@ class ChooseLocationFragment : Fragment() {
 
         binding.tvPickupLocation.text = getAddressFromLatLng(Constants.pickUpLatLng!!)
 
+        onClick()
+        observeOnLocation()
+        observeOnMakeTrip()
+
+    }
+
+    private fun onClick(){
         binding.tvPickupLocation.setOnClickListener {
             locType = "pickupLoc"
             model.setLocType("pickupLoc")
@@ -84,6 +91,20 @@ class ChooseLocationFragment : Fragment() {
             Constants.dropOffLatLng = null
         }
 
+        binding.btnContinueTripLoc.setOnClickListener {
+
+            if(Constants.pickUpLatLng != null && Constants.dropOffLatLng != null){
+                tripViewModel.makeTrip("500 KM",500,"160 Min",160)
+                locType = "continue"
+                model.setLocType("continue")
+            }else{
+                showToast("Choose DropOff Location")
+            }
+
+        }
+    }
+
+    private fun observeOnLocation(){
         model.location.observe(viewLifecycleOwner, Observer {
 
             if (locType == "pickupLoc" && Constants.pickUpLatLng != null){
@@ -98,21 +119,6 @@ class ChooseLocationFragment : Fragment() {
             }
 
         })
-
-        binding.btnContinueTripLoc.setOnClickListener {
-
-            if(Constants.pickUpLatLng != null && Constants.dropOffLatLng != null){
-                tripViewModel.makeTrip("500 KM",500,"160 Min",160)
-                locType = "continue"
-                model.setLocType("continue")
-            }else{
-                showToast("Choose DropOff Location")
-            }
-
-        }
-
-        observeOnMakeTrip()
-
     }
 
     private fun observeOnMakeTrip(){
@@ -150,7 +156,7 @@ class ChooseLocationFragment : Fragment() {
             }
         } catch (e: IOException) {
             e.printStackTrace()
-            showToast("Error getting address")
+            showToast("There is no internet connection")
         }
         return "Address not found"
     }

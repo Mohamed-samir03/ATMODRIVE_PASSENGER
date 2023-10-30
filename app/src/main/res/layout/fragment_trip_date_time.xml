@@ -28,6 +28,7 @@
         android:background="@drawable/background_circle"
         android:backgroundTint="@color/quinary"
         android:padding="@dimen/_6sdp"
+        android:onClick="onClick"
         android:src="@drawable/close"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/drag_handle_date_time" />

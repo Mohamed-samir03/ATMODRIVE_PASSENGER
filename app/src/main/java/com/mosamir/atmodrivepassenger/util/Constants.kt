@@ -15,6 +15,7 @@ class Constants {
         var isBottomSheetOn = false
         var pickUpLatLng: LatLng? = null
         var dropOffLatLng: LatLng? = null
+        var tripId: Int = 0
 
         // SharedPreferences keys
         const val PASSENGER_PREFS = "PassengerPrefs"

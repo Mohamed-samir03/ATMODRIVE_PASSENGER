@@ -20,8 +20,10 @@ import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
@@ -56,16 +58,23 @@ import com.google.firebase.ktx.Firebase
 import com.mosamir.atmodrivepassenger.R
 import com.mosamir.atmodrivepassenger.databinding.FragmentTripBinding
 import com.mosamir.atmodrivepassenger.features.auth.presentation.common.AuthActivity
+import com.mosamir.atmodrivepassenger.features.trip.domain.model.CancelTripResponse
+import com.mosamir.atmodrivepassenger.features.trip.domain.model.ConfirmTripResponse
 import com.mosamir.atmodrivepassenger.features.trip.presentation.common.SharedViewModel
+import com.mosamir.atmodrivepassenger.features.trip.presentation.common.TripViewModel
 import com.mosamir.atmodrivepassenger.util.AnimationUtils
 import com.mosamir.atmodrivepassenger.util.Constants
+import com.mosamir.atmodrivepassenger.util.IResult
 import com.mosamir.atmodrivepassenger.util.LocationHelper
 import com.mosamir.atmodrivepassenger.util.MapUtils
+import com.mosamir.atmodrivepassenger.util.NetworkState
 import com.mosamir.atmodrivepassenger.util.SharedPreferencesManager
+import com.mosamir.atmodrivepassenger.util.getData
 import com.mosamir.atmodrivepassenger.util.showToast
 import com.mosamir.atmodrivepassenger.util.visibilityGone
 import com.mosamir.atmodrivepassenger.util.visibilityVisible
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import java.io.IOException
 import java.util.Locale
 @AndroidEntryPoint
@@ -82,6 +91,7 @@ class TripFragment : Fragment(), OnMapReadyCallback {
     private var bottomSheet = BottomSheetBehavior<ConstraintLayout>()
     private var myNavHostFragment: NavHostFragment? = null
     var model = SharedViewModel()
+    private val tripViewModel by viewModels<TripViewModel>()
 
     private var mBackPressed: Long = 0
     private var movingCabMarker : Marker?= null
@@ -129,6 +139,7 @@ class TripFragment : Fragment(), OnMapReadyCallback {
         onClick()
         observeOnLocationType()
         observeOnRequestTrip()
+        observeOnCancelBeforeCaptain()
         onBackPressHandle()
 //        handleBottomSheetSize()
 
@@ -157,6 +168,7 @@ class TripFragment : Fragment(), OnMapReadyCallback {
             Constants.isBottomSheetOn = true
 
             // cancel trip
+            tripViewModel.cancelBeforeCaptain(Constants.tripId)
 
         }
 
@@ -243,6 +255,25 @@ class TripFragment : Fragment(), OnMapReadyCallback {
             }
 
         })
+    }
+
+    private fun observeOnCancelBeforeCaptain(){
+        lifecycleScope.launch {
+            tripViewModel.cancelBeforeCaptainResult.collect{ networkState ->
+                when(networkState?.status){
+                    NetworkState.Status.SUCCESS ->{
+                        val data = networkState.data as IResult<CancelTripResponse>
+                        showToast(data.getData()?.message!!)
+                    }
+                    NetworkState.Status.FAILED ->{
+                        showToast(networkState.msg.toString())
+                    }
+                    NetworkState.Status.RUNNING ->{
+                    }
+                    else -> {}
+                }
+            }
+        }
     }
 
     private fun initBottomSheet(){

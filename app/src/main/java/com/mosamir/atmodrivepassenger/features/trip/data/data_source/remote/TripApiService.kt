@@ -3,6 +3,7 @@ package com.mosamir.atmodrivepassenger.features.trip.data.data_source.remote
 
 import com.mosamir.atmodrivepassenger.features.trip.data.model.RemoteConfirmTripResponse
 import com.mosamir.atmodrivepassenger.features.trip.data.model.RemoteMakeTripResponse
+import com.mosamir.atmodrivepassenger.features.trip.data.model.RemoteCancelTripResponse
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.POST
@@ -10,6 +11,7 @@ import retrofit2.http.POST
 
 const val MAKE_TRIP = "make-trip"
 const val CONFIRM_TRIP = "confirm-trip"
+const val CANCEL_BEFORE_CAPTAIN_ACCEPT = "cancel-before-captain-accept"
 
 interface TripApiService {
 
@@ -36,5 +38,11 @@ interface TripApiService {
         @Field("pickup_location_name") pickupLocationName: String,
         @Field("dropoff_location_name") dropOffLocationName: String,
     ): RemoteConfirmTripResponse
+
+    @POST(CANCEL_BEFORE_CAPTAIN_ACCEPT)
+    @FormUrlEncoded
+    suspend fun cancelBeforeCaptain(
+        @Field("trip_id") tripId: Int
+    ): RemoteCancelTripResponse
 
 }

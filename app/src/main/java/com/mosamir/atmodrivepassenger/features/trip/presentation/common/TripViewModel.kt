@@ -2,6 +2,7 @@ package com.mosamir.atmodrivepassenger.features.trip.presentation.common
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mosamir.atmodrivepassenger.features.trip.domain.use_case.ICancelBeforeCaptainUseCase
 import com.mosamir.atmodrivepassenger.features.trip.domain.use_case.IConfirmTripUseCase
 import com.mosamir.atmodrivepassenger.features.trip.domain.use_case.IMakeTripUseCase
 import com.mosamir.atmodrivepassenger.util.NetworkState
@@ -16,7 +17,8 @@ import javax.inject.Inject
 @HiltViewModel
 class TripViewModel @Inject constructor(
     private val iMakeTripUseCase: IMakeTripUseCase,
-    private val iConfirmTripUseCase: IConfirmTripUseCase
+    private val iConfirmTripUseCase: IConfirmTripUseCase,
+    private val iCancelBeforeCaptainUseCase: ICancelBeforeCaptainUseCase
 ):ViewModel(){
 
     private val _makeTripResult: MutableStateFlow<NetworkState?> = MutableStateFlow(null)
@@ -24,6 +26,9 @@ class TripViewModel @Inject constructor(
 
     private val _confirmTripResult: MutableStateFlow<NetworkState?> = MutableStateFlow(null)
     val confirmTripResult: StateFlow<NetworkState?> =_confirmTripResult
+
+    private val _cancelBeforeCaptainResult: MutableStateFlow<NetworkState?> = MutableStateFlow(null)
+    val cancelBeforeCaptainResult: StateFlow<NetworkState?> =_cancelBeforeCaptainResult
 
 
     fun makeTrip(distanceText: String,
@@ -71,6 +76,23 @@ class TripViewModel @Inject constructor(
             }catch (ex:Exception){
                 ex.printStackTrace()
                 _confirmTripResult.value = NetworkState.getErrorMessage(ex)
+            }
+        }
+    }
+
+    fun cancelBeforeCaptain(tripId:Int) {
+        _cancelBeforeCaptainResult.value = NetworkState.LOADING
+        viewModelScope.launch {
+            try {
+                val result = iCancelBeforeCaptainUseCase.cancelBeforeCaptain(tripId)
+                if (result.isSuccessful()){
+                    _cancelBeforeCaptainResult.value = NetworkState.getLoaded(result)
+                }else{
+                    _cancelBeforeCaptainResult.value = NetworkState.getErrorMessage(result.getError().toString())
+                }
+            }catch (ex:Exception){
+                ex.printStackTrace()
+                _cancelBeforeCaptainResult.value = NetworkState.getErrorMessage(ex)
             }
         }
     }

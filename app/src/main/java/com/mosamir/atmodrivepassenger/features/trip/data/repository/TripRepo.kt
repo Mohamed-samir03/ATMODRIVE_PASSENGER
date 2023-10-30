@@ -1,6 +1,7 @@
 package com.mosamir.atmodrivepassenger.features.trip.data.repository
 
 import com.mosamir.atmodrivepassenger.features.trip.data.data_source.remote.ITripDataSource
+import com.mosamir.atmodrivepassenger.features.trip.domain.model.CancelTripResponse
 import com.mosamir.atmodrivepassenger.features.trip.domain.model.ConfirmTripResponse
 import com.mosamir.atmodrivepassenger.features.trip.domain.model.MakeTripResponse
 import com.mosamir.atmodrivepassenger.features.trip.domain.repository.ITripRepo
@@ -43,6 +44,10 @@ class TripRepo @Inject constructor(
             estimateDistance,
             pickupLocationName,
             dropOffLocationName)
+    }
+
+    override suspend fun cancelBeforeCaptain(tripId: Int): IResult<CancelTripResponse> {
+        return iTripDataSource.cancelBeforeCaptain(tripId)
     }
 
 

@@ -1,5 +1,6 @@
 package com.mosamir.atmodrivepassenger.features.trip.domain.repository
 
+import com.mosamir.atmodrivepassenger.features.trip.domain.model.CancelTripResponse
 import com.mosamir.atmodrivepassenger.features.trip.domain.model.ConfirmTripResponse
 import com.mosamir.atmodrivepassenger.features.trip.domain.model.MakeTripResponse
 import com.mosamir.atmodrivepassenger.util.IResult
@@ -17,5 +18,7 @@ interface ITripRepo {
                             estimateCost: String,estimateTime: String,estimateDistance: String,
                             pickupLocationName: String,dropOffLocationName: String,
     ): IResult<ConfirmTripResponse>
+
+    suspend fun cancelBeforeCaptain(tripId: Int): IResult<CancelTripResponse>
 
 }

@@ -22,11 +22,6 @@
         android:label="fragment_request_trip"
         tools:layout="@layout/fragment_request_trip" >
         <action
-            android:id="@+id/action_requestTripFragment_to_tripLifecycleFragment"
-            app:destination="@id/tripLifecycleFragment"
-            app:popUpTo="@id/requestTripFragment"
-            app:popUpToInclusive="true" />
-        <action
             android:id="@+id/action_requestTripFragment_to_tripDateTimeFragment"
             app:destination="@id/tripDateTimeFragment"
             app:popUpTo="@id/requestTripFragment"
@@ -43,9 +38,4 @@
             app:popUpTo="@id/tripDateTimeFragment"
             app:popUpToInclusive="true" />
     </fragment>
-    <fragment
-        android:id="@+id/tripLifecycleFragment"
-        android:name="com.mosamir.atmodrivepassenger.features.trip.presentation.fragment.TripLifecycleFragment"
-        android:label="fragment_trip_lifecycle"
-        tools:layout="@layout/fragment_trip_lifecycle" />
 </navigation>

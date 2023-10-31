@@ -3,6 +3,7 @@ package com.mosamir.atmodrivepassenger.util
 import retrofit2.HttpException
 import java.io.IOException
 import java.net.SocketTimeoutException
+import kotlin.math.log
 
 class NetworkState constructor(val status: Status, val msg: Any? = null, val data: Any? = null) {
 

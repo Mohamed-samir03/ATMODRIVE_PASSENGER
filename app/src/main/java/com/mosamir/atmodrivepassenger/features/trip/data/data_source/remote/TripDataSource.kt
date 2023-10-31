@@ -5,6 +5,7 @@ import com.mosamir.atmodrivepassenger.features.trip.data.data_source.mapper.asDo
 import com.mosamir.atmodrivepassenger.features.trip.domain.model.CancelTripResponse
 import com.mosamir.atmodrivepassenger.features.trip.domain.model.ConfirmTripResponse
 import com.mosamir.atmodrivepassenger.features.trip.domain.model.MakeTripResponse
+import com.mosamir.atmodrivepassenger.features.trip.domain.model.captain.CaptainDetailsResponse
 import com.mosamir.atmodrivepassenger.util.IResult
 import com.mosamir.atmodrivepassenger.util.NetworkState
 import java.lang.Exception
@@ -73,6 +74,19 @@ class TripDataSource @Inject constructor(
                 return IResult.onSuccess(cancelTripData.asDomain())
             }else{
                 return IResult.onFail(cancelTripData.message)
+            }
+        }catch (e: Exception){
+            IResult.onFail(NetworkState.getErrorMessage(e).msg.toString())
+        }
+    }
+
+    override suspend fun getCaptainDetails(tripId: Int): IResult<CaptainDetailsResponse> {
+        return try {
+            val captainData = tripApiService.getCaptainDetails(tripId)
+            if (captainData.status){
+                return IResult.onSuccess(captainData.asDomain())
+            }else{
+                return IResult.onFail(captainData.message)
             }
         }catch (e: Exception){
             IResult.onFail(NetworkState.getErrorMessage(e).msg.toString())

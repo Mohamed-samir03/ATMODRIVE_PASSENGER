@@ -51,6 +51,8 @@ import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.tasks.Task
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
@@ -98,8 +100,8 @@ class TripFragment : Fragment(), OnMapReadyCallback {
     private var previousLatLng: LatLng? = null
     private var currentLatLng: LatLng? = null
     private var valueAnimator: ValueAnimator? = null
-    private var valueEventListener : ValueEventListener?= null
 
+    private var valueEventListener : ValueEventListener?= null
     private lateinit var database: DatabaseReference
 
     private var pickUpMarker : Marker?= null
@@ -149,7 +151,7 @@ class TripFragment : Fragment(), OnMapReadyCallback {
 
         binding.locationCard.setOnClickListener {
             binding.locationCard.visibilityGone()
-            disPlayBottomSheet()
+            disPlayBottomSheet(R.navigation.trip_sheet_graph)
             try {
                 Constants.pickUpLatLng = myLoc!!
                 if(pickUpMarker == null){
@@ -163,12 +165,15 @@ class TripFragment : Fragment(), OnMapReadyCallback {
 
         binding.tvCancelFindCaptain.setOnClickListener {
             binding.layoutFindCaptain.visibilityGone()
-            model.setRequestTrip(false)
-            bottomSheet.state = BottomSheetBehavior.STATE_EXPANDED
-            Constants.isBottomSheetOn = true
+
+//            model.setRequestTrip(false)
+//            bottomSheet.state = BottomSheetBehavior.STATE_EXPANDED
+//            Constants.isBottomSheetOn = true
 
             // cancel trip
             tripViewModel.cancelBeforeCaptain(Constants.tripId)
+
+            clearMap()
 
         }
 
@@ -252,6 +257,10 @@ class TripFragment : Fragment(), OnMapReadyCallback {
 
             if (it){
                 findingCaptain()
+                listenerOnTrip()
+            }else if(!it){
+                showToast("tripCanceled")
+                clearMap()
             }
 
         })
@@ -276,6 +285,29 @@ class TripFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
+    private fun listenerOnTrip(){
+        valueEventListener =  object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+
+                val tripStats = snapshot.getValue(String::class.java)
+
+                if (tripStats != null){
+                    binding.layoutFindCaptain.visibilityGone()
+                    disPlayBottomSheet(R.navigation.trip_lifecycle_nav_graph)
+                }
+
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+        }
+
+        database.child("trips").child(Constants.tripId.toString()).child("status")
+            .addValueEventListener(valueEventListener!!)
+    }
+
     private fun initBottomSheet(){
         val bottomSheetView = view?.findViewById<ConstraintLayout>(R.id.bottom_sheet_trip)
         bottomSheet = BottomSheetBehavior.from(bottomSheetView!!)
@@ -284,9 +316,9 @@ class TripFragment : Fragment(), OnMapReadyCallback {
             childFragmentManager.findFragmentById(R.id.nav_trip_sheet) as NavHostFragment
     }
 
-    private fun disPlayBottomSheet(){
+    private fun disPlayBottomSheet(nav:Int){
         val inflater = myNavHostFragment?.navController?.navInflater
-        val graph = inflater?.inflate(R.navigation.trip_sheet_graph)
+        val graph = inflater?.inflate(nav)
         myNavHostFragment?.navController?.graph = graph!!
         bottomSheet.state = BottomSheetBehavior.STATE_EXPANDED
         Constants.isBottomSheetOn = true
@@ -621,5 +653,7 @@ class TripFragment : Fragment(), OnMapReadyCallback {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        database.child("trips").child(Constants.tripId.toString()).child("status")
+            .removeEventListener(valueEventListener!!)
     }
 }

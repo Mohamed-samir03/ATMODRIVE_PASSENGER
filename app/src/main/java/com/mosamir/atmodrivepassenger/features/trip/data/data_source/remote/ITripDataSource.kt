@@ -4,6 +4,7 @@ package com.mosamir.atmodrivepassenger.features.trip.data.data_source.remote
 import com.mosamir.atmodrivepassenger.features.trip.domain.model.CancelTripResponse
 import com.mosamir.atmodrivepassenger.features.trip.domain.model.ConfirmTripResponse
 import com.mosamir.atmodrivepassenger.features.trip.domain.model.MakeTripResponse
+import com.mosamir.atmodrivepassenger.features.trip.domain.model.captain.CaptainDetailsResponse
 import com.mosamir.atmodrivepassenger.util.IResult
 
 interface ITripDataSource {
@@ -21,5 +22,7 @@ interface ITripDataSource {
     ): IResult<ConfirmTripResponse>
 
     suspend fun cancelBeforeCaptain(tripId: Int): IResult<CancelTripResponse>
+
+    suspend fun getCaptainDetails(tripId: Int): IResult<CaptainDetailsResponse>
 
 }

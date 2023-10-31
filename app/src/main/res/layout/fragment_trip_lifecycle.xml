@@ -171,6 +171,7 @@
                 android:background="@drawable/button_background"
                 android:backgroundTint="#2000A6A6"
                 android:padding="@dimen/_8sdp"
+                android:onClick="onClick"
                 android:src="@drawable/phone"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView11" />

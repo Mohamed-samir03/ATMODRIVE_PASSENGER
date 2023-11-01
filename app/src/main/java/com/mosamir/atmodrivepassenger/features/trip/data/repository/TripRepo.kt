@@ -5,6 +5,7 @@ import com.mosamir.atmodrivepassenger.features.trip.domain.model.CancelTripRespo
 import com.mosamir.atmodrivepassenger.features.trip.domain.model.ConfirmTripResponse
 import com.mosamir.atmodrivepassenger.features.trip.domain.model.MakeTripResponse
 import com.mosamir.atmodrivepassenger.features.trip.domain.model.captain.CaptainDetailsResponse
+import com.mosamir.atmodrivepassenger.features.trip.domain.model.ontrip.OnTripResponse
 import com.mosamir.atmodrivepassenger.features.trip.domain.repository.ITripRepo
 import com.mosamir.atmodrivepassenger.util.IResult
 import javax.inject.Inject
@@ -53,6 +54,14 @@ class TripRepo @Inject constructor(
 
     override suspend fun getCaptainDetails(tripId: Int): IResult<CaptainDetailsResponse> {
         return iTripDataSource.getCaptainDetails(tripId)
+    }
+
+    override suspend fun onTrip(): IResult<OnTripResponse> {
+        return iTripDataSource.onTrip()
+    }
+
+    override suspend fun cancelTrip(tripId: Int): IResult<CancelTripResponse> {
+        return iTripDataSource.cancelTrip(tripId)
     }
 
 

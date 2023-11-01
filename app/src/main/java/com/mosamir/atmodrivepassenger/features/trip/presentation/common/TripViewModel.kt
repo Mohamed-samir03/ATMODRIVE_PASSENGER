@@ -3,9 +3,11 @@ package com.mosamir.atmodrivepassenger.features.trip.presentation.common
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mosamir.atmodrivepassenger.features.trip.domain.use_case.ICancelBeforeCaptainUseCase
+import com.mosamir.atmodrivepassenger.features.trip.domain.use_case.ICancelTripUseCase
 import com.mosamir.atmodrivepassenger.features.trip.domain.use_case.IConfirmTripUseCase
 import com.mosamir.atmodrivepassenger.features.trip.domain.use_case.IGetCaptainDetailsUseCase
 import com.mosamir.atmodrivepassenger.features.trip.domain.use_case.IMakeTripUseCase
+import com.mosamir.atmodrivepassenger.features.trip.domain.use_case.IOnTripUseCase
 import com.mosamir.atmodrivepassenger.util.NetworkState
 import com.mosamir.atmodrivepassenger.util.getError
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,7 +22,9 @@ class TripViewModel @Inject constructor(
     private val iMakeTripUseCase: IMakeTripUseCase,
     private val iConfirmTripUseCase: IConfirmTripUseCase,
     private val iCancelBeforeCaptainUseCase: ICancelBeforeCaptainUseCase,
-    private val iGetCaptainDetailsUseCase: IGetCaptainDetailsUseCase
+    private val iGetCaptainDetailsUseCase: IGetCaptainDetailsUseCase,
+    private val iOnTripUseCase: IOnTripUseCase,
+    private val iCancelTripUseCase: ICancelTripUseCase
 ):ViewModel(){
 
     private val _makeTripResult: MutableStateFlow<NetworkState?> = MutableStateFlow(null)
@@ -34,6 +38,12 @@ class TripViewModel @Inject constructor(
 
     private val _getCaptainDetailsResult: MutableStateFlow<NetworkState?> = MutableStateFlow(null)
     val getCaptainDetailsResult: StateFlow<NetworkState?> =_getCaptainDetailsResult
+
+    private val _onTripResult: MutableStateFlow<NetworkState?> = MutableStateFlow(null)
+    val onTripResult: StateFlow<NetworkState?> =_onTripResult
+
+    private val _cancelTripResult: MutableStateFlow<NetworkState?> = MutableStateFlow(null)
+    val cancelTripResult: StateFlow<NetworkState?> =_cancelTripResult
 
 
     fun makeTrip(distanceText: String,
@@ -115,6 +125,40 @@ class TripViewModel @Inject constructor(
             }catch (ex:Exception){
                 ex.printStackTrace()
                 _getCaptainDetailsResult.value = NetworkState.getErrorMessage(ex)
+            }
+        }
+    }
+
+    fun onTrip() {
+        _onTripResult.value = NetworkState.LOADING
+        viewModelScope.launch {
+            try {
+                val result = iOnTripUseCase.onTrip()
+                if (result.isSuccessful()){
+                    _onTripResult.value = NetworkState.getLoaded(result)
+                }else{
+                    _onTripResult.value = NetworkState.getErrorMessage(result.getError().toString())
+                }
+            }catch (ex:Exception){
+                ex.printStackTrace()
+                _onTripResult.value = NetworkState.getErrorMessage(ex)
+            }
+        }
+    }
+
+    fun cancelTrip(tripId:Int) {
+        _cancelTripResult.value = NetworkState.LOADING
+        viewModelScope.launch {
+            try {
+                val result = iCancelTripUseCase.cancelTrip(tripId)
+                if (result.isSuccessful()){
+                    _cancelTripResult.value = NetworkState.getLoaded(result)
+                }else{
+                    _cancelTripResult.value = NetworkState.getErrorMessage(result.getError().toString())
+                }
+            }catch (ex:Exception){
+                ex.printStackTrace()
+                _cancelTripResult.value = NetworkState.getErrorMessage(ex)
             }
         }
     }

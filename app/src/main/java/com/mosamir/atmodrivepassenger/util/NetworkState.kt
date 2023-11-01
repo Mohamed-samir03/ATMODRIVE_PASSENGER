@@ -32,7 +32,7 @@ class NetworkState constructor(val status: Status, val msg: Any? = null, val dat
                 }
                 else -> {
                     println("NetworkState__Error ${throwable.message}")
-                    NetworkState(Status.FAILED, "There is no internet connection")
+                    NetworkState(Status.FAILED, "${throwable.message}")
                 }
             }
         }

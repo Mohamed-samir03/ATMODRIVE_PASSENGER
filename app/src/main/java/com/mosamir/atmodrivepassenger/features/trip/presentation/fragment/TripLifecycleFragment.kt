@@ -74,6 +74,7 @@ class TripLifecycleFragment : Fragment() {
 
         listenerOnTrip()
         observeOnCaptainDetails()
+        observeOnCancelTrip()
         onClick()
 
     }
@@ -84,6 +85,10 @@ class TripLifecycleFragment : Fragment() {
             val phoneNumber = Uri.parse("tel:$captainMobile")
             val callIntent = Intent(Intent.ACTION_DIAL, phoneNumber)
             startActivity(callIntent)
+        }
+
+        binding.btnCancelTrip.setOnClickListener {
+            tripViewModel.cancelTrip(Constants.tripId)
         }
 
     }
@@ -131,10 +136,30 @@ class TripLifecycleFragment : Fragment() {
         }
     }
 
+    private fun observeOnCancelTrip(){
+        lifecycleScope.launch {
+            tripViewModel.cancelTripResult.collect{ networkState ->
+                when(networkState?.status){
+                    NetworkState.Status.SUCCESS ->{
+                        val data = networkState.data as IResult<CancelTripResponse>
+                        showToast(data.getData()?.message!!)
+                    }
+                    NetworkState.Status.FAILED ->{
+                        showToast(networkState.msg.toString())
+                    }
+                    NetworkState.Status.RUNNING ->{
+                    }
+                    else -> {}
+                }
+            }
+        }
+    }
+
     private fun updateUi(data:CaptainData){
         binding.apply {
 
             tvCaptainName.text = data.full_name
+            tvTripCaptainPrice.text = data.estimate_cost.toString()+" EGP"
 
         }
         captainMobile = data.mobile

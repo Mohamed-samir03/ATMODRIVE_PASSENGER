@@ -4,6 +4,7 @@ import com.mosamir.atmodrivepassenger.features.trip.domain.model.CancelTripRespo
 import com.mosamir.atmodrivepassenger.features.trip.domain.model.ConfirmTripResponse
 import com.mosamir.atmodrivepassenger.features.trip.domain.model.MakeTripResponse
 import com.mosamir.atmodrivepassenger.features.trip.domain.model.captain.CaptainDetailsResponse
+import com.mosamir.atmodrivepassenger.features.trip.domain.model.ontrip.OnTripResponse
 import com.mosamir.atmodrivepassenger.util.IResult
 
 interface ITripRepo {
@@ -23,5 +24,9 @@ interface ITripRepo {
     suspend fun cancelBeforeCaptain(tripId: Int): IResult<CancelTripResponse>
 
     suspend fun getCaptainDetails(tripId: Int): IResult<CaptainDetailsResponse>
+
+    suspend fun onTrip():IResult<OnTripResponse>
+
+    suspend fun cancelTrip(tripId: Int): IResult<CancelTripResponse>
 
 }

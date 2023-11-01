@@ -62,6 +62,8 @@ import com.mosamir.atmodrivepassenger.databinding.FragmentTripBinding
 import com.mosamir.atmodrivepassenger.features.auth.presentation.common.AuthActivity
 import com.mosamir.atmodrivepassenger.features.trip.domain.model.CancelTripResponse
 import com.mosamir.atmodrivepassenger.features.trip.domain.model.ConfirmTripResponse
+import com.mosamir.atmodrivepassenger.features.trip.domain.model.ontrip.OnTripData
+import com.mosamir.atmodrivepassenger.features.trip.domain.model.ontrip.OnTripResponse
 import com.mosamir.atmodrivepassenger.features.trip.presentation.common.SharedViewModel
 import com.mosamir.atmodrivepassenger.features.trip.presentation.common.TripViewModel
 import com.mosamir.atmodrivepassenger.util.AnimationUtils
@@ -128,13 +130,15 @@ class TripFragment : Fragment(), OnMapReadyCallback {
         super.onViewCreated(view, savedInstanceState)
 
         database = Firebase.database.reference
-
         model = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = childFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+
+        tripViewModel.onTrip()
+        observeOnOnTrip()
 
         initLocation()
         initBottomSheet()
@@ -264,6 +268,50 @@ class TripFragment : Fragment(), OnMapReadyCallback {
             }
 
         })
+    }
+
+    private fun observeOnOnTrip(){
+        lifecycleScope.launch {
+            tripViewModel.onTripResult.collect{ networkState ->
+                when(networkState?.status){
+                    NetworkState.Status.SUCCESS ->{
+                        val data = networkState.data as IResult<OnTripResponse>
+                        setUpTrip(data.getData()?.data!!)
+                    }
+                    NetworkState.Status.FAILED ->{
+                        showToast(networkState.msg.toString())
+                    }
+                    NetworkState.Status.RUNNING ->{
+                    }
+                    else -> {}
+                }
+            }
+        }
+    }
+
+    private fun setUpTrip(tripData:OnTripData){
+        Constants.tripId = tripData.trip_id
+        binding.locationCard.visibilityGone()
+        disPlayBottomSheet(R.navigation.trip_lifecycle_nav_graph)
+        val pickUpLatLng = LatLng(tripData.pickup_lat.toDouble(),tripData.pickup_lng.toDouble())
+        val dropOffLatLng = LatLng(tripData.dropoff_lat.toDouble(),tripData.dropoff_lng.toDouble())
+        if(pickUpMarker == null){
+            pickUpMarker = addPickUpMarker(pickUpLatLng)
+        }
+        pickUpMarker?.position = pickUpLatLng
+        if (dropOffMarker == null){
+            dropOffMarker = addDropOffMarker(dropOffLatLng)
+        }
+        dropOffMarker?.position = dropOffLatLng
+        val builder = LatLngBounds.Builder()
+        builder.include(pickUpLatLng)
+        builder.include(dropOffLatLng)
+        val bounds = builder.build()
+        mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 200))
+        setLocation(false)
+
+        //draw path
+
     }
 
     private fun observeOnCancelBeforeCaptain(){

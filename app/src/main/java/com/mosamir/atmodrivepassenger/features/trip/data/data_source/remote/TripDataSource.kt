@@ -2,10 +2,13 @@ package com.mosamir.atmodrivepassenger.features.trip.data.data_source.remote
 
 
 import com.mosamir.atmodrivepassenger.features.trip.data.data_source.mapper.asDomain
+import com.mosamir.atmodrivepassenger.features.trip.data.data_source.mapper.captain.asDomain
+import com.mosamir.atmodrivepassenger.features.trip.data.data_source.mapper.ontrip.asDomain
 import com.mosamir.atmodrivepassenger.features.trip.domain.model.CancelTripResponse
 import com.mosamir.atmodrivepassenger.features.trip.domain.model.ConfirmTripResponse
 import com.mosamir.atmodrivepassenger.features.trip.domain.model.MakeTripResponse
 import com.mosamir.atmodrivepassenger.features.trip.domain.model.captain.CaptainDetailsResponse
+import com.mosamir.atmodrivepassenger.features.trip.domain.model.ontrip.OnTripResponse
 import com.mosamir.atmodrivepassenger.util.IResult
 import com.mosamir.atmodrivepassenger.util.NetworkState
 import java.lang.Exception
@@ -87,6 +90,32 @@ class TripDataSource @Inject constructor(
                 return IResult.onSuccess(captainData.asDomain())
             }else{
                 return IResult.onFail(captainData.message)
+            }
+        }catch (e: Exception){
+            IResult.onFail(NetworkState.getErrorMessage(e).msg.toString())
+        }
+    }
+
+    override suspend fun onTrip(): IResult<OnTripResponse> {
+        return try {
+            val onTrip = tripApiService.onTrip()
+            if (onTrip.status){
+                return IResult.onSuccess(onTrip.asDomain())
+            }else{
+                return IResult.onFail(onTrip.message)
+            }
+        }catch (e: Exception){
+            IResult.onFail(NetworkState.getErrorMessage(e).msg.toString())
+        }
+    }
+
+    override suspend fun cancelTrip(tripId: Int): IResult<CancelTripResponse> {
+        return try {
+            val cancelTrip = tripApiService.cancelTrip(tripId)
+            if (cancelTrip.status){
+                return IResult.onSuccess(cancelTrip.asDomain())
+            }else{
+                return IResult.onFail(cancelTrip.message)
             }
         }catch (e: Exception){
             IResult.onFail(NetworkState.getErrorMessage(e).msg.toString())

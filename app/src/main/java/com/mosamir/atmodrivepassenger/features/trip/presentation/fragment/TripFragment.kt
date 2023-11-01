@@ -65,6 +65,7 @@ import com.mosamir.atmodrivepassenger.features.trip.domain.model.ConfirmTripResp
 import com.mosamir.atmodrivepassenger.features.trip.domain.model.ontrip.OnTripData
 import com.mosamir.atmodrivepassenger.features.trip.domain.model.ontrip.OnTripResponse
 import com.mosamir.atmodrivepassenger.features.trip.presentation.common.SharedViewModel
+import com.mosamir.atmodrivepassenger.features.trip.presentation.common.Trip
 import com.mosamir.atmodrivepassenger.features.trip.presentation.common.TripViewModel
 import com.mosamir.atmodrivepassenger.util.AnimationUtils
 import com.mosamir.atmodrivepassenger.util.Constants
@@ -243,13 +244,7 @@ class TripFragment : Fragment(), OnMapReadyCallback {
                 clearMap()
             }else if(it == "continue"){
 
-                val builder = LatLngBounds.Builder()
-                builder.include(Constants.pickUpLatLng!!)
-                builder.include(Constants.dropOffLatLng!!)
-                val bounds = builder.build()
-                mMap?.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 200))
-
-                // drawPath
+                showPath(Constants.pickUpLatLng!!,Constants.dropOffLatLng!!)
 
             }
 
@@ -277,6 +272,7 @@ class TripFragment : Fragment(), OnMapReadyCallback {
                     NetworkState.Status.SUCCESS ->{
                         val data = networkState.data as IResult<OnTripResponse>
                         setUpTrip(data.getData()?.data!!)
+                        listenerOnTrip()
                     }
                     NetworkState.Status.FAILED ->{
                         showToast(networkState.msg.toString())
@@ -303,12 +299,17 @@ class TripFragment : Fragment(), OnMapReadyCallback {
             dropOffMarker = addDropOffMarker(dropOffLatLng)
         }
         dropOffMarker?.position = dropOffLatLng
+        showPath(pickUpLatLng,dropOffLatLng)
+        setLocation(false)
+
+    }
+
+    private fun showPath(pickUp:LatLng,dropOff:LatLng){
         val builder = LatLngBounds.Builder()
-        builder.include(pickUpLatLng)
-        builder.include(dropOffLatLng)
+        builder.include(pickUp)
+        builder.include(dropOff)
         val bounds = builder.build()
         mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 200))
-        setLocation(false)
 
         //draw path
 
@@ -337,11 +338,12 @@ class TripFragment : Fragment(), OnMapReadyCallback {
         valueEventListener =  object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
 
-                val tripStats = snapshot.getValue(String::class.java)
+                val trip = snapshot.getValue(Trip::class.java)
 
-                if (tripStats != null){
+                if (trip != null){
                     binding.layoutFindCaptain.visibilityGone()
                     disPlayBottomSheet(R.navigation.trip_lifecycle_nav_graph)
+                    updateCarLocation(LatLng(trip.lat.toDouble(),trip.lng.toDouble()))
                 }
 
             }
@@ -352,7 +354,7 @@ class TripFragment : Fragment(), OnMapReadyCallback {
 
         }
 
-        database.child("trips").child(Constants.tripId.toString()).child("status")
+        database.child("trips").child(Constants.tripId.toString())
             .addValueEventListener(valueEventListener!!)
     }
 
@@ -421,6 +423,7 @@ class TripFragment : Fragment(), OnMapReadyCallback {
         Constants.dropOffLatLng = null
         pickupDropOff = 0
         Constants.isBottomSheetOn = false
+        movingCabMarker = null
     }
 
     private fun findingCaptain(){
@@ -701,7 +704,7 @@ class TripFragment : Fragment(), OnMapReadyCallback {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-        database.child("trips").child(Constants.tripId.toString()).child("status")
+        database.child("trips").child(Constants.tripId.toString())
             .removeEventListener(valueEventListener!!)
     }
 }

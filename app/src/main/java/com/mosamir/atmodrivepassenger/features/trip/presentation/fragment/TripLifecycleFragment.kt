@@ -1,11 +1,13 @@
 package com.mosamir.atmodrivepassenger.features.trip.presentation.fragment
 
 import android.content.Intent
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
@@ -30,6 +32,8 @@ import com.mosamir.atmodrivepassenger.features.trip.presentation.common.TripView
 import com.mosamir.atmodrivepassenger.util.Constants
 import com.mosamir.atmodrivepassenger.util.IResult
 import com.mosamir.atmodrivepassenger.util.NetworkState
+import com.mosamir.atmodrivepassenger.util.disable
+import com.mosamir.atmodrivepassenger.util.enabled
 import com.mosamir.atmodrivepassenger.util.getData
 import com.mosamir.atmodrivepassenger.util.showToast
 import com.mosamir.atmodrivepassenger.util.visibilityGone
@@ -103,10 +107,57 @@ class TripLifecycleFragment : Fragment() {
 
                 val tripStats = snapshot.getValue(String::class.java)
 
-                if (tripStats == null){
-                    model.setRequestTrip(false)
-                }else if(tripStats == "start_trip"){
+                when (tripStats) {
+                    null -> {
+                        model.setRequestTrip(false)
+                    }
+                    "accepted" -> {
 
+                    }
+                    "on_the_way" -> {
+                        binding.tvTripStatus.apply {
+                            text = "Captain is on the way to you."
+                            setBackgroundColor(ContextCompat.getColor(context, R.color.progress))
+                        }
+                        binding.btnCancelTrip.apply {
+                            enabled()
+                            setBackgroundResource(R.drawable.background_cancel_trip)
+                            setTextColor(ContextCompat.getColor(requireContext(), R.color.error))
+                        }
+                    }
+                    "arrived" -> {
+                        binding.tvTripStatus.apply {
+                            text = "Captain is arrived to pickup."
+                            setBackgroundColor(ContextCompat.getColor(context, R.color.success))
+                        }
+                        binding.btnCancelTrip.apply {
+                            enabled()
+                            setBackgroundResource(R.drawable.background_cancel_trip)
+                            setTextColor(ContextCompat.getColor(requireContext(), R.color.error))
+                        }
+                    }
+                    "start_trip" -> {
+                        binding.tvTripStatus.apply {
+                            text = "Trip running"
+                            setBackgroundColor(ContextCompat.getColor(context, R.color.progress))
+                        }
+                        binding.btnCancelTrip.apply {
+                            disable()
+                            setBackgroundResource(R.drawable.background_disable)
+                            setTextColor(Color.parseColor("#D6E2ED"))
+                        }
+                    }
+                    "end_trip" -> {
+                        binding.tvTripStatus.apply {
+                            text = "You are arrived to drop off! 🎉🎉"
+                            setBackgroundColor(ContextCompat.getColor(context, R.color.success))
+                        }
+                        binding.btnCancelTrip.apply {
+                            disable()
+                            setBackgroundResource(R.drawable.background_disable)
+                            setTextColor(Color.parseColor("#D6E2ED"))
+                        }
+                    }
                 }
 
             }

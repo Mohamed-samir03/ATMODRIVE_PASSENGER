@@ -61,11 +61,10 @@ import com.mosamir.atmodrivepassenger.R
 import com.mosamir.atmodrivepassenger.databinding.FragmentTripBinding
 import com.mosamir.atmodrivepassenger.features.auth.presentation.common.AuthActivity
 import com.mosamir.atmodrivepassenger.features.trip.domain.model.CancelTripResponse
-import com.mosamir.atmodrivepassenger.features.trip.domain.model.ConfirmTripResponse
 import com.mosamir.atmodrivepassenger.features.trip.domain.model.ontrip.OnTripData
 import com.mosamir.atmodrivepassenger.features.trip.domain.model.ontrip.OnTripResponse
 import com.mosamir.atmodrivepassenger.features.trip.presentation.common.SharedViewModel
-import com.mosamir.atmodrivepassenger.features.trip.presentation.common.Trip
+import com.mosamir.atmodrivepassenger.features.trip.presentation.common.RealTimeTripObject
 import com.mosamir.atmodrivepassenger.features.trip.presentation.common.TripViewModel
 import com.mosamir.atmodrivepassenger.util.AnimationUtils
 import com.mosamir.atmodrivepassenger.util.Constants
@@ -109,9 +108,10 @@ class TripFragment : Fragment(), OnMapReadyCallback {
 
     private var pickUpMarker : Marker?= null
     private var dropOffMarker : Marker?= null
-    var address = ""
-    var pickupDropOff = 0
-    var myLoc:LatLng? = null
+    private var address = ""
+    private var pickupDropOff = 0
+    private var myLoc:LatLng? = null
+    private var status = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -291,6 +291,8 @@ class TripFragment : Fragment(), OnMapReadyCallback {
         disPlayBottomSheet(R.navigation.trip_lifecycle_nav_graph)
         val pickUpLatLng = LatLng(tripData.pickup_lat.toDouble(),tripData.pickup_lng.toDouble())
         val dropOffLatLng = LatLng(tripData.dropoff_lat.toDouble(),tripData.dropoff_lng.toDouble())
+        Constants.pickUpLatLng = pickUpLatLng
+        Constants.dropOffLatLng = dropOffLatLng
         if(pickUpMarker == null){
             pickUpMarker = addPickUpMarker(pickUpLatLng)
         }
@@ -338,12 +340,30 @@ class TripFragment : Fragment(), OnMapReadyCallback {
         valueEventListener =  object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
 
-                val trip = snapshot.getValue(Trip::class.java)
+                val trip = snapshot.getValue(RealTimeTripObject::class.java)
 
-                if (trip != null){
+                val tripStatus = trip?.status
+
+                if(trip?.status != null && tripStatus != status){
                     binding.layoutFindCaptain.visibilityGone()
                     disPlayBottomSheet(R.navigation.trip_lifecycle_nav_graph)
+                    status = tripStatus!!
+                    val captainLatLng = LatLng(trip.lat.toDouble(),trip.lng.toDouble())
+                    when (status){
+                        "on_the_way" ->{
+                            showPath(captainLatLng,Constants.pickUpLatLng!!)
+                        }
+                        "start_trip" -> {
+                            showPath(captainLatLng,Constants.dropOffLatLng!!)
+                        }
+                    }
+                }
+
+                if (trip != null){
                     updateCarLocation(LatLng(trip.lat.toDouble(),trip.lng.toDouble()))
+                }else{
+//                    findingCaptain()
+//                    binding.locationCard.visibilityGone()
                 }
 
             }
@@ -424,6 +444,7 @@ class TripFragment : Fragment(), OnMapReadyCallback {
         pickupDropOff = 0
         Constants.isBottomSheetOn = false
         movingCabMarker = null
+        status = ""
     }
 
     private fun findingCaptain(){
@@ -623,7 +644,7 @@ class TripFragment : Fragment(), OnMapReadyCallback {
 
         val cameraPosition = CameraPosition.Builder()
             .bearing(LocationHelper.getBearing(previous, latLng))
-            .target(latLng).tilt(45f).zoom(16f).build()
+            .target(latLng).zoom(16f).build()
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
 
     }

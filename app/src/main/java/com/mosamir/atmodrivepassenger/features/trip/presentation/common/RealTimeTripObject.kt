@@ -3,7 +3,7 @@ package com.mosamir.atmodrivepassenger.features.trip.presentation.common
 import com.google.firebase.database.IgnoreExtraProperties
 
 @IgnoreExtraProperties
-data class Trip(
+data class RealTimeTripObject(
     val captainId:Int,
     val cost:Double,
     val distance:Double,

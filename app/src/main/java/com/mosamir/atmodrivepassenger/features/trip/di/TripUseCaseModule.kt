@@ -5,10 +5,12 @@ import com.mosamir.atmodrivepassenger.features.trip.domain.use_case.CancelBefore
 import com.mosamir.atmodrivepassenger.features.trip.domain.use_case.CancelTripUseCase
 import com.mosamir.atmodrivepassenger.features.trip.domain.use_case.ConfirmTripUseCase
 import com.mosamir.atmodrivepassenger.features.trip.domain.use_case.GetCaptainDetailsUseCase
+import com.mosamir.atmodrivepassenger.features.trip.domain.use_case.GetTripDetailsUseCase
 import com.mosamir.atmodrivepassenger.features.trip.domain.use_case.ICancelBeforeCaptainUseCase
 import com.mosamir.atmodrivepassenger.features.trip.domain.use_case.ICancelTripUseCase
 import com.mosamir.atmodrivepassenger.features.trip.domain.use_case.IConfirmTripUseCase
 import com.mosamir.atmodrivepassenger.features.trip.domain.use_case.IGetCaptainDetailsUseCase
+import com.mosamir.atmodrivepassenger.features.trip.domain.use_case.IGetTripDetailsUseCase
 import com.mosamir.atmodrivepassenger.features.trip.domain.use_case.IMakeTripUseCase
 import com.mosamir.atmodrivepassenger.features.trip.domain.use_case.IOnTripUseCase
 import com.mosamir.atmodrivepassenger.features.trip.domain.use_case.MakeTripUseCase
@@ -47,6 +49,10 @@ object TripUseCaseModule {
     @Provides
     fun provideCancelTripUseCase(iTripRepo: ITripRepo):ICancelTripUseCase
             = CancelTripUseCase(iTripRepo)
+
+    @Provides
+    fun provideTripDetailsUseCase(iTripRepo: ITripRepo):IGetTripDetailsUseCase
+            = GetTripDetailsUseCase(iTripRepo)
 
 
 }

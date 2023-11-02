@@ -7,6 +7,7 @@ import com.mosamir.atmodrivepassenger.features.trip.data.data_source.mapper.ontr
 import com.mosamir.atmodrivepassenger.features.trip.domain.model.CancelTripResponse
 import com.mosamir.atmodrivepassenger.features.trip.domain.model.ConfirmTripResponse
 import com.mosamir.atmodrivepassenger.features.trip.domain.model.MakeTripResponse
+import com.mosamir.atmodrivepassenger.features.trip.domain.model.TripDetailsResponse
 import com.mosamir.atmodrivepassenger.features.trip.domain.model.captain.CaptainDetailsResponse
 import com.mosamir.atmodrivepassenger.features.trip.domain.model.ontrip.OnTripResponse
 import com.mosamir.atmodrivepassenger.util.IResult
@@ -116,6 +117,19 @@ class TripDataSource @Inject constructor(
                 return IResult.onSuccess(cancelTrip.asDomain())
             }else{
                 return IResult.onFail(cancelTrip.message)
+            }
+        }catch (e: Exception){
+            IResult.onFail(NetworkState.getErrorMessage(e).msg.toString())
+        }
+    }
+
+    override suspend fun getTripDetails(tripId: Int): IResult<TripDetailsResponse> {
+        return try {
+            val tripDetails = tripApiService.getTripDetails(tripId)
+            if (tripDetails.status){
+                return IResult.onSuccess(tripDetails.asDomain())
+            }else{
+                return IResult.onFail(tripDetails.message)
             }
         }catch (e: Exception){
             IResult.onFail(NetworkState.getErrorMessage(e).msg.toString())

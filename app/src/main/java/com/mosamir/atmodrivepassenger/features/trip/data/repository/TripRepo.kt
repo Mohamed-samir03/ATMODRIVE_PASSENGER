@@ -4,6 +4,7 @@ import com.mosamir.atmodrivepassenger.features.trip.data.data_source.remote.ITri
 import com.mosamir.atmodrivepassenger.features.trip.domain.model.CancelTripResponse
 import com.mosamir.atmodrivepassenger.features.trip.domain.model.ConfirmTripResponse
 import com.mosamir.atmodrivepassenger.features.trip.domain.model.MakeTripResponse
+import com.mosamir.atmodrivepassenger.features.trip.domain.model.TripDetailsResponse
 import com.mosamir.atmodrivepassenger.features.trip.domain.model.captain.CaptainDetailsResponse
 import com.mosamir.atmodrivepassenger.features.trip.domain.model.ontrip.OnTripResponse
 import com.mosamir.atmodrivepassenger.features.trip.domain.repository.ITripRepo
@@ -62,6 +63,10 @@ class TripRepo @Inject constructor(
 
     override suspend fun cancelTrip(tripId: Int): IResult<CancelTripResponse> {
         return iTripDataSource.cancelTrip(tripId)
+    }
+
+    override suspend fun getTripDetails(tripId: Int): IResult<TripDetailsResponse> {
+        return iTripDataSource.getTripDetails(tripId)
     }
 
 

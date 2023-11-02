@@ -22,6 +22,7 @@ import com.google.firebase.ktx.Firebase
 import com.mosamir.atmodrivepassenger.R
 import com.mosamir.atmodrivepassenger.databinding.FragmentTripLifecycleBinding
 import com.mosamir.atmodrivepassenger.features.trip.domain.model.CancelTripResponse
+import com.mosamir.atmodrivepassenger.features.trip.domain.model.TripDetailsResponse
 import com.mosamir.atmodrivepassenger.features.trip.domain.model.captain.CaptainData
 import com.mosamir.atmodrivepassenger.features.trip.domain.model.captain.CaptainDetailsResponse
 import com.mosamir.atmodrivepassenger.features.trip.presentation.common.SharedViewModel
@@ -72,9 +73,12 @@ class TripLifecycleFragment : Fragment() {
 
         tripViewModel.getCaptainDetails(Constants.tripId)
 
+//        tripViewModel.getTripDetails(Constants.tripId)
+
         listenerOnTrip()
         observeOnCaptainDetails()
         observeOnCancelTrip()
+//        observeOnTripDetails()
         onClick()
 
     }
@@ -124,6 +128,24 @@ class TripLifecycleFragment : Fragment() {
                     NetworkState.Status.SUCCESS ->{
                         val data = networkState.data as IResult<CaptainDetailsResponse>
                         updateUi(data.getData()?.data!!)
+                    }
+                    NetworkState.Status.FAILED ->{
+                        showToast(networkState.msg.toString())
+                    }
+                    NetworkState.Status.RUNNING ->{
+                    }
+                    else -> {}
+                }
+            }
+        }
+    }
+
+    private fun observeOnTripDetails(){
+        lifecycleScope.launch {
+            tripViewModel.tripDetailsResult.collect{ networkState ->
+                when(networkState?.status){
+                    NetworkState.Status.SUCCESS ->{
+                        val data = networkState.data as IResult<TripDetailsResponse>
                     }
                     NetworkState.Status.FAILED ->{
                         showToast(networkState.msg.toString())

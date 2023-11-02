@@ -6,6 +6,7 @@ import com.mosamir.atmodrivepassenger.features.trip.domain.use_case.ICancelBefor
 import com.mosamir.atmodrivepassenger.features.trip.domain.use_case.ICancelTripUseCase
 import com.mosamir.atmodrivepassenger.features.trip.domain.use_case.IConfirmTripUseCase
 import com.mosamir.atmodrivepassenger.features.trip.domain.use_case.IGetCaptainDetailsUseCase
+import com.mosamir.atmodrivepassenger.features.trip.domain.use_case.IGetTripDetailsUseCase
 import com.mosamir.atmodrivepassenger.features.trip.domain.use_case.IMakeTripUseCase
 import com.mosamir.atmodrivepassenger.features.trip.domain.use_case.IOnTripUseCase
 import com.mosamir.atmodrivepassenger.util.NetworkState
@@ -24,7 +25,8 @@ class TripViewModel @Inject constructor(
     private val iCancelBeforeCaptainUseCase: ICancelBeforeCaptainUseCase,
     private val iGetCaptainDetailsUseCase: IGetCaptainDetailsUseCase,
     private val iOnTripUseCase: IOnTripUseCase,
-    private val iCancelTripUseCase: ICancelTripUseCase
+    private val iCancelTripUseCase: ICancelTripUseCase,
+    private val iGetTripDetailsUseCase: IGetTripDetailsUseCase
 ):ViewModel(){
 
     private val _makeTripResult: MutableStateFlow<NetworkState?> = MutableStateFlow(null)
@@ -44,6 +46,9 @@ class TripViewModel @Inject constructor(
 
     private val _cancelTripResult: MutableStateFlow<NetworkState?> = MutableStateFlow(null)
     val cancelTripResult: StateFlow<NetworkState?> =_cancelTripResult
+
+    private val _tripDetailsResult: MutableStateFlow<NetworkState?> = MutableStateFlow(null)
+    val tripDetailsResult: StateFlow<NetworkState?> =_tripDetailsResult
 
 
     fun makeTrip(distanceText: String,
@@ -159,6 +164,23 @@ class TripViewModel @Inject constructor(
             }catch (ex:Exception){
                 ex.printStackTrace()
                 _cancelTripResult.value = NetworkState.getErrorMessage(ex)
+            }
+        }
+    }
+
+    fun getTripDetails(tripId:Int) {
+        _tripDetailsResult.value = NetworkState.LOADING
+        viewModelScope.launch {
+            try {
+                val result = iGetTripDetailsUseCase.getTripDetails(tripId)
+                if (result.isSuccessful()){
+                    _tripDetailsResult.value = NetworkState.getLoaded(result)
+                }else{
+                    _tripDetailsResult.value = NetworkState.getErrorMessage(result.getError().toString())
+                }
+            }catch (ex:Exception){
+                ex.printStackTrace()
+                _tripDetailsResult.value = NetworkState.getErrorMessage(ex)
             }
         }
     }

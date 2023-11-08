@@ -10,7 +10,7 @@ data class RemoteOnTripData(
     val pickup_lng: String,
     val pickup_location_name: String,
     val real_trip: Any?,
-    val start_date: Int,
+    val start_date: Any?,
     val trip_id: Int,
     val trip_status: String
 )

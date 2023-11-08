@@ -22,6 +22,7 @@ import com.mosamir.atmodrivepassenger.util.Constants
 import com.mosamir.atmodrivepassenger.util.IResult
 import com.mosamir.atmodrivepassenger.util.NetworkState
 import com.mosamir.atmodrivepassenger.util.SharedPreferencesManager
+import com.mosamir.atmodrivepassenger.util.getAddressFromLatLng
 import com.mosamir.atmodrivepassenger.util.getData
 import com.mosamir.atmodrivepassenger.util.showToast
 import com.mosamir.atmodrivepassenger.util.visibilityGone
@@ -143,22 +144,6 @@ class ChooseLocationFragment : Fragment() {
                 }
             }
         }
-    }
-
-    private fun getAddressFromLatLng(latLng: LatLng): String {
-        val geocoder = Geocoder(requireContext(), Locale.getDefault())
-        try {
-            val addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1)
-            if (addresses?.isNotEmpty()!!) {
-                val address = addresses[0]
-                // You can format the address as per your requirements
-                return address.getAddressLine(0)
-            }
-        } catch (e: IOException) {
-            e.printStackTrace()
-            showToast("There is no internet connection")
-        }
-        return "Address not found"
     }
 
     override fun onDestroyView() {

@@ -80,9 +80,7 @@ class TripLifecycleFragment : Fragment() {
 //        tripViewModel.getTripDetails(Constants.tripId)
 
         listenerOnTrip()
-        observeOnCaptainDetails()
-        observeOnCancelTrip()
-//        observeOnTripDetails()
+        observer()
         onClick()
 
     }
@@ -172,7 +170,7 @@ class TripLifecycleFragment : Fragment() {
             .addValueEventListener(valueEventListener!!)
     }
 
-    private fun observeOnCaptainDetails(){
+    private fun observer(){
         lifecycleScope.launch {
             tripViewModel.getCaptainDetailsResult.collect{ networkState ->
                 when(networkState?.status){
@@ -189,9 +187,6 @@ class TripLifecycleFragment : Fragment() {
                 }
             }
         }
-    }
-
-    private fun observeOnTripDetails(){
         lifecycleScope.launch {
             tripViewModel.tripDetailsResult.collect{ networkState ->
                 when(networkState?.status){
@@ -207,9 +202,6 @@ class TripLifecycleFragment : Fragment() {
                 }
             }
         }
-    }
-
-    private fun observeOnCancelTrip(){
         lifecycleScope.launch {
             tripViewModel.cancelTripResult.collect{ networkState ->
                 when(networkState?.status){

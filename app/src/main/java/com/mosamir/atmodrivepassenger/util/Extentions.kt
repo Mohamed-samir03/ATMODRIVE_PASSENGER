@@ -6,6 +6,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.graphics.Rect
+import android.location.Geocoder
 import android.media.ExifInterface
 import android.view.View
 import android.view.ViewGroup
@@ -14,9 +15,11 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.snackbar.Snackbar
 import com.hbb20.BuildConfig
 import java.io.IOException
+import java.util.Locale
 
 fun AppCompatActivity.showToast(massage: Any) {
     Toast.makeText(this, "$massage", Toast.LENGTH_LONG).show()
@@ -155,4 +158,20 @@ fun DialogFragment.setWidthPercent(percentage: Int) {
     val rect = dm.run { Rect(0, 0, widthPixels, heightPixels) }
     val percentWidth = rect.width() * percent
     dialog?.window?.setLayout(percentWidth.toInt(), ViewGroup.LayoutParams.WRAP_CONTENT)
+}
+
+fun Fragment.getAddressFromLatLng(latLng: LatLng): String {
+    val geocoder = Geocoder(requireContext(), Locale.getDefault())
+    try {
+        val addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1)
+        if (addresses?.isNotEmpty()!!) {
+            val address = addresses[0]
+            // You can format the address as per your requirements
+            return address.getAddressLine(0)
+        }
+    } catch (e: IOException) {
+        e.printStackTrace()
+        showToast("There is no internet connection")
+    }
+    return "Address not found"
 }

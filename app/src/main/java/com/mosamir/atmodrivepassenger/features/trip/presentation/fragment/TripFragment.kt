@@ -73,6 +73,7 @@ import com.mosamir.atmodrivepassenger.util.LocationHelper
 import com.mosamir.atmodrivepassenger.util.MapUtils
 import com.mosamir.atmodrivepassenger.util.NetworkState
 import com.mosamir.atmodrivepassenger.util.SharedPreferencesManager
+import com.mosamir.atmodrivepassenger.util.getAddressFromLatLng
 import com.mosamir.atmodrivepassenger.util.getData
 import com.mosamir.atmodrivepassenger.util.showToast
 import com.mosamir.atmodrivepassenger.util.visibilityGone
@@ -139,14 +140,13 @@ class TripFragment : Fragment(), OnMapReadyCallback {
         mapFragment.getMapAsync(this)
 
         tripViewModel.onTrip()
-        observeOnOnTrip()
 
         initLocation()
         initBottomSheet()
         onClick()
         observeOnLocationType()
         observeOnRequestTrip()
-        observeOnCancelBeforeCaptain()
+        observer()
         onBackPressHandle()
 //        handleBottomSheetSize()
 
@@ -265,7 +265,7 @@ class TripFragment : Fragment(), OnMapReadyCallback {
         })
     }
 
-    private fun observeOnOnTrip(){
+    private fun observer(){
         lifecycleScope.launch {
             tripViewModel.onTripResult.collect{ networkState ->
                 when(networkState?.status){
@@ -273,6 +273,22 @@ class TripFragment : Fragment(), OnMapReadyCallback {
                         val data = networkState.data as IResult<OnTripResponse>
                         setUpTrip(data.getData()?.data!!)
                         listenerOnTrip()
+                    }
+                    NetworkState.Status.FAILED ->{
+                        showToast(networkState.msg.toString())
+                    }
+                    NetworkState.Status.RUNNING ->{
+                    }
+                    else -> {}
+                }
+            }
+        }
+        lifecycleScope.launch {
+            tripViewModel.cancelBeforeCaptainResult.collect{ networkState ->
+                when(networkState?.status){
+                    NetworkState.Status.SUCCESS ->{
+                        val data = networkState.data as IResult<CancelTripResponse>
+                        showToast(data.getData()?.message!!)
                     }
                     NetworkState.Status.FAILED ->{
                         showToast(networkState.msg.toString())
@@ -317,25 +333,6 @@ class TripFragment : Fragment(), OnMapReadyCallback {
 
     }
 
-    private fun observeOnCancelBeforeCaptain(){
-        lifecycleScope.launch {
-            tripViewModel.cancelBeforeCaptainResult.collect{ networkState ->
-                when(networkState?.status){
-                    NetworkState.Status.SUCCESS ->{
-                        val data = networkState.data as IResult<CancelTripResponse>
-                        showToast(data.getData()?.message!!)
-                    }
-                    NetworkState.Status.FAILED ->{
-                        showToast(networkState.msg.toString())
-                    }
-                    NetworkState.Status.RUNNING ->{
-                    }
-                    else -> {}
-                }
-            }
-        }
-    }
-
     private fun listenerOnTrip(){
         valueEventListener =  object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -350,11 +347,20 @@ class TripFragment : Fragment(), OnMapReadyCallback {
                     status = tripStatus!!
                     val captainLatLng = LatLng(trip.lat.toDouble(),trip.lng.toDouble())
                     when (status){
-                        "on_the_way" ->{
+                        "accepted" -> {
                             showPath(captainLatLng,Constants.pickUpLatLng!!)
+                        }
+                        "on_the_way" -> {
+                            showPath(captainLatLng,Constants.pickUpLatLng!!)
+                        }
+                        "arrived" -> {
+
                         }
                         "start_trip" -> {
                             showPath(captainLatLng,Constants.dropOffLatLng!!)
+                        }
+                        "end_trip" -> {
+
                         }
                     }
                 }
@@ -514,22 +520,6 @@ class TripFragment : Fragment(), OnMapReadyCallback {
 
         mFusedLocationClient?.requestLocationUpdates(mLocationRequest!!,mLocationCallback!!, Looper.getMainLooper())
 
-    }
-
-    private fun getAddressFromLatLng(latLng: LatLng): String {
-        val geocoder = Geocoder(requireContext(), Locale.getDefault())
-        try {
-            val addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1)
-            if (addresses?.isNotEmpty()!!) {
-                val address = addresses[0]
-                // You can format the address as per your requirements
-                return address.getAddressLine(0)
-            }
-        } catch (e: IOException) {
-            e.printStackTrace()
-            showToast("There is no internet connection")
-        }
-        return "Address not found"
     }
 
     private fun moveCameraMap(latLng: LatLng){

@@ -1,7 +1,7 @@
 package com.mosamir.atmodrivepassenger.features.trip.domain.model.ontrip
 
 data class OnTripData(
-    val captain_details: OnTripCaptainDetails,
+    val captain_details: OnTripCaptainDetails?,
     val dropoff_lat: String,
     val dropoff_lng: String,
     val dropoff_location_name: String,

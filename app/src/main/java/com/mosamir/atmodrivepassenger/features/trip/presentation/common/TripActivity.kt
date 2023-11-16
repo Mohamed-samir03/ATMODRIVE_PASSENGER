@@ -19,4 +19,8 @@ class TripActivity : AppCompatActivity(){
 
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+    }
+
 }

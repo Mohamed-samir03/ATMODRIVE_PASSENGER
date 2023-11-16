@@ -5,7 +5,7 @@ import com.mosamir.atmodrivepassenger.features.trip.data.model.ontrip.RemoteOnTr
 import com.mosamir.atmodrivepassenger.features.trip.domain.model.ontrip.OnTripData
 
 fun RemoteOnTripData.asDomain() = OnTripData(
-    captain_details.asDomain(),
+    captain_details?.asDomain(),
     dropoff_lat,
     dropoff_lng,
     dropoff_location_name,

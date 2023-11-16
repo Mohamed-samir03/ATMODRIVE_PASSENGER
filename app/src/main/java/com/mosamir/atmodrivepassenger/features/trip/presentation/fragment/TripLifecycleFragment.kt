@@ -110,7 +110,15 @@ class TripLifecycleFragment : Fragment() {
                         model.setRequestTrip(false)
                     }
                     "accepted" -> {
-
+                        binding.tvTripStatus.apply {
+                            text = "Captain accepted."
+                            setBackgroundColor(ContextCompat.getColor(context, R.color.progress))
+                        }
+                        binding.btnCancelTrip.apply {
+                            enabled()
+                            setBackgroundResource(R.drawable.background_cancel_trip)
+                            setTextColor(ContextCompat.getColor(requireContext(), R.color.error))
+                        }
                     }
                     "on_the_way" -> {
                         binding.tvTripStatus.apply {
@@ -145,7 +153,7 @@ class TripLifecycleFragment : Fragment() {
                             setTextColor(Color.parseColor("#D6E2ED"))
                         }
                     }
-                    "end_trip" -> {
+                    "pay" -> {
                         binding.tvTripStatus.apply {
                             text = "You are arrived to drop off! 🎉🎉"
                             setBackgroundColor(ContextCompat.getColor(context, R.color.success))

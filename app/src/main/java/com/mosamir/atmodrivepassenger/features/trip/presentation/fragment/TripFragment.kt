@@ -171,10 +171,6 @@ class TripFragment : Fragment(), OnMapReadyCallback {
         binding.tvCancelFindCaptain.setOnClickListener {
             binding.layoutFindCaptain.visibilityGone()
 
-//            model.setRequestTrip(false)
-//            bottomSheet.state = BottomSheetBehavior.STATE_EXPANDED
-//            Constants.isBottomSheetOn = true
-
             // cancel trip
             tripViewModel.cancelBeforeCaptain(Constants.tripId)
 
@@ -271,8 +267,13 @@ class TripFragment : Fragment(), OnMapReadyCallback {
                 when(networkState?.status){
                     NetworkState.Status.SUCCESS ->{
                         val data = networkState.data as IResult<OnTripResponse>
-                        setUpTrip(data.getData()?.data!!)
-                        listenerOnTrip()
+                        Constants.tripId = data.getData()?.data?.trip_id!!
+                        if(data.getData()?.data?.captain_details == null){
+                            findingCaptain()
+                        }else{
+                            setUpTrip(data.getData()?.data!!)
+                            listenerOnTrip()
+                        }
                     }
                     NetworkState.Status.FAILED ->{
                         showToast(networkState.msg.toString())
@@ -359,7 +360,7 @@ class TripFragment : Fragment(), OnMapReadyCallback {
                         "start_trip" -> {
                             showPath(captainLatLng,Constants.dropOffLatLng!!)
                         }
-                        "end_trip" -> {
+                        "pay" -> {
 
                         }
                     }

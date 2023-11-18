@@ -16,9 +16,9 @@ data class CaptainData(
     val pickup_lat: String,
     val pickup_lng: String,
     val pickup_location_name: String,
-    val rate: Int,
+    val rate: Double,
     val trip_color: String,
-    val vehicle: String,
+    val vehicle: String?,
     val vehicle_class: Any?,
     val vehicle_model: String,
     val vehicle_registration_plate: String

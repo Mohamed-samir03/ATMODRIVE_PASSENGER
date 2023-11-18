@@ -16,13 +16,13 @@ object MapUtils {
     }
 
     fun getPickupBitmap(context: Context): Bitmap {
-        val bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.pickup_location_icon)
-        return Bitmap.createScaledBitmap(bitmap, 120, 120, true)
+        val bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.drop_off)
+        return Bitmap.createScaledBitmap(bitmap, 130, 130, true)
     }
 
     fun getDropOffBitmap(context: Context): Bitmap {
-        val bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.drop_off)
-        return Bitmap.createScaledBitmap(bitmap, 130, 130, true)
+        val bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.pickup_location_icon)
+        return Bitmap.createScaledBitmap(bitmap, 120, 120, true)
     }
 
     fun getRotation(start: LatLng, end: LatLng): Float {

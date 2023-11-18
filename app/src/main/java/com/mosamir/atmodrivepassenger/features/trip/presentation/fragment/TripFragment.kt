@@ -254,7 +254,6 @@ class TripFragment : Fragment(), OnMapReadyCallback {
                 findingCaptain()
                 listenerOnTrip()
             }else if(!it){
-                showToast("tripCanceled")
                 clearMap()
             }
 
@@ -268,7 +267,7 @@ class TripFragment : Fragment(), OnMapReadyCallback {
                     NetworkState.Status.SUCCESS ->{
                         val data = networkState.data as IResult<OnTripResponse>
                         Constants.tripId = data.getData()?.data?.trip_id!!
-                        if(data.getData()?.data?.captain_details == null){
+                        if(data.getData()?.data?.trip_status!! == "pending"){
                             findingCaptain()
                         }else{
                             setUpTrip(data.getData()?.data!!)
@@ -334,6 +333,20 @@ class TripFragment : Fragment(), OnMapReadyCallback {
 
     }
 
+    private fun pickUpPassengerMarker(){
+        if(pickUpMarker == null){
+            pickUpMarker = addPickUpMarker(Constants.pickUpLatLng!!)
+        }
+        pickUpMarker?.position = Constants.pickUpLatLng!!
+    }
+
+    private fun dropOffPassengerMarker(){
+        if (dropOffMarker == null){
+            dropOffMarker = addDropOffMarker(Constants.dropOffLatLng!!)
+        }
+        dropOffMarker?.position = Constants.dropOffLatLng!!
+    }
+
     private fun listenerOnTrip(){
         valueEventListener =  object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -355,13 +368,15 @@ class TripFragment : Fragment(), OnMapReadyCallback {
                             showPath(captainLatLng,Constants.pickUpLatLng!!)
                         }
                         "arrived" -> {
-
+                            showPath(captainLatLng,Constants.dropOffLatLng!!)
+                            pickUpMarker?.remove()
                         }
                         "start_trip" -> {
+                            pickUpMarker?.remove()
                             showPath(captainLatLng,Constants.dropOffLatLng!!)
                         }
                         "pay" -> {
-
+                            dropOffMarker?.remove()
                         }
                     }
                 }
@@ -458,6 +473,7 @@ class TripFragment : Fragment(), OnMapReadyCallback {
         bottomSheet.state = BottomSheetBehavior.STATE_COLLAPSED
         Constants.isBottomSheetOn = false
         binding.layoutFindCaptain.visibilityVisible()
+        binding.locationCard.visibilityGone()
     }
 
     private fun setLocation(status:Boolean){
@@ -716,7 +732,8 @@ class TripFragment : Fragment(), OnMapReadyCallback {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-        database.child("trips").child(Constants.tripId.toString())
-            .removeEventListener(valueEventListener!!)
+        if (Constants.tripId != 0)
+            database.child("trips").child(Constants.tripId.toString())
+                .removeEventListener(valueEventListener!!)
     }
 }

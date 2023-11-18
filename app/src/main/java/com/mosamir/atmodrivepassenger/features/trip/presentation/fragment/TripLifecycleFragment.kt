@@ -24,6 +24,7 @@ import com.google.firebase.ktx.Firebase
 import com.mosamir.atmodrivepassenger.R
 import com.mosamir.atmodrivepassenger.databinding.FragmentTripLifecycleBinding
 import com.mosamir.atmodrivepassenger.features.trip.domain.model.CancelTripResponse
+import com.mosamir.atmodrivepassenger.features.trip.domain.model.TripDetailsData
 import com.mosamir.atmodrivepassenger.features.trip.domain.model.TripDetailsResponse
 import com.mosamir.atmodrivepassenger.features.trip.domain.model.captain.CaptainData
 import com.mosamir.atmodrivepassenger.features.trip.domain.model.captain.CaptainDetailsResponse
@@ -76,8 +77,7 @@ class TripLifecycleFragment : Fragment() {
         database = Firebase.database.reference
 
         tripViewModel.getCaptainDetails(Constants.tripId)
-
-//        tripViewModel.getTripDetails(Constants.tripId)
+        tripViewModel.getTripDetails(Constants.tripId)
 
         listenerOnTrip()
         observer()
@@ -184,7 +184,7 @@ class TripLifecycleFragment : Fragment() {
                 when(networkState?.status){
                     NetworkState.Status.SUCCESS ->{
                         val data = networkState.data as IResult<CaptainDetailsResponse>
-                        updateUi(data.getData()?.data!!)
+                        updateCaptainUi(data.getData()?.data!!)
                     }
                     NetworkState.Status.FAILED ->{
                         showToast(networkState.msg.toString())
@@ -200,6 +200,7 @@ class TripLifecycleFragment : Fragment() {
                 when(networkState?.status){
                     NetworkState.Status.SUCCESS ->{
                         val data = networkState.data as IResult<TripDetailsResponse>
+                        updateCarUi(data.getData()?.data!!)
                     }
                     NetworkState.Status.FAILED ->{
                         showToast(networkState.msg.toString())
@@ -228,18 +229,23 @@ class TripLifecycleFragment : Fragment() {
         }
     }
 
-    private fun updateUi(data:CaptainData){
+    private fun updateCaptainUi(data:CaptainData){
         binding.apply {
-
             tvCaptainName.text = data.full_name
             tvTripCaptainPrice.text = data.estimate_cost.toString()+" EGP"
-
         }
         captainMobile = data.mobile
         Glide.with(this)
             .load(Constants.BASE_Image_URL+data.avatar)
             .placeholder(R.drawable.captain)
             .into(binding.imgTripCaptain)
+    }
+
+    private fun updateCarUi(data:TripDetailsData){
+        binding.apply {
+            tvCarBrand.text = data.car_brand
+            tvCarModel.text = data.car_model
+        }
     }
 
     override fun onDestroyView() {

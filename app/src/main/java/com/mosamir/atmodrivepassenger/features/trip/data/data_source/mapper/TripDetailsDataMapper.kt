@@ -12,5 +12,7 @@ fun RemoteTripDetailsData.asDomain() = TripDetailsData(
     pickup_location_name,
     start_date,
     trip_id,
-    trip_status
+    trip_status,
+    car_brand,
+    car_model
 )

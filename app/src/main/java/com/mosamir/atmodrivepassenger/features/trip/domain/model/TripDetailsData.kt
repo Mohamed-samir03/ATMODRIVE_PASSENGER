@@ -9,5 +9,7 @@ data class TripDetailsData(
     val pickup_location_name: String,
     val start_date: Any?,
     val trip_id: Int,
-    val trip_status: String
+    val trip_status: String,
+    val car_brand : String,
+    val car_model : String
 )

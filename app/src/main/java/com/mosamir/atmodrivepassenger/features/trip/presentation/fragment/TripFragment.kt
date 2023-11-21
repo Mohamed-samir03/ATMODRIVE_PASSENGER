@@ -9,6 +9,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.location.Geocoder
+import android.location.Location
 import android.os.Bundle
 import android.os.Looper
 import android.util.DisplayMetrics
@@ -103,12 +104,14 @@ class TripFragment : Fragment(), OnMapReadyCallback {
     private var previousLatLng: LatLng? = null
     private var currentLatLng: LatLng? = null
     private var valueAnimator: ValueAnimator? = null
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     private var valueEventListener : ValueEventListener?= null
     private lateinit var database: DatabaseReference
 
     private var pickUpMarker : Marker?= null
     private var dropOffMarker : Marker?= null
+    private var myLocMarker : Marker?= null
     private var address = ""
     private var pickupDropOff = 0
     private var myLoc:LatLng? = null
@@ -133,6 +136,7 @@ class TripFragment : Fragment(), OnMapReadyCallback {
 
         database = Firebase.database.reference
         model = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = childFragmentManager
@@ -156,6 +160,7 @@ class TripFragment : Fragment(), OnMapReadyCallback {
 
         binding.locationCard.setOnClickListener {
             binding.locationCard.visibilityGone()
+            binding.detectMyLocation.visibilityGone()
             disPlayBottomSheet(R.navigation.trip_sheet_graph)
             try {
                 Constants.pickUpLatLng = myLoc!!
@@ -166,6 +171,10 @@ class TripFragment : Fragment(), OnMapReadyCallback {
             }catch (ex:NullPointerException){
                 showToast("There is no internet connection")
             }
+        }
+
+        binding.detectMyLocation.setOnClickListener {
+            getCurrentLocation()
         }
 
         binding.tvCancelFindCaptain.setOnClickListener {
@@ -304,6 +313,7 @@ class TripFragment : Fragment(), OnMapReadyCallback {
     private fun setUpTrip(tripData:OnTripData){
         Constants.tripId = tripData.trip_id
         binding.locationCard.visibilityGone()
+        binding.detectMyLocation.visibilityGone()
         disPlayBottomSheet(R.navigation.trip_lifecycle_nav_graph)
         val pickUpLatLng = LatLng(tripData.pickup_lat.toDouble(),tripData.pickup_lng.toDouble())
         val dropOffLatLng = LatLng(tripData.dropoff_lat.toDouble(),tripData.dropoff_lng.toDouble())
@@ -347,6 +357,13 @@ class TripFragment : Fragment(), OnMapReadyCallback {
         dropOffMarker?.position = Constants.dropOffLatLng!!
     }
 
+    private fun myLocationMarker(latlong:LatLng){
+        if (myLocMarker == null){
+            myLocMarker = addMyLocationMarker(latlong)
+        }
+        myLocMarker?.position = latlong
+    }
+
     private fun listenerOnTrip(){
         valueEventListener =  object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -358,7 +375,6 @@ class TripFragment : Fragment(), OnMapReadyCallback {
                 if(trip?.status != null && tripStatus != status){
                     binding.layoutFindCaptain.visibilityGone()
                     disPlayBottomSheet(R.navigation.trip_lifecycle_nav_graph)
-                    showToast("trip accept mo")
                     status = tripStatus!!
                     val captainLatLng = LatLng(trip.lat.toDouble(),trip.lng.toDouble())
                     when (status){
@@ -457,17 +473,18 @@ class TripFragment : Fragment(), OnMapReadyCallback {
     private fun clearMap(){
         bottomSheet.state = BottomSheetBehavior.STATE_COLLAPSED
         binding.locationCard.visibilityVisible()
-        setLocation(true)
+        binding.detectMyLocation.visibilityVisible()
         mMap.clear()
-        moveCameraMap(myLoc!!)
         pickUpMarker = null
         dropOffMarker = null
+        myLocMarker = null
         Constants.pickUpLatLng = myLoc
         Constants.dropOffLatLng = null
         pickupDropOff = 0
         Constants.isBottomSheetOn = false
         movingCabMarker = null
         status = ""
+        setLocation(true)
     }
 
     private fun findingCaptain(){
@@ -475,19 +492,15 @@ class TripFragment : Fragment(), OnMapReadyCallback {
         Constants.isBottomSheetOn = false
         binding.layoutFindCaptain.visibilityVisible()
         binding.locationCard.visibilityGone()
+        binding.detectMyLocation.visibilityGone()
     }
 
     private fun setLocation(status:Boolean){
-        if (ActivityCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
+        if (status){
+            getCurrentLocation()
+        }else{
+            myLocMarker?.remove()
         }
-        mMap.isMyLocationEnabled = status
     }
 
     private fun setMapDarkStyle(map: GoogleMap) {
@@ -522,7 +535,7 @@ class TripFragment : Fragment(), OnMapReadyCallback {
     @SuppressLint("MissingPermission")
     private fun getLocation(){
 
-        mMap.isMyLocationEnabled = true
+        mMap.isMyLocationEnabled = false
         mLocationCallback = object : LocationCallback(){
             override fun onLocationResult(result: LocationResult) {
                 super.onLocationResult(result)
@@ -532,12 +545,32 @@ class TripFragment : Fragment(), OnMapReadyCallback {
                 val address = getAddressFromLatLng(latLng)
                 binding.tvYourLocation.text = address
                 myLoc = latLng
+                myLocationMarker(latLng)
 
             }
         }
 
         mFusedLocationClient?.requestLocationUpdates(mLocationRequest!!,mLocationCallback!!, Looper.getMainLooper())
 
+    }
+
+    @SuppressLint("MissingPermission")
+    fun getCurrentLocation() {
+        val currentLocationTask: Task<Location> = fusedLocationClient.getCurrentLocation(
+            LocationRequest.PRIORITY_HIGH_ACCURACY, null
+        )
+        currentLocationTask.addOnCompleteListener { task: Task<Location> ->
+            if (task.isSuccessful && task.result != null) {
+                val result: Location = task.result
+
+                myLoc = LatLng(result.latitude,result.longitude)
+                moveCameraMap(myLoc!!)
+                val address = getAddressFromLatLng(myLoc!!)
+                binding.tvYourLocation.text = address
+                myLocationMarker(myLoc!!)
+
+            }
+        }
     }
 
     private fun moveCameraMap(latLng: LatLng){
@@ -557,7 +590,7 @@ class TripFragment : Fragment(), OnMapReadyCallback {
 
             try {
                 task.getResult(ApiException::class.java)
-                getLocation()
+                getCurrentLocation()
             }catch (exception : ApiException){
                 when (exception.statusCode){
 
@@ -580,6 +613,13 @@ class TripFragment : Fragment(), OnMapReadyCallback {
 
     }
 
+    private fun addMyLocationMarker(latLng: LatLng): Marker {
+        val bitmapDescriptor =
+            BitmapDescriptorFactory.fromBitmap(MapUtils.getMyLocationBitmap(requireContext()))
+        return mMap.addMarker(
+            MarkerOptions().position(latLng).flat(true).icon(bitmapDescriptor)
+        )!!
+    }
     private fun addPickUpMarker(latLng: LatLng): Marker {
         val bitmapDescriptor =
             BitmapDescriptorFactory.fromBitmap(MapUtils.getPickupBitmap(requireContext()))
@@ -664,7 +704,7 @@ class TripFragment : Fragment(), OnMapReadyCallback {
             Priority.PRIORITY_HIGH_ACCURACY ->{
                 when(resultCode){
                     Activity.RESULT_OK ->{
-                        getLocation()
+                        getCurrentLocation()
                     }
                     Activity.RESULT_CANCELED ->{
                         locationChecker()

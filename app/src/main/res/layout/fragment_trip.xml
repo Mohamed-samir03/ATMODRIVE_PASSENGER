@@ -54,6 +54,18 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/img_category" />
 
+            <ImageView
+                android:id="@+id/detect_myLocation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/_6sdp"
+                android:layout_marginBottom="@dimen/_14sdp"
+                android:src="@drawable/detect_location"
+                android:background="@drawable/background_circle"
+                android:backgroundTint="@color/background"
+                app:layout_constraintBottom_toTopOf="@+id/location_card"
+                app:layout_constraintEnd_toEndOf="parent" />
+
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/location_card"
                 android:layout_width="match_parent"

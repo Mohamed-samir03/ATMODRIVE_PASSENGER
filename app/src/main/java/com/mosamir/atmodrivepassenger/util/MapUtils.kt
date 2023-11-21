@@ -25,6 +25,11 @@ object MapUtils {
         return Bitmap.createScaledBitmap(bitmap, 120, 120, true)
     }
 
+    fun getMyLocationBitmap(context: Context): Bitmap {
+        val bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.my_location)
+        return Bitmap.createScaledBitmap(bitmap, 130, 130, true)
+    }
+
     fun getRotation(start: LatLng, end: LatLng): Float {
         val latDifference: Double = abs(start.latitude - end.latitude)
         val lngDifference: Double = abs(start.longitude - end.longitude)

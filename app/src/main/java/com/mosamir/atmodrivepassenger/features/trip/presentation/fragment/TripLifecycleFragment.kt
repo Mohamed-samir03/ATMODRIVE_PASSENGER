@@ -38,6 +38,7 @@ import com.mosamir.atmodrivepassenger.util.enabled
 import com.mosamir.atmodrivepassenger.util.getData
 import com.mosamir.atmodrivepassenger.util.showToast
 import com.mosamir.atmodrivepassenger.util.visibilityGone
+import com.mosamir.atmodrivepassenger.util.visibilityVisible
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -183,13 +184,16 @@ class TripLifecycleFragment : Fragment() {
             tripViewModel.getCaptainDetailsResult.collect{ networkState ->
                 when(networkState?.status){
                     NetworkState.Status.SUCCESS ->{
+                        binding.tripCycleProgressBar.visibilityGone()
                         val data = networkState.data as IResult<CaptainDetailsResponse>
                         updateCaptainUi(data.getData()?.data!!)
                     }
                     NetworkState.Status.FAILED ->{
+                        binding.tripCycleProgressBar.visibilityGone()
                         showToast(networkState.msg.toString())
                     }
                     NetworkState.Status.RUNNING ->{
+                        binding.tripCycleProgressBar.visibilityVisible()
                     }
                     else -> {}
                 }
@@ -199,13 +203,16 @@ class TripLifecycleFragment : Fragment() {
             tripViewModel.tripDetailsResult.collect{ networkState ->
                 when(networkState?.status){
                     NetworkState.Status.SUCCESS ->{
+                        binding.tripCycleProgressBar.visibilityGone()
                         val data = networkState.data as IResult<TripDetailsResponse>
                         updateCarUi(data.getData()?.data!!)
                     }
                     NetworkState.Status.FAILED ->{
+                        binding.tripCycleProgressBar.visibilityGone()
                         showToast(networkState.msg.toString())
                     }
                     NetworkState.Status.RUNNING ->{
+                        binding.tripCycleProgressBar.visibilityVisible()
                     }
                     else -> {}
                 }
@@ -215,13 +222,16 @@ class TripLifecycleFragment : Fragment() {
             tripViewModel.cancelTripResult.collect{ networkState ->
                 when(networkState?.status){
                     NetworkState.Status.SUCCESS ->{
+                        binding.tripCycleProgressBar.visibilityGone()
                         val data = networkState.data as IResult<CancelTripResponse>
                         showToast(data.getData()?.message!!)
                     }
                     NetworkState.Status.FAILED ->{
+                        binding.tripCycleProgressBar.visibilityGone()
                         showToast(networkState.msg.toString())
                     }
                     NetworkState.Status.RUNNING ->{
+                        binding.tripCycleProgressBar.visibilityVisible()
                     }
                     else -> {}
                 }

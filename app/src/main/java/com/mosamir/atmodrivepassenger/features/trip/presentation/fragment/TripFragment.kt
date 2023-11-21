@@ -358,6 +358,7 @@ class TripFragment : Fragment(), OnMapReadyCallback {
                 if(trip?.status != null && tripStatus != status){
                     binding.layoutFindCaptain.visibilityGone()
                     disPlayBottomSheet(R.navigation.trip_lifecycle_nav_graph)
+                    showToast("trip accept mo")
                     status = tripStatus!!
                     val captainLatLng = LatLng(trip.lat.toDouble(),trip.lng.toDouble())
                     when (status){

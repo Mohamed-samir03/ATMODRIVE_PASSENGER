@@ -112,7 +112,7 @@ class RequestTripFragment  : Fragment() {
                     NetworkState.Status.SUCCESS ->{
                         binding.requestTripProgressBar.visibilityGone()
                         val data = networkState.data as IResult<ConfirmTripResponse>
-                        showToast(data.getData()?.trip_id!!)
+//                        showToast(data.getData()?.trip_id!!)
                         Constants.tripId = data.getData()?.trip_id!!
                         model.setRequestTrip(true)
                     }

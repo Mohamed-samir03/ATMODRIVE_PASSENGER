@@ -22,9 +22,11 @@ import androidx.activity.addCallback
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
@@ -142,8 +144,6 @@ class TripFragment : Fragment(), OnMapReadyCallback {
         val mapFragment = childFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
-
-        tripViewModel.onTrip()
 
         initLocation()
         initBottomSheet()
@@ -271,40 +271,50 @@ class TripFragment : Fragment(), OnMapReadyCallback {
 
     private fun observer(){
         lifecycleScope.launch {
-            tripViewModel.onTripResult.collect{ networkState ->
-                when(networkState?.status){
-                    NetworkState.Status.SUCCESS ->{
-                        val data = networkState.data as IResult<OnTripResponse>
-                        Constants.tripId = data.getData()?.data?.trip_id!!
-                        if(data.getData()?.data?.trip_status!! == "pending"){
-                            findingCaptain()
-                        }else{
-                            setUpTrip(data.getData()?.data!!)
-                            listenerOnTrip()
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                tripViewModel.onTripResult.collect { networkState ->
+                    when (networkState?.status) {
+                        NetworkState.Status.SUCCESS -> {
+                            val data = networkState.data as IResult<OnTripResponse>
+                            Constants.tripId = data.getData()?.data?.trip_id!!
+                            if (data.getData()?.data?.trip_status!! == "pending") {
+                                findingCaptain()
+                            } else {
+                                setUpTrip(data.getData()?.data!!)
+                                listenerOnTrip()
+                            }
                         }
+
+                        NetworkState.Status.FAILED -> {
+                            showToast(networkState.msg.toString())
+                        }
+
+                        NetworkState.Status.RUNNING -> {
+                        }
+
+                        else -> {}
                     }
-                    NetworkState.Status.FAILED ->{
-                        showToast(networkState.msg.toString())
-                    }
-                    NetworkState.Status.RUNNING ->{
-                    }
-                    else -> {}
                 }
             }
         }
         lifecycleScope.launch {
-            tripViewModel.cancelBeforeCaptainResult.collect{ networkState ->
-                when(networkState?.status){
-                    NetworkState.Status.SUCCESS ->{
-                        val data = networkState.data as IResult<CancelTripResponse>
-                        showToast(data.getData()?.message!!)
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                tripViewModel.cancelBeforeCaptainResult.collect { networkState ->
+                    when (networkState?.status) {
+                        NetworkState.Status.SUCCESS -> {
+                            val data = networkState.data as IResult<CancelTripResponse>
+                            showToast(data.getData()?.message!!)
+                        }
+
+                        NetworkState.Status.FAILED -> {
+                            showToast(networkState.msg.toString())
+                        }
+
+                        NetworkState.Status.RUNNING -> {
+                        }
+
+                        else -> {}
                     }
-                    NetworkState.Status.FAILED ->{
-                        showToast(networkState.msg.toString())
-                    }
-                    NetworkState.Status.RUNNING ->{
-                    }
-                    else -> {}
                 }
             }
         }
@@ -426,11 +436,13 @@ class TripFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun disPlayBottomSheet(nav:Int){
-        val inflater = myNavHostFragment?.navController?.navInflater
-        val graph = inflater?.inflate(nav)
-        myNavHostFragment?.navController?.graph = graph!!
         bottomSheet.state = BottomSheetBehavior.STATE_EXPANDED
         Constants.isBottomSheetOn = true
+        val finalHost = NavHostFragment.create(nav)
+        childFragmentManager.beginTransaction()
+            .replace(R.id.nav_trip_sheet, finalHost)
+            .setPrimaryNavigationFragment(finalHost)
+            .commit()
     }
 
     private fun handleBottomSheetSize() {
@@ -591,6 +603,7 @@ class TripFragment : Fragment(), OnMapReadyCallback {
             try {
                 task.getResult(ApiException::class.java)
                 getCurrentLocation()
+                tripViewModel.onTrip()
             }catch (exception : ApiException){
                 when (exception.statusCode){
 
@@ -705,6 +718,7 @@ class TripFragment : Fragment(), OnMapReadyCallback {
                 when(resultCode){
                     Activity.RESULT_OK ->{
                         getCurrentLocation()
+                        tripViewModel.onTrip()
                     }
                     Activity.RESULT_CANCELED ->{
                         locationChecker()
@@ -721,7 +735,7 @@ class TripFragment : Fragment(), OnMapReadyCallback {
                     ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
                             != PackageManager.PERMISSION_GRANTED) ){
             ActivityCompat.requestPermissions(
-                requireContext() as Activity,
+                requireActivity(),
                 arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION),2)
         }else{
             locationChecker()

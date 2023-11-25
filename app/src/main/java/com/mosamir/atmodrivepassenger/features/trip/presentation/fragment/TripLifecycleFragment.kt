@@ -10,8 +10,10 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
@@ -120,6 +122,7 @@ class TripLifecycleFragment : Fragment() {
                             setBackgroundResource(R.drawable.background_cancel_trip)
                             setTextColor(ContextCompat.getColor(requireContext(), R.color.error))
                         }
+                        binding.imgCallCaptain.enabled()
                     }
                     "on_the_way" -> {
                         binding.tvTripStatus.apply {
@@ -131,6 +134,7 @@ class TripLifecycleFragment : Fragment() {
                             setBackgroundResource(R.drawable.background_cancel_trip)
                             setTextColor(ContextCompat.getColor(requireContext(), R.color.error))
                         }
+                        binding.imgCallCaptain.enabled()
                     }
                     "arrived" -> {
                         binding.tvTripStatus.apply {
@@ -142,6 +146,7 @@ class TripLifecycleFragment : Fragment() {
                             setBackgroundResource(R.drawable.background_cancel_trip)
                             setTextColor(ContextCompat.getColor(requireContext(), R.color.error))
                         }
+                        binding.imgCallCaptain.enabled()
                     }
                     "start_trip" -> {
                         binding.tvTripStatus.apply {
@@ -153,6 +158,7 @@ class TripLifecycleFragment : Fragment() {
                             setBackgroundResource(R.drawable.background_disable)
                             setTextColor(Color.parseColor("#D6E2ED"))
                         }
+                        binding.imgCallCaptain.disable()
                     }
                     "pay" -> {
                         binding.tvTripStatus.apply {
@@ -164,6 +170,7 @@ class TripLifecycleFragment : Fragment() {
                             setBackgroundResource(R.drawable.background_disable)
                             setTextColor(Color.parseColor("#D6E2ED"))
                         }
+                        binding.imgCallCaptain.disable()
                     }
                 }
 
@@ -181,59 +188,74 @@ class TripLifecycleFragment : Fragment() {
 
     private fun observer(){
         lifecycleScope.launch {
-            tripViewModel.getCaptainDetailsResult.collect{ networkState ->
-                when(networkState?.status){
-                    NetworkState.Status.SUCCESS ->{
-                        binding.tripCycleProgressBar.visibilityGone()
-                        val data = networkState.data as IResult<CaptainDetailsResponse>
-                        updateCaptainUi(data.getData()?.data!!)
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                tripViewModel.getCaptainDetailsResult.collect { networkState ->
+                    when (networkState?.status) {
+                        NetworkState.Status.SUCCESS -> {
+                            binding.tripCycleProgressBar.visibilityGone()
+                            val data = networkState.data as IResult<CaptainDetailsResponse>
+                            updateCaptainUi(data.getData()?.data!!)
+                        }
+
+                        NetworkState.Status.FAILED -> {
+                            binding.tripCycleProgressBar.visibilityGone()
+                            showToast(networkState.msg.toString())
+                        }
+
+                        NetworkState.Status.RUNNING -> {
+                            binding.tripCycleProgressBar.visibilityVisible()
+                        }
+
+                        else -> {}
                     }
-                    NetworkState.Status.FAILED ->{
-                        binding.tripCycleProgressBar.visibilityGone()
-                        showToast(networkState.msg.toString())
-                    }
-                    NetworkState.Status.RUNNING ->{
-                        binding.tripCycleProgressBar.visibilityVisible()
-                    }
-                    else -> {}
                 }
             }
         }
         lifecycleScope.launch {
-            tripViewModel.tripDetailsResult.collect{ networkState ->
-                when(networkState?.status){
-                    NetworkState.Status.SUCCESS ->{
-                        binding.tripCycleProgressBar.visibilityGone()
-                        val data = networkState.data as IResult<TripDetailsResponse>
-                        updateCarUi(data.getData()?.data!!)
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                tripViewModel.tripDetailsResult.collect { networkState ->
+                    when (networkState?.status) {
+                        NetworkState.Status.SUCCESS -> {
+                            binding.tripCycleProgressBar.visibilityGone()
+                            val data = networkState.data as IResult<TripDetailsResponse>
+                            updateCarUi(data.getData()?.data!!)
+                        }
+
+                        NetworkState.Status.FAILED -> {
+                            binding.tripCycleProgressBar.visibilityGone()
+                            showToast(networkState.msg.toString())
+                        }
+
+                        NetworkState.Status.RUNNING -> {
+                            binding.tripCycleProgressBar.visibilityVisible()
+                        }
+
+                        else -> {}
                     }
-                    NetworkState.Status.FAILED ->{
-                        binding.tripCycleProgressBar.visibilityGone()
-                        showToast(networkState.msg.toString())
-                    }
-                    NetworkState.Status.RUNNING ->{
-                        binding.tripCycleProgressBar.visibilityVisible()
-                    }
-                    else -> {}
                 }
             }
         }
         lifecycleScope.launch {
-            tripViewModel.cancelTripResult.collect{ networkState ->
-                when(networkState?.status){
-                    NetworkState.Status.SUCCESS ->{
-                        binding.tripCycleProgressBar.visibilityGone()
-                        val data = networkState.data as IResult<CancelTripResponse>
-                        showToast(data.getData()?.message!!)
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                tripViewModel.cancelTripResult.collect { networkState ->
+                    when (networkState?.status) {
+                        NetworkState.Status.SUCCESS -> {
+                            binding.tripCycleProgressBar.visibilityGone()
+                            val data = networkState.data as IResult<CancelTripResponse>
+                            showToast(data.getData()?.message!!)
+                        }
+
+                        NetworkState.Status.FAILED -> {
+                            binding.tripCycleProgressBar.visibilityGone()
+                            showToast(networkState.msg.toString())
+                        }
+
+                        NetworkState.Status.RUNNING -> {
+                            binding.tripCycleProgressBar.visibilityVisible()
+                        }
+
+                        else -> {}
                     }
-                    NetworkState.Status.FAILED ->{
-                        binding.tripCycleProgressBar.visibilityGone()
-                        showToast(networkState.msg.toString())
-                    }
-                    NetworkState.Status.RUNNING ->{
-                        binding.tripCycleProgressBar.visibilityVisible()
-                    }
-                    else -> {}
                 }
             }
         }

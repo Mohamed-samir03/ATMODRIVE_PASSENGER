@@ -7,9 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
@@ -107,23 +109,28 @@ class RequestTripFragment  : Fragment() {
 
     private fun observeOnConfirmTrip(){
         lifecycleScope.launch {
-            tripViewModel.confirmTripResult.collect{ networkState ->
-                when(networkState?.status){
-                    NetworkState.Status.SUCCESS ->{
-                        binding.requestTripProgressBar.visibilityGone()
-                        val data = networkState.data as IResult<ConfirmTripResponse>
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                tripViewModel.confirmTripResult.collect { networkState ->
+                    when (networkState?.status) {
+                        NetworkState.Status.SUCCESS -> {
+                            binding.requestTripProgressBar.visibilityGone()
+                            val data = networkState.data as IResult<ConfirmTripResponse>
 //                        showToast(data.getData()?.trip_id!!)
-                        Constants.tripId = data.getData()?.trip_id!!
-                        model.setRequestTrip(true)
+                            Constants.tripId = data.getData()?.trip_id!!
+                            model.setRequestTrip(true)
+                        }
+
+                        NetworkState.Status.FAILED -> {
+                            showToast(networkState.msg.toString())
+                            binding.requestTripProgressBar.visibilityGone()
+                        }
+
+                        NetworkState.Status.RUNNING -> {
+                            binding.requestTripProgressBar.visibilityVisible()
+                        }
+
+                        else -> {}
                     }
-                    NetworkState.Status.FAILED ->{
-                        showToast(networkState.msg.toString())
-                        binding.requestTripProgressBar.visibilityGone()
-                    }
-                    NetworkState.Status.RUNNING ->{
-                        binding.requestTripProgressBar.visibilityVisible()
-                    }
-                    else -> {}
                 }
             }
         }

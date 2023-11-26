@@ -1,5 +1,6 @@
 package com.mosamir.atmodrivepassenger.features.trip.presentation.fragment
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
@@ -97,9 +98,28 @@ class TripLifecycleFragment : Fragment() {
         }
 
         binding.btnCancelTrip.setOnClickListener {
-            tripViewModel.cancelTrip(Constants.tripId)
+            cancelTripDialog()
         }
 
+    }
+
+    private fun cancelTripDialog(){
+
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("Cancel Trip")
+        builder.setMessage("Do you want to cancel the trip?")
+
+        builder.setPositiveButton("Yes") { dialog, which ->
+            tripViewModel.cancelTrip(Constants.tripId)
+            dialog.dismiss()
+        }
+
+        builder.setNegativeButton("No") { dialog, which ->
+            dialog.cancel()
+        }
+
+        val alertDialog: AlertDialog = builder.create()
+        alertDialog.show()
     }
 
     private fun listenerOnTrip(){
@@ -282,8 +302,8 @@ class TripLifecycleFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
         database.child("trips").child(Constants.tripId.toString()).child("status")
             .removeEventListener(valueEventListener!!)
+        _binding = null
     }
 }

@@ -786,9 +786,9 @@ class TripFragment : Fragment(), OnMapReadyCallback {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
         if (Constants.tripId != 0)
             database.child("trips").child(Constants.tripId.toString())
                 .removeEventListener(valueEventListener!!)
+        _binding = null
     }
 }

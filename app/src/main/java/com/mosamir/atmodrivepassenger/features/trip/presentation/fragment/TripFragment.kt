@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import androidx.activity.addCallback
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
@@ -78,6 +79,7 @@ import com.mosamir.atmodrivepassenger.util.NetworkState
 import com.mosamir.atmodrivepassenger.util.SharedPreferencesManager
 import com.mosamir.atmodrivepassenger.util.getAddressFromLatLng
 import com.mosamir.atmodrivepassenger.util.getData
+import com.mosamir.atmodrivepassenger.util.hideKeyboard
 import com.mosamir.atmodrivepassenger.util.showToast
 import com.mosamir.atmodrivepassenger.util.visibilityGone
 import com.mosamir.atmodrivepassenger.util.visibilityVisible
@@ -232,7 +234,6 @@ class TripFragment : Fragment(), OnMapReadyCallback {
 
     private fun observeOnLocationType(){
         model.locType.observe(viewLifecycleOwner, Observer {
-
             if (it == "pickupLoc"){
                 pickupDropOff = 1
                 binding.chooseLocationFromMaps.visibilityVisible()
@@ -286,7 +287,7 @@ class TripFragment : Fragment(), OnMapReadyCallback {
                         }
 
                         NetworkState.Status.FAILED -> {
-                            showToast(networkState.msg.toString())
+//                            showToast(networkState.msg.toString())
                         }
 
                         NetworkState.Status.RUNNING -> {
@@ -298,23 +299,21 @@ class TripFragment : Fragment(), OnMapReadyCallback {
             }
         }
         lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                tripViewModel.cancelBeforeCaptainResult.collect { networkState ->
-                    when (networkState?.status) {
-                        NetworkState.Status.SUCCESS -> {
-                            val data = networkState.data as IResult<CancelTripResponse>
-                            showToast(data.getData()?.message!!)
-                        }
-
-                        NetworkState.Status.FAILED -> {
-                            showToast(networkState.msg.toString())
-                        }
-
-                        NetworkState.Status.RUNNING -> {
-                        }
-
-                        else -> {}
+            tripViewModel.cancelBeforeCaptainResult.collect { networkState ->
+                when (networkState?.status) {
+                    NetworkState.Status.SUCCESS -> {
+                        val data = networkState.data as IResult<CancelTripResponse>
+                        showToast(data.getData()?.message!!)
                     }
+
+                    NetworkState.Status.FAILED -> {
+                        showToast(networkState.msg.toString())
+                    }
+
+                    NetworkState.Status.RUNNING -> {
+                    }
+
+                    else -> {}
                 }
             }
         }

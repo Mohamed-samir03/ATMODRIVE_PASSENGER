@@ -66,7 +66,7 @@ class ChooseLocationFragment : Fragment() {
 
         model = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
 
-        binding.tvPickupLocation.text = getAddressFromLatLng(Constants.pickUpLatLng!!)
+        binding.tvPickupLocation.setText(getAddressFromLatLng(Constants.pickUpLatLng!!))
 
         onClick()
         observeOnLocation()
@@ -109,14 +109,14 @@ class ChooseLocationFragment : Fragment() {
         model.location.observe(viewLifecycleOwner, Observer {
 
             if (locType == "pickupLoc" && Constants.pickUpLatLng != null){
-                binding.tvPickupLocation.text = getAddressFromLatLng(Constants.pickUpLatLng!!)
+                binding.tvPickupLocation.setText(getAddressFromLatLng(Constants.pickUpLatLng!!))
                 pickupLoc = it.toString()
             }else if (locType == "dropLoc" && Constants.dropOffLatLng != null){
-                binding.tvDropOffLocation.text = getAddressFromLatLng(Constants.dropOffLatLng!!)
+                binding.tvDropOffLocation.setText(getAddressFromLatLng(Constants.dropOffLatLng!!))
                 dropLoc = it.toString()
             }else if (locType == "cancel"){
-                binding.tvPickupLocation.text = getAddressFromLatLng(Constants.pickUpLatLng!!)
-                binding.tvDropOffLocation.text = ""
+                binding.tvPickupLocation.setText(getAddressFromLatLng(Constants.pickUpLatLng!!))
+                binding.tvDropOffLocation.setText("")
             }
 
         })

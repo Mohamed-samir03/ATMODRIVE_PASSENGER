@@ -109,28 +109,26 @@ class RequestTripFragment  : Fragment() {
 
     private fun observeOnConfirmTrip(){
         lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                tripViewModel.confirmTripResult.collect { networkState ->
-                    when (networkState?.status) {
-                        NetworkState.Status.SUCCESS -> {
-                            binding.requestTripProgressBar.visibilityGone()
-                            val data = networkState.data as IResult<ConfirmTripResponse>
+            tripViewModel.confirmTripResult.collect { networkState ->
+                when (networkState?.status) {
+                    NetworkState.Status.SUCCESS -> {
+                        binding.requestTripProgressBar.visibilityGone()
+                        val data = networkState.data as IResult<ConfirmTripResponse>
 //                        showToast(data.getData()?.trip_id!!)
-                            Constants.tripId = data.getData()?.trip_id!!
-                            model.setRequestTrip(true)
-                        }
-
-                        NetworkState.Status.FAILED -> {
-                            showToast(networkState.msg.toString())
-                            binding.requestTripProgressBar.visibilityGone()
-                        }
-
-                        NetworkState.Status.RUNNING -> {
-                            binding.requestTripProgressBar.visibilityVisible()
-                        }
-
-                        else -> {}
+                        Constants.tripId = data.getData()?.trip_id!!
+                        model.setRequestTrip(true)
                     }
+
+                    NetworkState.Status.FAILED -> {
+                        showToast(networkState.msg.toString())
+                        binding.requestTripProgressBar.visibilityGone()
+                    }
+
+                    NetworkState.Status.RUNNING -> {
+                        binding.requestTripProgressBar.visibilityVisible()
+                    }
+
+                    else -> {}
                 }
             }
         }

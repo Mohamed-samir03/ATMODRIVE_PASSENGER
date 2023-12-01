@@ -256,26 +256,24 @@ class TripLifecycleFragment : Fragment() {
             }
         }
         lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                tripViewModel.cancelTripResult.collect { networkState ->
-                    when (networkState?.status) {
-                        NetworkState.Status.SUCCESS -> {
-                            binding.tripCycleProgressBar.visibilityGone()
-                            val data = networkState.data as IResult<CancelTripResponse>
-                            showToast(data.getData()?.message!!)
-                        }
-
-                        NetworkState.Status.FAILED -> {
-                            binding.tripCycleProgressBar.visibilityGone()
-                            showToast(networkState.msg.toString())
-                        }
-
-                        NetworkState.Status.RUNNING -> {
-                            binding.tripCycleProgressBar.visibilityVisible()
-                        }
-
-                        else -> {}
+            tripViewModel.cancelTripResult.collect { networkState ->
+                when (networkState?.status) {
+                    NetworkState.Status.SUCCESS -> {
+                        binding.tripCycleProgressBar.visibilityGone()
+                        val data = networkState.data as IResult<CancelTripResponse>
+                        showToast(data.getData()?.message!!)
                     }
+
+                    NetworkState.Status.FAILED -> {
+                        binding.tripCycleProgressBar.visibilityGone()
+                        showToast(networkState.msg.toString())
+                    }
+
+                    NetworkState.Status.RUNNING -> {
+                        binding.tripCycleProgressBar.visibilityVisible()
+                    }
+
+                    else -> {}
                 }
             }
         }

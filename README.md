@@ -1,4 +1,4 @@
-# ATMODRIVE PASSENGER.
+# ATMODRIVE PASSENGER
 - `Delivery android application for passenger.`
 
 ## Clean Architecture with MVVM.

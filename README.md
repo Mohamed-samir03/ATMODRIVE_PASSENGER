@@ -1,5 +1,9 @@
 # ATMODRIVE PASSENGER
-- `Delivery Android application like Uber Request a ride for passenger.`
+Delivery Android application like Uber Request a ride for passenger.
+
+## Code Installation
+you can clone code and run it using :
+`IDE : Android Studio Gradle Version : 8.0.1 Compile Sdk : 33`
 
 ## Clean Architecture with MVVM.
 ![clean with mvvm](https://github.com/Mohamed-samir03/ATMODRIVE_PASSENGER/assets/81251707/3bb0fb28-41aa-4e54-8746-c3a3e9dd6c78)

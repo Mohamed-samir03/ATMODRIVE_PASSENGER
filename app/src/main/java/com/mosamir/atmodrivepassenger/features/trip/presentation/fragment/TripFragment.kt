@@ -733,8 +733,7 @@ class TripFragment : Fragment(), OnMapReadyCallback {
                     != PackageManager.PERMISSION_GRANTED) && (
                     ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
                             != PackageManager.PERMISSION_GRANTED) ){
-            ActivityCompat.requestPermissions(
-                requireActivity(),
+            requestPermissions(
                 arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION),2)
         }else{
             locationChecker()

@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/background">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:backgroundTint="@color/background"
+        app:cardCornerRadius="@dimen/_16sdp"
+        app:cardElevation="@dimen/_10sdp"
+        android:layout_margin="@dimen/_16sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/background"
+            android:padding="@dimen/_12sdp">
+
+            <TextView
+                android:id="@+id/tv_trip_history_date"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="5:00 PM, sun 2 may 2023"
+                android:textColor="@color/title"
+                android:textSize="@dimen/_15sdp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toStartOf="@+id/tv_trip_history_status"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_trip_history_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="150 EGP"
+                android:textColor="@color/success"
+                android:textSize="@dimen/_15sdp"
+                android:textStyle="bold"
+                android:layout_marginTop="@dimen/_6sdp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_trip_history_date" />
+
+            <TextView
+                android:id="@+id/tv_trip_history_payment_method"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_12sdp"
+                android:text="cash"
+                android:textColor="@color/secondary"
+                android:textSize="@dimen/_12sdp"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_trip_history_price"
+                app:layout_constraintStart_toEndOf="@+id/tv_trip_history_price"
+                app:layout_constraintTop_toTopOf="@+id/tv_trip_history_price" />
+
+            <TextView
+                android:id="@+id/tv_trip_history_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Finished"
+                android:textColor="@color/success"
+                android:textSize="@dimen/_11sdp"
+                android:textStyle="bold"
+                android:backgroundTint="#253CD29C"
+                android:background="@drawable/button_background"
+                android:paddingHorizontal="@dimen/_10sdp"
+                android:paddingVertical="@dimen/_3sdp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:id="@+id/view_dashed_trip_history"
+                android:layout_width="@dimen/_24sdp"
+                android:layout_height="0dp"
+                android:background="@drawable/dashed_line"
+                android:rotation="90"
+                app:layout_constraintBottom_toTopOf="@+id/img_dropOff_location_trip_history"
+                app:layout_constraintEnd_toEndOf="@+id/img_pickUp_location_trip_history"
+                app:layout_constraintStart_toStartOf="@+id/img_pickUp_location_trip_history"
+                app:layout_constraintTop_toBottomOf="@+id/img_pickUp_location_trip_history" />
+
+            <ImageView
+                android:id="@+id/img_pickUp_location_trip_history"
+                android:layout_width="@dimen/_10sdp"
+                android:layout_height="@dimen/_10sdp"
+                android:src="@drawable/yourloc"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_pickUp_loc_trip_history"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <ImageView
+                android:id="@+id/img_dropOff_location_trip_history"
+                android:layout_width="@dimen/_10sdp"
+                android:layout_height="@dimen/_14sdp"
+                android:src="@drawable/location"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_dropOff_loc_trip_history"
+                app:layout_constraintStart_toStartOf="@+id/img_pickUp_location_trip_history"
+                app:layout_constraintTop_toTopOf="@+id/tv_dropOff_loc_trip_history" />
+
+            <TextView
+                android:id="@+id/tv_pickUp_loc_trip_history"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_16sdp"
+                android:hint="pickUp location"
+                android:textColor="@color/secondary"
+                android:textColorHint="@color/hint"
+                android:textSize="@dimen/_12sdp"
+                android:layout_marginTop="@dimen/_12sdp"
+                app:layout_constraintStart_toEndOf="@+id/img_pickUp_location_trip_history"
+                app:layout_constraintTop_toBottomOf="@+id/tv_trip_history_price"
+                tools:text="B. 1256, Northern Ex. - 6 Oct." />
+
+            <View
+                android:id="@+id/view_line_trip_history"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_1sdp"
+                android:layout_marginTop="@dimen/_6sdp"
+                android:background="@color/quinary"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/tv_pickUp_loc_trip_history"
+                app:layout_constraintTop_toBottomOf="@+id/tv_pickUp_loc_trip_history" />
+
+
+            <TextView
+                android:id="@+id/tv_dropOff_loc_trip_history"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_6sdp"
+                android:hint="dropOff location"
+                android:textColor="@color/secondary"
+                android:textColorHint="@color/hint"
+                android:textSize="@dimen/_12sdp"
+                app:layout_constraintStart_toStartOf="@+id/view_line_trip_history"
+                app:layout_constraintTop_toBottomOf="@+id/view_line_trip_history"
+                tools:text="402 El Mehwar Str. " />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

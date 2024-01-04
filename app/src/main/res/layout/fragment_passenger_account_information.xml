@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:padding="@dimen/_16sdp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".features.setting.presentation.fragment.PassengerAccountInformationFragment">
+
+    <ImageView
+        android:id="@+id/back_from_account_information"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/arrow_back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_account_information_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Account information"
+        android:textStyle="bold"
+        android:textSize="@dimen/_18sdp"
+        android:textColor="@color/title"
+        android:layout_marginStart="@dimen/_16sdp"
+        app:layout_constraintStart_toEndOf="@+id/back_from_account_information"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/et_passenger_account_info_name"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_40sdp"
+        android:backgroundTint="@color/hint"
+        android:hint="passenger name"
+        android:textColor="@color/title"
+        android:textColorHint="@color/hint"
+        android:textSize="@dimen/_14sdp"
+        android:inputType="text"
+        android:layout_marginTop="@dimen/_16sdp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_account_information_title" />
+
+    <com.hbb20.CountryCodePicker
+        android:id="@+id/update_ccp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="false"
+        app:ccpDialog_textColor="@color/title"
+        app:ccp_contentColor="@color/title"
+        app:ccp_defaultNameCode="EG"
+        android:layout_marginTop="@dimen/_16sdp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_passenger_account_info_name" />
+
+    <EditText
+        android:id="@+id/et_account_info_phone_number"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/button_background"
+        android:hint="100 123 4567"
+        android:inputType="number"
+        android:maxLength="10"
+        android:textColor="@color/title"
+        android:textColorHint="@color/hint"
+        android:textSize="@dimen/_14sdp"
+        app:layout_constraintBottom_toBottomOf="@+id/update_ccp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/update_ccp"
+        app:layout_constraintTop_toTopOf="@+id/update_ccp" />
+
+    <View
+        android:id="@+id/view_account_info"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_1sdp"
+        android:background="@color/hint"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/update_ccp" />
+
+    <EditText
+        android:id="@+id/et_passenger_account_info_email"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_40sdp"
+        android:backgroundTint="@color/hint"
+        android:hint="mo.samir@gmail.com"
+        android:inputType="textEmailAddress"
+        android:textColor="@color/title"
+        android:textColorHint="@color/hint"
+        android:textSize="@dimen/_14sdp"
+        android:layout_marginTop="@dimen/_16sdp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view_account_info" />
+
+    <Button
+        android:id="@+id/btn_update_information"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_40sdp"
+        android:background="@drawable/button_background"
+        android:backgroundTint="@color/primary"
+        android:text="Update information"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_16sdp"
+        android:textStyle="bold"
+        android:layout_marginTop="@dimen/_16sdp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_passenger_account_info_email" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

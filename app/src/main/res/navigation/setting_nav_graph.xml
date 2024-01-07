@@ -16,6 +16,12 @@
         <action
             android:id="@+id/action_passengerProfileFragment_to_tripHistoryFragment"
             app:destination="@id/tripHistoryFragment" />
+        <action
+            android:id="@+id/action_passengerProfileFragment_to_getHelpFragment"
+            app:destination="@id/getHelpFragment" />
+        <action
+            android:id="@+id/action_passengerProfileFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
     </fragment>
     <fragment
         android:id="@+id/passengerAccountInformationFragment"
@@ -37,6 +43,28 @@
             android:id="@+id/action_tripHistoryFragment_to_passengerProfileFragment"
             app:destination="@id/passengerProfileFragment"
             app:popUpTo="@id/tripHistoryFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/getHelpFragment"
+        android:name="com.mosamir.atmodrivepassenger.features.setting.presentation.fragment.GetHelpFragment"
+        android:label="fragment_get_help"
+        tools:layout="@layout/fragment_get_help" >
+        <action
+            android:id="@+id/action_getHelpFragment_to_passengerProfileFragment"
+            app:destination="@id/passengerProfileFragment"
+            app:popUpTo="@id/getHelpFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.mosamir.atmodrivepassenger.features.setting.presentation.fragment.SettingsFragment"
+        android:label="fragment_settings"
+        tools:layout="@layout/fragment_settings" >
+        <action
+            android:id="@+id/action_settingsFragment_to_passengerProfileFragment"
+            app:destination="@id/passengerProfileFragment"
+            app:popUpTo="@id/settingsFragment"
             app:popUpToInclusive="true" />
     </fragment>
 </navigation>

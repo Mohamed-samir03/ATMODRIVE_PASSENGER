@@ -41,6 +41,16 @@ class PassengerProfileFragment : Fragment() {
             findNavController().navigate(action)
         }
 
+        binding.getHelpLayout.setOnClickListener {
+            val action = PassengerProfileFragmentDirections.actionPassengerProfileFragmentToGetHelpFragment()
+            findNavController().navigate(action)
+        }
+
+        binding.settingLayout.setOnClickListener {
+            val action = PassengerProfileFragmentDirections.actionPassengerProfileFragmentToSettingsFragment()
+            findNavController().navigate(action)
+        }
+
     }
 
     override fun onDestroyView() {

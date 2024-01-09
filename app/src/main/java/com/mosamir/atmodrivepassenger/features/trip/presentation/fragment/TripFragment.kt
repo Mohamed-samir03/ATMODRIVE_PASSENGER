@@ -64,6 +64,7 @@ import com.google.firebase.ktx.Firebase
 import com.mosamir.atmodrivepassenger.R
 import com.mosamir.atmodrivepassenger.databinding.FragmentTripBinding
 import com.mosamir.atmodrivepassenger.features.auth.presentation.common.AuthActivity
+import com.mosamir.atmodrivepassenger.features.setting.presentation.common.SettingActivity
 import com.mosamir.atmodrivepassenger.features.trip.domain.model.CancelTripResponse
 import com.mosamir.atmodrivepassenger.features.trip.domain.model.ontrip.OnTripData
 import com.mosamir.atmodrivepassenger.features.trip.domain.model.ontrip.OnTripResponse
@@ -223,9 +224,7 @@ class TripFragment : Fragment(), OnMapReadyCallback {
         }
 
         binding.imgCategory.setOnClickListener {
-            // logout for test only
-            SharedPreferencesManager(requireContext()).clearString(Constants.REMEMBER_TOKEN_PREFS)
-            val intent = Intent(requireContext(), AuthActivity::class.java)
+            val intent = Intent(requireContext(), SettingActivity::class.java)
             startActivity(intent)
             activity?.finish()
         }

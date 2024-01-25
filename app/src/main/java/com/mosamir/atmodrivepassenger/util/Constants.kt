@@ -6,9 +6,9 @@ class Constants {
 
     companion object{
 
-        const val BASE_URL = "https://s1.drive.api.atmosphere.solutions/api/v1/passengers/"
+        const val BASE_URL = "BASE_URL"
 
-        const val BASE_Image_URL = "https://s1.drive.dashboard.atmosphere.solutions/storage/"
+        const val BASE_Image_URL = "BASE_Image_URL"
 
         const val INTRO_PREFS = "firstTime"
 

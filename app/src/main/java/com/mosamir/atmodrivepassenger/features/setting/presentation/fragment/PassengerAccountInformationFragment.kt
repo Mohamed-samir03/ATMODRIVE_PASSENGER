@@ -31,8 +31,7 @@ class PassengerAccountInformationFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.backFromAccountInformation.setOnClickListener {
-            val action = PassengerAccountInformationFragmentDirections.actionPassengerAccountInformationFragmentToPassengerProfileFragment()
-            findNavController().navigate(action)
+            requireActivity().onBackPressedDispatcher.onBackPressed()
         }
 
     }

@@ -32,8 +32,7 @@ class TripHistoryFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.goBackFromTripHistory.setOnClickListener {
-            val action = TripHistoryFragmentDirections.actionTripHistoryFragmentToPassengerProfileFragment()
-            findNavController().navigate(action)
+            requireActivity().onBackPressedDispatcher.onBackPressed()
         }
 
     }

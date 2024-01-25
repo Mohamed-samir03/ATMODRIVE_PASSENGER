@@ -32,8 +32,7 @@ class SettingsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.backFromSetting.setOnClickListener {
-            val action = SettingsFragmentDirections.actionSettingsFragmentToPassengerProfileFragment()
-            findNavController().navigate(action)
+            requireActivity().onBackPressedDispatcher.onBackPressed()
         }
 
     }

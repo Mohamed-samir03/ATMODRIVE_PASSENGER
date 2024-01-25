@@ -33,8 +33,7 @@ class GetHelpFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.backFromGetHelp.setOnClickListener {
-            val action = GetHelpFragmentDirections.actionGetHelpFragmentToPassengerProfileFragment()
-            findNavController().navigate(action)
+            requireActivity().onBackPressedDispatcher.onBackPressed()
         }
 
     }
